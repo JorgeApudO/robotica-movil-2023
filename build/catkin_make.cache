@@ -1,2 +1,2 @@
-very_simple_robot_simulator:yocs_cmd_vel_mux
+lab1:very_simple_robot_simulator:yocs_cmd_vel_mux
 -DCATKIN_DEVEL_PREFIX=/home/titin/Documents/Clases/robotica-movil-2023/devel -DCMAKE_INSTALL_PREFIX=/home/titin/Documents/Clases/robotica-movil-2023/install -G Unix Makefiles

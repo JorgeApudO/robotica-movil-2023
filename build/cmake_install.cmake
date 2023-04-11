@@ -131,6 +131,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/titin/Documents/Clases/robotica-movil-2023/build/gtest/cmake_install.cmake")
+  include("/home/titin/Documents/Clases/robotica-movil-2023/build/lab1/cmake_install.cmake")
   include("/home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator/cmake_install.cmake")
   include("/home/titin/Documents/Clases/robotica-movil-2023/build/yocs_cmd_vel_mux/cmake_install.cmake")
 

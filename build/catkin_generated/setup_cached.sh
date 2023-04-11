@@ -8,6 +8,9 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/titin/Documents/Clases/robotica-movil-2023/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/titin/Documents/Clases/robotica-movil-2023/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/titin/Documents/Clases/robotica-movil-2023/build'
+export PYTHONPATH="/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/python3/dist-packages:$PYTHONPATH"
 export ROSLISP_PACKAGE_DIRECTORIES='/home/titin/Documents/Clases/robotica-movil-2023/devel/share/common-lisp'
 export ROS_PACKAGE_PATH="/home/titin/Documents/Clases/robotica-movil-2023/src:$ROS_PACKAGE_PATH"

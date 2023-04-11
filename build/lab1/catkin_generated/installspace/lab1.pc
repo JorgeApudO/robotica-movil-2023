@@ -1,0 +1,8 @@
+prefix=/home/titin/Documents/Clases/robotica-movil-2023/install
+
+Name: lab1
+Description: Description of lab1
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
