@@ -1,0 +1,8 @@
+prefix=/home/titin/Documents/Clases/robotica-movil-2023/install
+
+Name: very_simple_robot_simulator
+Description: Description of very_simple_robot_simulator
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
