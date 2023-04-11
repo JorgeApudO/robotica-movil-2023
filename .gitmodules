@@ -1,0 +1,6 @@
+[submodule "src/yocs_cmd_vel_mux"]
+	path = src/yocs_cmd_vel_mux
+	url = https://github.com/gasevi/yocs_cmd_vel_mux.git
+[submodule "src/very_simple_robot_simulator"]
+	path = src/very_simple_robot_simulator
+	url = https://github.com/gasevi/very_simple_robot_simulator.git
