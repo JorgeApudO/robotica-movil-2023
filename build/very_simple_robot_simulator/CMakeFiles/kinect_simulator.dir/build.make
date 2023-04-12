@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/titin/Documents/Clases/robotica-movil-2023/src
+CMAKE_SOURCE_DIR = /home/pato/robotica-movil-2023/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/titin/Documents/Clases/robotica-movil-2023/build
+CMAKE_BINARY_DIR = /home/pato/robotica-movil-2023/build
 
 # Include any dependencies generated for this target.
 include very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/depend.make
@@ -58,43 +58,43 @@ include very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/progress.mak
 include very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/flags.make
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/flags.make
-very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o: /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/titin/Documents/Clases/robotica-movil-2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o"
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o -c /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp
+very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o: /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pato/robotica-movil-2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o"
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o -c /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.i"
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp > CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.i
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp > CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.i
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.s"
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp -o CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.s
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp -o CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.s
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/flags.make
-very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o: /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/titin/Documents/Clases/robotica-movil-2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o"
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o -c /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp
+very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o: /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pato/robotica-movil-2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o"
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o -c /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.i"
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp > CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.i
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp > CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.i
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.s"
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp -o CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.s
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp -o CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.s
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/flags.make
-very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o: /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/titin/Documents/Clases/robotica-movil-2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o"
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o -c /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp
+very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o: /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pato/robotica-movil-2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o"
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o -c /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.i"
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp > CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.i
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp > CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.i
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.s"
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp -o CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.s
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp -o CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.s
 
 # Object files for target kinect_simulator
 kinect_simulator_OBJECTS = \
@@ -105,152 +105,152 @@ kinect_simulator_OBJECTS = \
 # External object files for target kinect_simulator
 kinect_simulator_EXTERNAL_OBJECTS =
 
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/build.make
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libtf.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libtf2_ros.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libactionlib.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libtf2.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libimage_transport.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libmessage_filters.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libclass_loader.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libPocoFoundation.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libdl.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libroscpp.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libpthread.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libxmlrpcpp.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libroslib.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/librospack.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libpython3.8.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.71.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libtinyxml2.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libcv_bridge.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_calib3d.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_features2d.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_flann.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_highgui.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ml.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_objdetect.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_photo.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_stitching.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_video.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_videoio.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_aruco.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_bgsegm.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_bioinspired.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ccalib.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_datasets.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn_objdetect.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn_superres.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dpm.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_face.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_freetype.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_fuzzy.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_hdf.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_hfs.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_img_hash.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_line_descriptor.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_optflow.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_phase_unwrapping.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_plot.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_quality.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_reg.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_rgbd.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_saliency.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_shape.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_stereo.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_structured_light.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_superres.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_surface_matching.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_text.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_tracking.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_videostab.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_viz.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ximgproc.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_xobjdetect.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_xphoto.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_core.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_imgproc.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_imgcodecs.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/librosconsole.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/librosconsole_log4cxx.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/librosconsole_backend_interface.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libroscpp_serialization.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/librostime.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libcpp_common.so
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_stitching.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_aruco.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_bgsegm.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_bioinspired.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ccalib.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn_objdetect.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn_superres.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dpm.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_face.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_freetype.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_fuzzy.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_hdf.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_hfs.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_img_hash.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_line_descriptor.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_quality.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_reg.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_rgbd.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_saliency.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_shape.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_stereo.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_structured_light.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_superres.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_surface_matching.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_tracking.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_videostab.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_viz.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_xobjdetect.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_xphoto.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_highgui.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_datasets.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_plot.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_text.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ml.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_phase_unwrapping.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_optflow.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ximgproc.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_video.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_videoio.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_imgcodecs.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_objdetect.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_calib3d.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_features2d.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_flann.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_photo.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_imgproc.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_core.so.4.2.0
-/home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/titin/Documents/Clases/robotica-movil-2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable /home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator"
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/kinect_simulator.dir/link.txt --verbose=$(VERBOSE)
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/build.make
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libtf.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libtf2_ros.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libactionlib.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libtf2.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libimage_transport.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libmessage_filters.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libclass_loader.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libPocoFoundation.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libdl.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libroscpp.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libpthread.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libxmlrpcpp.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libroslib.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/librospack.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libpython3.8.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.71.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libtinyxml2.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libcv_bridge.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_calib3d.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_features2d.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_flann.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_highgui.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ml.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_objdetect.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_photo.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_stitching.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_video.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_videoio.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_aruco.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_bgsegm.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_bioinspired.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ccalib.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_datasets.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn_objdetect.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn_superres.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dpm.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_face.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_freetype.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_fuzzy.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_hdf.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_hfs.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_img_hash.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_line_descriptor.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_optflow.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_phase_unwrapping.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_plot.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_quality.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_reg.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_rgbd.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_saliency.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_shape.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_stereo.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_structured_light.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_superres.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_surface_matching.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_text.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_tracking.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_videostab.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_viz.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ximgproc.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_xobjdetect.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_xphoto.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_core.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_imgproc.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_imgcodecs.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/librosconsole.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/librosconsole_log4cxx.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/librosconsole_backend_interface.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libroscpp_serialization.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/librostime.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /opt/ros/noetic/lib/libcpp_common.so
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_stitching.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_aruco.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_bgsegm.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_bioinspired.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ccalib.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn_objdetect.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn_superres.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dpm.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_face.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_freetype.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_fuzzy.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_hdf.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_hfs.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_img_hash.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_line_descriptor.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_quality.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_reg.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_rgbd.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_saliency.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_shape.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_stereo.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_structured_light.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_superres.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_surface_matching.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_tracking.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_videostab.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_viz.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_xobjdetect.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_xphoto.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_highgui.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_datasets.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_plot.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_text.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_dnn.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ml.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_phase_unwrapping.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_optflow.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_ximgproc.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_video.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_videoio.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_imgcodecs.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_objdetect.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_calib3d.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_features2d.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_flann.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_photo.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_imgproc.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: /usr/lib/x86_64-linux-gnu/libopencv_core.so.4.2.0
+/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator: very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pato/robotica-movil-2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable /home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator"
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/kinect_simulator.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/build: /home/titin/Documents/Clases/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator
+very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/build: /home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/kinect_simulator
 
 .PHONY : very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/build
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/clean:
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator && $(CMAKE_COMMAND) -P CMakeFiles/kinect_simulator.dir/cmake_clean.cmake
+	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && $(CMAKE_COMMAND) -P CMakeFiles/kinect_simulator.dir/cmake_clean.cmake
 .PHONY : very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/clean
 
 very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/depend:
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/titin/Documents/Clases/robotica-movil-2023/src /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator /home/titin/Documents/Clases/robotica-movil-2023/build /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator /home/titin/Documents/Clases/robotica-movil-2023/build/very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/pato/robotica-movil-2023/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pato/robotica-movil-2023/src /home/pato/robotica-movil-2023/src/very_simple_robot_simulator /home/pato/robotica-movil-2023/build /home/pato/robotica-movil-2023/build/very_simple_robot_simulator /home/pato/robotica-movil-2023/build/very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/depend
 

@@ -67,14 +67,14 @@ set(very_simple_robot_simulator_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(very_simple_robot_simulator_SOURCE_PREFIX /home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator)
-  set(very_simple_robot_simulator_DEVEL_PREFIX /home/titin/Documents/Clases/robotica-movil-2023/devel)
+  set(very_simple_robot_simulator_SOURCE_PREFIX /home/pato/robotica-movil-2023/src/very_simple_robot_simulator)
+  set(very_simple_robot_simulator_DEVEL_PREFIX /home/pato/robotica-movil-2023/devel)
   set(very_simple_robot_simulator_INSTALL_PREFIX "")
   set(very_simple_robot_simulator_PREFIX ${very_simple_robot_simulator_DEVEL_PREFIX})
 else()
   set(very_simple_robot_simulator_SOURCE_PREFIX "")
   set(very_simple_robot_simulator_DEVEL_PREFIX "")
-  set(very_simple_robot_simulator_INSTALL_PREFIX /home/titin/Documents/Clases/robotica-movil-2023/install)
+  set(very_simple_robot_simulator_INSTALL_PREFIX /home/pato/robotica-movil-2023/install)
   set(very_simple_robot_simulator_PREFIX ${very_simple_robot_simulator_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/titin/Documents/Clases/robotica-movil-2023/install/lib;/opt/ros/noetic/lib)
+    foreach(path /home/pato/robotica-movil-2023/install/lib;/home/pato/robotica-movil-2023/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

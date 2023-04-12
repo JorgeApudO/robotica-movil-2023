@@ -1,6 +1,6 @@
 # CMake generated Testfile for 
-# Source directory: /home/titin/Documents/Clases/robotica-movil-2023/src
-# Build directory: /home/titin/Documents/Clases/robotica-movil-2023/build
+# Source directory: /home/pato/robotica-movil-2023/src
+# Build directory: /home/pato/robotica-movil-2023/build
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
