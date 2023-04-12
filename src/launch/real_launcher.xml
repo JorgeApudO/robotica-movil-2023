@@ -1,0 +1,29 @@
+
+<launch>
+
+
+    <include file="$(find kobuki node)/launch/minimal.launch" />
+    <include file="$(find freenect launch)/launch/freenect.launch" />
+
+    <node pkg="lab1" name="Movement_manager" type="dead_reackoning_nav.py" />
+    <node pkg="lab1" name="pose loader" type="pose_loader.py" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
