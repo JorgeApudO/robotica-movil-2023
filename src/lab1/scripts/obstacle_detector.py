@@ -20,7 +20,6 @@ class Turtlebot_Perception( object ):
         self.rate_obj = rospy.Rate( 5 )
         self.kinect_obj = Turtlebot_Kinect()
 
-        
     
     def send( self ) -> None:
         while not rospy.is_shutdown():
@@ -36,6 +35,11 @@ class Turtlebot_Perception( object ):
         # cortar bordes abajo y arriba de matriz
         # revisar si hay objetos entre 450mm y 800mm
         # todo con numpy
+        true_matrix = np.array([[True if 450 <= col <= 800 else False for col in row] for row in raw_image])
+        
+        izquierda = np.any(true_matrix[:, :213])
+        centro = np.any(true_matrix[:, 213:427])
+        derecha = np.any(true_matrix[:, 427:640])
 
         return Vector3((izquierda, centro, derecha))
             
