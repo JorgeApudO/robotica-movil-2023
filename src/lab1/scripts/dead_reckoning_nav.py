@@ -1,5 +1,5 @@
 import rospy as rp
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist,PoseArray
 import time
 import math
 #importar topicos
@@ -14,6 +14,7 @@ class Movement(object):
                 Twist, queue_size = 10)
         self.rate_hz = 10
         self.rate = rp.Rate(self.rate_hz)
+        self.mov_sub= rp.Subscriber("goal_list",PoseArray,self.accion_mover) # investigar PoseArray
         self.init_pose = (0,0,0)
 
 
@@ -27,7 +28,7 @@ class Movement(object):
                 self.vel_applier.publish(speed)
                 self.rate.sleep()
 
-    def mover_robot_a_destino(self, goal_pose):
+    def mover_robot_a_destino(self, goal_pose:tuple): #EDITAR POSEARRAY
         x_movement, y_movement, t_movement = goal_pose[0], goal_pose[1], goal_pose[2]
         
         intructions = [( self.v, 0, x_movement / self.v ), ( 0, self.ang, math.pi / self.ang ),
@@ -35,4 +36,9 @@ class Movement(object):
         self.aplicar_velocidad(intructions)
 
         
-    def accion_mover(self,)
+    def accion_mover(self,pose_list:list):
+        for pose in pose_list:
+            self.mover_robot_a_destino(pose)
+
+
+
