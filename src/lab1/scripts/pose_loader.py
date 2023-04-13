@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 import rospy
-from std_msgs.msg import PoseArray
+from geometry_msgs.msg import PoseArray
+from os import path
 import math
 def pose_loader():
-    rospy.init_node( 'pose loader' )
+    rospy.init_node( 'pose_loader' )
     pub = rospy.Publisher( 'goal_list', PoseArray, queue_size=10 )
-    with open("pose_list.txt","r") as pl:
+    with open(path.join("src","lab1","scripts","pose_list.txt"), "r") as pl:
         pose_list = [line.strip()[1:-1].split(",") for line in pl]
         for j,pose in enumerate(pose_list):
             for i,el in enumerate(pose):
