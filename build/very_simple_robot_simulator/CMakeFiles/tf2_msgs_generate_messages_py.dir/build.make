@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pato/robotica-movil-2023/src
+CMAKE_SOURCE_DIR = /home/jorge/robotica-movil-2023/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pato/robotica-movil-2023/build
+CMAKE_BINARY_DIR = /home/jorge/robotica-movil-2023/build
 
 # Utility rule file for tf2_msgs_generate_messages_py.
 
@@ -63,10 +63,10 @@ very_simple_robot_simulator/CMakeFiles/tf2_msgs_generate_messages_py.dir/build: 
 .PHONY : very_simple_robot_simulator/CMakeFiles/tf2_msgs_generate_messages_py.dir/build
 
 very_simple_robot_simulator/CMakeFiles/tf2_msgs_generate_messages_py.dir/clean:
-	cd /home/pato/robotica-movil-2023/build/very_simple_robot_simulator && $(CMAKE_COMMAND) -P CMakeFiles/tf2_msgs_generate_messages_py.dir/cmake_clean.cmake
+	cd /home/jorge/robotica-movil-2023/build/very_simple_robot_simulator && $(CMAKE_COMMAND) -P CMakeFiles/tf2_msgs_generate_messages_py.dir/cmake_clean.cmake
 .PHONY : very_simple_robot_simulator/CMakeFiles/tf2_msgs_generate_messages_py.dir/clean
 
 very_simple_robot_simulator/CMakeFiles/tf2_msgs_generate_messages_py.dir/depend:
-	cd /home/pato/robotica-movil-2023/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pato/robotica-movil-2023/src /home/pato/robotica-movil-2023/src/very_simple_robot_simulator /home/pato/robotica-movil-2023/build /home/pato/robotica-movil-2023/build/very_simple_robot_simulator /home/pato/robotica-movil-2023/build/very_simple_robot_simulator/CMakeFiles/tf2_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/jorge/robotica-movil-2023/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/jorge/robotica-movil-2023/src /home/jorge/robotica-movil-2023/src/very_simple_robot_simulator /home/jorge/robotica-movil-2023/build /home/jorge/robotica-movil-2023/build/very_simple_robot_simulator /home/jorge/robotica-movil-2023/build/very_simple_robot_simulator/CMakeFiles/tf2_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : very_simple_robot_simulator/CMakeFiles/tf2_msgs_generate_messages_py.dir/depend
 

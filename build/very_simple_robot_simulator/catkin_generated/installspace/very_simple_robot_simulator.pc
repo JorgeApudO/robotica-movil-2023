@@ -1,4 +1,4 @@
-prefix=/home/pato/robotica-movil-2023/install
+prefix=/home/jorge/robotica-movil-2023/install
 
 Name: very_simple_robot_simulator
 Description: Description of very_simple_robot_simulator
