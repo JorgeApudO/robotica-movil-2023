@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import rospy as rp
 from geometry_msgs.msg import Twist,PoseArray
 import time
@@ -42,3 +43,7 @@ class Movement(object):
 
 
 
+
+if __name__ == "__main__":
+    mov = Movement()
+    rp.spin()

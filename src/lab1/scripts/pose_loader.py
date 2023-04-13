@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import rospy
 from std_msgs.msg import PoseArray
 import math
@@ -19,3 +20,4 @@ def pose_loader():
 
 if __name__ == '__main__':
     pose_loader()
+    rospy.spin()
