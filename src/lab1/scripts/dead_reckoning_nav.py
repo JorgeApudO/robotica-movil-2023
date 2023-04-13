@@ -1,6 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
 import rospy as rp
-from geometry_msgs.msg import Twist,PoseArray
+from geometry_msgs.msg import Twist, PoseArray
+
 import time
 import math
 #importar topicos
@@ -15,7 +17,7 @@ class Movement(object):
                 Twist, queue_size = 10)
         self.rate_hz = 10
         self.rate = rp.Rate(self.rate_hz)
-        self.mov_sub= rp.Subscriber("goal_list",PoseArray,self.accion_mover) # investigar PoseArray
+        self.mov_sub= rp.Subscriber("goal_list",PoseArray,self.accion_mover) 
         self.init_pose = (0,0,0)
 
 
