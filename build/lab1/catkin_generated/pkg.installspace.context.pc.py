@@ -4,5 +4,5 @@ PROJECT_PKG_CONFIG_INCLUDE_DIRS = "".split(';') if "" != "" else []
 PROJECT_CATKIN_DEPENDS = "".replace(';', ' ')
 PKG_CONFIG_LIBRARIES_WITH_PREFIX = "".split(';') if "" != "" else []
 PROJECT_NAME = "lab1"
-PROJECT_SPACE_DIR = "/home/titin/Documents/Clases/robotica-movil-2023/install"
+PROJECT_SPACE_DIR = "/home/pato/robotica-movil-2023/install"
 PROJECT_VERSION = "0.0.0"

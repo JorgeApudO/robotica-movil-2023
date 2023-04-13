@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator/kobuki_simulator.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator/kobuki_simulator.h
 ros/ros.h
 -
 std_msgs/String.h
@@ -22,13 +22,13 @@ nav_msgs/Odometry.h
 tf/transform_broadcaster.h
 -
 
-/home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator/vsrs_utils.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator/vsrs_utils.h
 vector
 -
 
-/home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kobuki_simulator.cpp
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kobuki_simulator.cpp
 kobuki_simulator.h
-/home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kobuki_simulator.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kobuki_simulator.h
 tf/transform_datatypes.h
 -
 tf/transform_broadcaster.h
@@ -36,15 +36,15 @@ tf/transform_broadcaster.h
 geometry_msgs/TransformStamped.h
 -
 
-/home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kobuki_simulator_node.cpp
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kobuki_simulator_node.cpp
 kobuki_simulator.h
-/home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/kobuki_simulator.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kobuki_simulator.h
 ros/ros.h
 -
 
-/home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp
 vsrs_utils.h
-/home/titin/Documents/Clases/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.h
 cmath
 -
 

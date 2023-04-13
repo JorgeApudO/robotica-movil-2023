@@ -1,4 +1,4 @@
-prefix=/home/titin/Documents/Clases/robotica-movil-2023/devel
+prefix=/home/pato/robotica-movil-2023/devel
 
 Name: very_simple_robot_simulator
 Description: Description of very_simple_robot_simulator

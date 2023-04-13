@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/titin/Documents/Clases/robotica-movil-2023/src
+CMAKE_SOURCE_DIR = /home/pato/robotica-movil-2023/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/titin/Documents/Clases/robotica-movil-2023/build
+CMAKE_BINARY_DIR = /home/pato/robotica-movil-2023/build
 
 # Utility rule file for rosgraph_msgs_generate_messages_nodejs.
 
@@ -63,10 +63,10 @@ lab1/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/build: rosgraph_msgs_
 .PHONY : lab1/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/build
 
 lab1/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/clean:
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build/lab1 && $(CMAKE_COMMAND) -P CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/cmake_clean.cmake
+	cd /home/pato/robotica-movil-2023/build/lab1 && $(CMAKE_COMMAND) -P CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/cmake_clean.cmake
 .PHONY : lab1/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/clean
 
 lab1/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/depend:
-	cd /home/titin/Documents/Clases/robotica-movil-2023/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/titin/Documents/Clases/robotica-movil-2023/src /home/titin/Documents/Clases/robotica-movil-2023/src/lab1 /home/titin/Documents/Clases/robotica-movil-2023/build /home/titin/Documents/Clases/robotica-movil-2023/build/lab1 /home/titin/Documents/Clases/robotica-movil-2023/build/lab1/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/pato/robotica-movil-2023/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pato/robotica-movil-2023/src /home/pato/robotica-movil-2023/src/lab1 /home/pato/robotica-movil-2023/build /home/pato/robotica-movil-2023/build/lab1 /home/pato/robotica-movil-2023/build/lab1/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : lab1/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/depend
 

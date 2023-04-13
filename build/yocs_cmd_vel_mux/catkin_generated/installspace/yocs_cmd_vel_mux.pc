@@ -1,4 +1,4 @@
-prefix=/home/titin/Documents/Clases/robotica-movil-2023/install
+prefix=/home/pato/robotica-movil-2023/install
 
 Name: yocs_cmd_vel_mux
 Description: Description of yocs_cmd_vel_mux
