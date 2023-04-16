@@ -29,15 +29,19 @@ class Movement(object):
                 self.rate.sleep()
 
     def mover_robot_a_destino(self, goal_pose:tuple): #EDITAR POSEARRAY
-        x_movement, y_movement, t_movement = goal_pose[0], goal_pose[1], goal_pose[2]
+        x_goal, y_goal= goal_pose.position.x(), goal_pose.position.y()
+
+        e = euler_from_quaternion(*goal_pose.orientation())
+
+        yaw_goal = e[2]
         
-        intructions = [( self.v, 0, x_movement / self.v ), ( 0, self.ang, math.pi / self.ang ),
-                        ( self.v, 0, y_movement / self.v ), ( 0, self.ang, t_movement / self.v )]
+        instructions=[] #Hay que definir esto bien
+
         self.aplicar_velocidad(intructions)
 
         
-    def accion_mover(self,pose_list:list):
-        for pose in pose_list:
+    def accion_mover(self,pose_array: PoseArray):
+        for pose in pose_array.poses:
             self.mover_robot_a_destino(pose)
 
 

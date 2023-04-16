@@ -14,7 +14,8 @@ def pose_loader():
                 else:
                     pose_list[j][i] = float(el)
             pose_list[j]= tuple(pose_list[j])
-    print(pose_list)
+    while not rospy.is_shutdown() and pub.get_num_connections() == 0:
+        pass
     pub.publish(pose_list)
 
 if __name__ == '__main__':
