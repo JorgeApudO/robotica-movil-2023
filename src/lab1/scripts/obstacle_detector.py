@@ -9,7 +9,7 @@ import numpy as np
 
 class Turtlebot_Kinect( object ):
     def __init__( self ) -> None:
-        self.raw_sub = rospy.Subscriber( 'camera/depth/image_raw', Image, self.raw_cb )
+        self.raw_sub = rospy.Subscriber( '/camera/depth/image_raw', Image, self.raw_cb )
         self.bridge = CvBridge()
         self.current_cv_raw_image = None
 
@@ -34,21 +34,26 @@ class Turtlebot_Perception( object ):
             self.rate_obj.sleep()
 
     def detect_objects( self ) -> Vector3:
-        raw_image = self.kinect_obj.current_cv_raw_image
+        raw_image = self.kinect_obj.current_cv_raw_image.copy()
+
+        # print(raw_image)
 
         # revisar pixeles 0-213, 213-427, 427-640
         # cortar bordes abajo y arriba de matriz
         # revisar si hay objetos entre 450mm y 800mm
         # todo con numpy
-        raw_image[~np.isnan(raw_image)] = 450 <= raw_imamge[~np.isnan(raw_image)] <= 800
-        raw_image[np.isnan(raw_image)] = False
+        raw_image[np.isnan(raw_image)] = 0
+        truth_matrix = np.full(raw_image.shape, False, dtype=bool)
+        for i, row in enumerate(raw_image):
+            for j, val in enumerate(row):
+                truth_matrix[i, j] = 0.450 <= val <= 0.800
 
         tc = 20
         bc = 20
         
-        izquierda = np.any(raw_image[tc:-bc, 0:213])
-        centro = np.any(raw_image[tc:-bc, 213:427])
-        derecha = np.any(raw_image[tc:-bc, 427:640])
+        izquierda = np.any(truth_matrix[tc:-bc, 0:213])
+        centro = np.any(truth_matrix[tc:-bc, 213:427])
+        derecha = np.any(truth_matrix[tc:-bc, 427:640])
 
         return Vector3(int(izquierda), int(centro), int(derecha))
             
