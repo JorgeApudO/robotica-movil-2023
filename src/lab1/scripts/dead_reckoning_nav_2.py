@@ -98,5 +98,6 @@ class Movement(object):
             time.sleep(1)
 
 if __name__ == "__main__":
+    time.sleep(5)
     m = Movement()
     rp.spin()
