@@ -26,6 +26,7 @@ class Movement(object):
 
     def mover_robot_a_destino(self, goal_pose: Pose):  # EDITAR POSEARRAY
         x_goal, y_goal = goal_pose.position.x(), goal_pose.position.y()
+        yaw_goal = euler_from_quaternion(*goal_pose.orientation())[2]
         instructions = []  # Hay que definir esto bien
         x_initial,y_initial = self.current_pose.position.x(), self.current_pose.position.y()
         yaw_initial = euler_from_quaternion(*self.current_pose.orientation())[2]
@@ -48,7 +49,7 @@ class Movement(object):
         dir_ang = (-1 if yaw_goal - yaw_initial > 0 else 1) #sign?
         instructions.append((0, self.v_ang * dir_ang, abs(yaw_goal - yaw_initial) / self.v_ang))
         
-        self.aplicar_velocidad(intructions)
+        self.aplicar_velocidad(instructions)
         self.current_pose = goal_pose
 
     def accion_mover(self, pose_array: PoseArray):
