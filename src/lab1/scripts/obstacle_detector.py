@@ -1,3 +1,5 @@
+#!/usr/bin/env python3 
+
 import rospy
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Vector3

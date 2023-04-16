@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import rospy as rp
 from geometry_msgs.msg import Twist, PoseArray, Pose
 from tf.transformations import euler_from_quaternion
@@ -56,3 +58,5 @@ class Movement(object):
     def accion_mover(self, pose_array: PoseArray):
         for pose in pose_array.poses:
             self.mover_robot_a_destino(pose)
+
+rp.spin()
