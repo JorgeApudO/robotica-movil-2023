@@ -40,14 +40,15 @@ class Turtlebot_Perception( object ):
         # cortar bordes abajo y arriba de matriz
         # revisar si hay objetos entre 450mm y 800mm
         # todo con numpy
-        true_matrix = np.array([[True if 450 <= col <= 800 else False for col in row] for row in raw_image])
+        raw_image[~np.isnan(raw_image)] = 450 <= raw_imamge[~np.isnan(raw_image)] <= 800
+        raw_image[np.isnan(raw_image)] = False
 
         tc = 20
         bc = 20
         
-        izquierda = np.any(true_matrix[tc:-bc, :213])
-        centro = np.any(true_matrix[tc:-bc, 213:427])
-        derecha = np.any(true_matrix[tc:-bc, 427:640])
+        izquierda = np.any(raw_image[tc:-bc, 0:213])
+        centro = np.any(raw_image[tc:-bc, 213:427])
+        derecha = np.any(raw_image[tc:-bc, 427:640])
 
         return Vector3(int(izquierda), int(centro), int(derecha))
             
