@@ -1,9 +1,0 @@
-<launch>
-
-  <include file="$(find very_simple_robot_simulator)/launch/run_all.launch" />
-  
-  <node pkg="lab1" name="Movement_manager" type="dead_reckoning_nav.py" output="screen" />
-  <node pkg="lab1" name="pose_loader" type="pose_loader.py" output="screen" />
-
-</launch>
-

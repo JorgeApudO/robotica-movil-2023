@@ -25,7 +25,10 @@ class Turtlebot_Perception( object ):
     
     def send( self ) -> None:
         while not rospy.is_shutdown():
-            detected_objects = self.detect_objects()
+            if self.kinect_obj.current_cv_raw_image is None:
+                detected_objects=Vector3(0,0,0)
+            else:    
+                detected_objects = self.detect_objects()
             rospy.loginfo( f'publishing object detection {detected_objects}' )
             self.pub.publish( detected_objects )
             self.rate_obj.sleep()
@@ -46,7 +49,7 @@ class Turtlebot_Perception( object ):
         centro = np.any(true_matrix[tc:-bc, 213:427])
         derecha = np.any(true_matrix[tc:-bc, 427:640])
 
-        return Vector3((izquierda, centro, derecha))
+        return Vector3(int(izquierda), int(centro), int(derecha))
             
 
 if __name__ == "__main__":
