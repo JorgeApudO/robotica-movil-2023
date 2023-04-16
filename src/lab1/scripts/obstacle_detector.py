@@ -38,10 +38,13 @@ class Turtlebot_Perception( object ):
         # revisar si hay objetos entre 450mm y 800mm
         # todo con numpy
         true_matrix = np.array([[True if 450 <= col <= 800 else False for col in row] for row in raw_image])
+
+        tc = 20
+        bc = 20
         
-        izquierda = np.any(true_matrix[:, :213])
-        centro = np.any(true_matrix[:, 213:427])
-        derecha = np.any(true_matrix[:, 427:640])
+        izquierda = np.any(true_matrix[tc:-bc, :213])
+        centro = np.any(true_matrix[tc:-bc, 213:427])
+        derecha = np.any(true_matrix[tc:-bc, 427:640])
 
         return Vector3((izquierda, centro, derecha))
             
