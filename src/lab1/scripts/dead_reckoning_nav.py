@@ -1,48 +1,61 @@
 import rospy as rp
-from geometry_msgs.msg import Twist,PoseArray
+from geometry_msgs.msg import Twist, PoseArray, Pose
 import time
 import math
-#importar topicos
-
 
 class Movement(object):
     def __init__(self) -> None:
-        self.v = 0.2 # m/s
-        self.ang = 1 #rads/s
+        self.v = 0.2  # m/s
+        self.ang = 1  # rads/s
         rp.init_node("Movement_manager")
         self.vel_applier = rp.Publisher("yocs_cmd_vel_mux/input/navigation",
-                Twist, queue_size = 10)
+                                        Twist, queue_size=10)
         self.rate_hz = 10
         self.rate = rp.Rate(self.rate_hz)
-        self.mov_sub= rp.Subscriber("goal_list",PoseArray,self.accion_mover) # investigar PoseArray
-        self.init_pose = (0,0,0)
+        self.mov_sub = rp.Subscriber("goal_list", PoseArray,
+                                     self.accion_mover)  # investigar PoseArray
+        self.current_pose = Pose()
 
-
-    def aplicar_velocidad(self,speed_command: list ):
+    def aplicar_velocidad(self, speed_command: list):
         for mov in speed_command:
             inicial_time = time.time()
-            while time.time()<= inicial_time+mov[2]:
-                speed= Twist()
-                speed.linear.x, speed.angular.z= mov[0],mov[1]            
-                rp.loginfo("linear speed:", mov[0],"angular speed:",mov[1])
+            while time.time() <= inicial_time+mov[2]:
+                speed = Twist()
+                speed.linear.x, speed.angular.z = mov[0], mov[1]
+                rp.loginfo("linear speed:", mov[0], "angular speed:", mov[1])
                 self.vel_applier.publish(speed)
                 self.rate.sleep()
 
-    def mover_robot_a_destino(self, goal_pose:tuple): #EDITAR POSEARRAY
-        x_goal, y_goal= goal_pose.position.x(), goal_pose.position.y()
+    def mover_robot_a_destino(self, goal_pose: Pose):  # EDITAR POSEARRAY
+        x_goal, y_goal = goal_pose.position.x(), goal_pose.position.y()
+        instructions = []  # Hay que definir esto bien
+        e = euler_from_quaternion(*goal_pose.orientation())[2]
+        x_initial,y_initial = self.current_pose.position.x(),self.current_pose.position.y()
+        yaw_initial =euler_from_quaternion(*self.current_pose.orientation())[2]
+        #align x
+        ang = (0 if x_goal-x_initial>0 else math.pi)
+        ang_dir = (-1 if yaw_initial-ang>0 else 1)
+        instructions.append((0,self.ang*ang_dir,abs(ang-yaw_initial)/self.ang))
+        instructions.append(self.v,0,abs(x_initial-x_goal)/self.v)
 
-        e = euler_from_quaternion(*goal_pose.orientation())
-
-        yaw_goal = e[2]
+        # align y
+        yaw_initial = ang
+        ang = (math.pi/2 if y_goal-y_initial>0 else -math.pi/2)
+        ang_dir = (1 if yaw_initial-ang>0 else -1) #sign?
         
-        instructions=[] #Hay que definir esto bien
+        instructions.append((0,self.ang*ang_dir,abs(ang-yaw_initial)/self.ang))
+        instructions.append(self.v,0,abs(x_initial-x_goal)/self.v)
+        
+
+        #yaw align
+        yaw_initial = ang
+        ang_dir = (1 if yaw_goal-yaw_initial>0 else -1) #sign?
+        instructions.append((0,self.ang*ang_dir,abs(yaw_goal-yaw_initial)/self.ang))
+        
+
 
         self.aplicar_velocidad(intructions)
 
-        
-    def accion_mover(self,pose_array: PoseArray):
+    def accion_mover(self, pose_array: PoseArray):
         for pose in pose_array.poses:
             self.mover_robot_a_destino(pose)
-
-
-
