@@ -67,14 +67,14 @@ set(yocs_cmd_vel_mux_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(yocs_cmd_vel_mux_SOURCE_PREFIX /home/jorge/robotica-movil-2023/src/yocs_cmd_vel_mux)
-  set(yocs_cmd_vel_mux_DEVEL_PREFIX /home/jorge/robotica-movil-2023/devel)
+  set(yocs_cmd_vel_mux_SOURCE_PREFIX /home/pato/robotica-movil-2023/src/yocs_cmd_vel_mux)
+  set(yocs_cmd_vel_mux_DEVEL_PREFIX /home/pato/robotica-movil-2023/devel)
   set(yocs_cmd_vel_mux_INSTALL_PREFIX "")
   set(yocs_cmd_vel_mux_PREFIX ${yocs_cmd_vel_mux_DEVEL_PREFIX})
 else()
   set(yocs_cmd_vel_mux_SOURCE_PREFIX "")
   set(yocs_cmd_vel_mux_DEVEL_PREFIX "")
-  set(yocs_cmd_vel_mux_INSTALL_PREFIX /home/jorge/robotica-movil-2023/install)
+  set(yocs_cmd_vel_mux_INSTALL_PREFIX /home/pato/robotica-movil-2023/install)
   set(yocs_cmd_vel_mux_PREFIX ${yocs_cmd_vel_mux_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(yocs_cmd_vel_mux_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/jorge/robotica-movil-2023/devel/include;/home/jorge/robotica-movil-2023/src/yocs_cmd_vel_mux/include " STREQUAL " ")
+if(NOT "/home/pato/robotica-movil-2023/devel/include;/home/pato/robotica-movil-2023/src/yocs_cmd_vel_mux/include " STREQUAL " ")
   set(yocs_cmd_vel_mux_INCLUDE_DIRS "")
-  set(_include_dirs "/home/jorge/robotica-movil-2023/devel/include;/home/jorge/robotica-movil-2023/src/yocs_cmd_vel_mux/include")
+  set(_include_dirs "/home/pato/robotica-movil-2023/devel/include;/home/pato/robotica-movil-2023/src/yocs_cmd_vel_mux/include")
   if(NOT "https://github.com/yujinrobot/yujin_ocs/issues " STREQUAL " ")
     set(_report "Check the issue tracker 'https://github.com/yujinrobot/yujin_ocs/issues' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT "http://ros.org/wiki/yocs_cmd_vel_mux " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/jorge/robotica-movil-2023/devel/include;/home/jorge/robotica-movil
         message(FATAL_ERROR "Project 'yocs_cmd_vel_mux' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'yocs_cmd_vel_mux' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/jorge/robotica-movil-2023/src/yocs_cmd_vel_mux/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'yocs_cmd_vel_mux' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/pato/robotica-movil-2023/src/yocs_cmd_vel_mux/${idir}'.  ${_report}")
     endif()
     _list_append_unique(yocs_cmd_vel_mux_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/jorge/robotica-movil-2023/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/pato/robotica-movil-2023/devel/lib;/home/pato/workspace_prueba/devel/lib;/home/pato/robotica-movil-2023/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

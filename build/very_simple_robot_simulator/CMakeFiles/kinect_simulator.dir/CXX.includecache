@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator/kinect_simulator.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator/kinect_simulator.h
 vsrs_utils.h
-/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator/vsrs_utils.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator/vsrs_utils.h
 ros/ros.h
 -
 image_transport/image_transport.h
@@ -22,15 +22,15 @@ opencv2/opencv.hpp
 vector
 -
 
-/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator/vsrs_utils.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator/vsrs_utils.h
 vector
 -
 
-/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp
 kinect_simulator.h
-/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.h
 vsrs_utils.h
-/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.h
 ros/console.h
 -
 tf/transform_datatypes.h
@@ -38,15 +38,15 @@ tf/transform_datatypes.h
 cv_bridge/cv_bridge.h
 -
 
-/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp
 kinect_simulator.h
-/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.h
 ros/ros.h
 -
 
-/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp
 vsrs_utils.h
-/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.h
+/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.h
 cmath
 -
 

@@ -1,8 +1,8 @@
-# Install script for directory: /home/jorge/robotica-movil-2023/src/lab1
+# Install script for directory: /home/pato/robotica-movil-2023/src/lab1
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/jorge/robotica-movil-2023/install")
+  set(CMAKE_INSTALL_PREFIX "/home/pato/robotica-movil-2023/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/jorge/robotica-movil-2023/build/lab1/catkin_generated/installspace/lab1.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/pato/robotica-movil-2023/build/lab1/catkin_generated/installspace/lab1.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab1/cmake" TYPE FILE FILES
-    "/home/jorge/robotica-movil-2023/build/lab1/catkin_generated/installspace/lab1Config.cmake"
-    "/home/jorge/robotica-movil-2023/build/lab1/catkin_generated/installspace/lab1Config-version.cmake"
+    "/home/pato/robotica-movil-2023/build/lab1/catkin_generated/installspace/lab1Config.cmake"
+    "/home/pato/robotica-movil-2023/build/lab1/catkin_generated/installspace/lab1Config-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab1" TYPE FILE FILES "/home/jorge/robotica-movil-2023/src/lab1/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lab1" TYPE FILE FILES "/home/pato/robotica-movil-2023/src/lab1/package.xml")
 endif()
 

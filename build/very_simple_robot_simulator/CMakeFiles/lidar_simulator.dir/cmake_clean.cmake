@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/jorge/robotica-movil-2023/devel/lib/very_simple_robot_simulator/lidar_simulator"
-  "/home/jorge/robotica-movil-2023/devel/lib/very_simple_robot_simulator/lidar_simulator.pdb"
+  "/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/lidar_simulator"
+  "/home/pato/robotica-movil-2023/devel/lib/very_simple_robot_simulator/lidar_simulator.pdb"
   "CMakeFiles/lidar_simulator.dir/src/lidar_simulator.cpp.o"
   "CMakeFiles/lidar_simulator.dir/src/lidar_simulator_node.cpp.o"
   "CMakeFiles/lidar_simulator.dir/src/vsrs_utils.cpp.o"

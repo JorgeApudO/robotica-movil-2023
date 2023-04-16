@@ -1,5 +1,5 @@
 # generated from catkin/cmake/template/order_packages.context.py.in
-source_root_dir = '/home/jorge/robotica-movil-2023/src'
+source_root_dir = '/home/pato/robotica-movil-2023/src'
 whitelisted_packages = ''.split(';') if '' != '' else []
 blacklisted_packages = ''.split(';') if '' != '' else []
-underlay_workspaces = '/opt/ros/noetic'.split(';') if '/opt/ros/noetic' != '' else []
+underlay_workspaces = '/home/pato/workspace_prueba/devel;/home/pato/robotica-movil-2023/devel;/opt/ros/noetic'.split(';') if '/home/pato/workspace_prueba/devel;/home/pato/robotica-movil-2023/devel;/opt/ros/noetic' != '' else []

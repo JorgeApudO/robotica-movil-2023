@@ -6,5 +6,5 @@ CXX_FLAGS =  -std=c++11 -fPIC
 
 CXX_DEFINES = -DHAVE_NEW_YAMLCPP -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"yocs_cmd_vel_mux\" -Dyocs_cmd_vel_mux_nodelet_EXPORTS
 
-CXX_INCLUDES = -I/home/jorge/robotica-movil-2023/devel/include -I/home/jorge/robotica-movil-2023/src/yocs_cmd_vel_mux/include -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp 
+CXX_INCLUDES = -I/home/pato/robotica-movil-2023/devel/include -I/home/pato/robotica-movil-2023/src/yocs_cmd_vel_mux/include -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp 
 

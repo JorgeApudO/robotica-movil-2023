@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/jorge/robotica-movil-2023/devel/lib/libyocs_cmd_vel_mux_nodelet.pdb"
-  "/home/jorge/robotica-movil-2023/devel/lib/libyocs_cmd_vel_mux_nodelet.so"
+  "/home/pato/robotica-movil-2023/devel/lib/libyocs_cmd_vel_mux_nodelet.pdb"
+  "/home/pato/robotica-movil-2023/devel/lib/libyocs_cmd_vel_mux_nodelet.so"
   "CMakeFiles/yocs_cmd_vel_mux_nodelet.dir/src/cmd_vel_mux_nodelet.cpp.o"
   "CMakeFiles/yocs_cmd_vel_mux_nodelet.dir/src/cmd_vel_subscribers.cpp.o"
 )

@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp" "/home/jorge/robotica-movil-2023/build/very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o"
-  "/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp" "/home/jorge/robotica-movil-2023/build/very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o"
-  "/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp" "/home/jorge/robotica-movil-2023/build/very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o"
+  "/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator.cpp" "/home/pato/robotica-movil-2023/build/very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator.cpp.o"
+  "/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/kinect_simulator_node.cpp" "/home/pato/robotica-movil-2023/build/very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/kinect_simulator_node.cpp.o"
+  "/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/src/vsrs_utils.cpp" "/home/pato/robotica-movil-2023/build/very_simple_robot_simulator/CMakeFiles/kinect_simulator.dir/src/vsrs_utils.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -21,7 +21,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/opt/ros/noetic/include"
   "/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
-  "/home/jorge/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator"
+  "/home/pato/robotica-movil-2023/src/very_simple_robot_simulator/include/very_simple_robot_simulator"
   "/usr/include/opencv4"
   )
 

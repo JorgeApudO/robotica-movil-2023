@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/jorge/robotica-movil-2023/src
+CMAKE_SOURCE_DIR = /home/pato/robotica-movil-2023/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/jorge/robotica-movil-2023/build
+CMAKE_BINARY_DIR = /home/pato/robotica-movil-2023/build
 
 # Utility rule file for dynamic_reconfigure_generate_messages_lisp.
 
@@ -63,10 +63,10 @@ yocs_cmd_vel_mux/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/build
 .PHONY : yocs_cmd_vel_mux/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/build
 
 yocs_cmd_vel_mux/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/clean:
-	cd /home/jorge/robotica-movil-2023/build/yocs_cmd_vel_mux && $(CMAKE_COMMAND) -P CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/cmake_clean.cmake
+	cd /home/pato/robotica-movil-2023/build/yocs_cmd_vel_mux && $(CMAKE_COMMAND) -P CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/cmake_clean.cmake
 .PHONY : yocs_cmd_vel_mux/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/clean
 
 yocs_cmd_vel_mux/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/depend:
-	cd /home/jorge/robotica-movil-2023/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/jorge/robotica-movil-2023/src /home/jorge/robotica-movil-2023/src/yocs_cmd_vel_mux /home/jorge/robotica-movil-2023/build /home/jorge/robotica-movil-2023/build/yocs_cmd_vel_mux /home/jorge/robotica-movil-2023/build/yocs_cmd_vel_mux/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/pato/robotica-movil-2023/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pato/robotica-movil-2023/src /home/pato/robotica-movil-2023/src/yocs_cmd_vel_mux /home/pato/robotica-movil-2023/build /home/pato/robotica-movil-2023/build/yocs_cmd_vel_mux /home/pato/robotica-movil-2023/build/yocs_cmd_vel_mux/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : yocs_cmd_vel_mux/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/depend
 
