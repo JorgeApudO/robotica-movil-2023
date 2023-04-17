@@ -30,7 +30,9 @@ class Movement(object):
             self.factor_y= 1.08325
             self.factor_yaw = 1.08325
         else:
-            self.factor = 1
+            self.factor_x = 1
+            self.factor_y= 1
+            self.factor_yaw = 1
 
     def real_pose_manager(self, data):
 
