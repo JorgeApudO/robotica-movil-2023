@@ -26,10 +26,11 @@ class Movement(object):
         self.odom_pose = Pose()
         self.correction=True
         if self.correction:
-            self.factor = 1.08329042990381
+            self.factor_x = 1.08325
+            self.factor_y= 1.08325
+            self.factor_yaw = 1.08325
         else:
             self.factor = 1
-        self.factor = 1.08
 
     def real_pose_manager(self, data):
 
@@ -67,6 +68,10 @@ class Movement(object):
         rp.loginfo(f"distance_to_origin: {math.sqrt(((self.real_pose.position.x - 1 )**2) + ((self.real_pose.position.y - 1 )**2))}")
 
 
+        if len(self.correcciones) !=0:
+
+            rp.loginfo(f"correccion: {self.correcciones}")
+
     def mover_robot_a_destino(self, goal_pose: Pose):
         x_goal, y_goal = goal_pose.position.x, goal_pose.position.y
         yaw_goal = euler_from_quaternion((goal_pose.orientation.x, goal_pose.orientation.y,
@@ -86,7 +91,7 @@ class Movement(object):
             ang_aplicado = self.corregir_angulo(yaw_initial - ang)
             dir_ang = (-1 if ang_aplicado > 0  else 1)
             if yaw_initial-ang != 0:
-                instructions.append((0, self.v_ang * dir_ang, self.factor *( abs(ang_aplicado) / self.v_ang)))
+                instructions.append((0, self.v_ang * dir_ang, self.factor_x *( abs(ang_aplicado) / self.v_ang)))
             instructions.append((self.v, 0, abs(x_initial - x_goal) / self.v))
             yaw_initial = self.corregir_angulo(ang)
 
@@ -97,7 +102,7 @@ class Movement(object):
             ang_aplicado = self.corregir_angulo(yaw_initial - ang)
             dir_ang = (-1 if ang_aplicado > 0 else 1)
             if yaw_initial-ang != 0:
-                instructions.append((0, self.v_ang * dir_ang, self.factor *( abs(ang_aplicado) / self.v_ang)))
+                instructions.append((0, self.v_ang * dir_ang, self.factor_y *( abs(ang_aplicado) / self.v_ang)))
             instructions.append((self.v, 0, abs(y_initial - y_goal) / self.v))
             yaw_initial = self.corregir_angulo(ang)
 
@@ -105,7 +110,7 @@ class Movement(object):
         if yaw_initial-yaw_goal != 0:
             ang_aplicado = self.corregir_angulo(yaw_initial - yaw_goal)
             dir_ang = (-1 if ang_aplicado > 0 else 1)
-            instructions.append((0, self.v_ang * dir_ang, self.factor *( abs(ang_aplicado) / self.v_ang)))
+            instructions.append((0, self.v_ang * dir_ang, self.factor_yaw *( abs(ang_aplicado) / self.v_ang)))
 
         self.aplicar_velocidad(instructions)
         self.current_pose = goal_pose
