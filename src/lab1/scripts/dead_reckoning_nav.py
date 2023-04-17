@@ -29,9 +29,9 @@ class Movement(object):
         self.odom_pose = Pose()
         self.correction = True
         if self.correction:
-            self.factor_x = 1.08325
-            self.factor_y = 1.08325
-            self.factor_yaw = 1.08325
+            self.factor_x = 1.08329042990381
+            self.factor_y = 1.08329042990381
+            self.factor_yaw = 1.08329042990381
         else:
             self.factor_x = 1
             self.factor_y = 1
