@@ -67,11 +67,6 @@ class Movement(object):
         rp.loginfo(f"real_pose: ({self.real_pose.position.x - 1},{self.real_pose.position.y - 1})")
         rp.loginfo(f"distance_to_origin: {math.sqrt(((self.real_pose.position.x - 1 )**2) + ((self.real_pose.position.y - 1 )**2))}")
 
-
-        if len(self.correcciones) !=0:
-
-            rp.loginfo(f"correccion: {self.correcciones}")
-
     def mover_robot_a_destino(self, goal_pose: Pose):
         x_goal, y_goal = goal_pose.position.x, goal_pose.position.y
         yaw_goal = euler_from_quaternion((goal_pose.orientation.x, goal_pose.orientation.y,
