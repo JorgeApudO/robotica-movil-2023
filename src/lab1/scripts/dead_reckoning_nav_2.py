@@ -18,35 +18,32 @@ class Movement(object):
         self.mov_sub = rp.Subscriber("goal_list", PoseArray,
                                      self.accion_mover)  # investigar PoseArray
         self.current_pose = Pose()
-        self.obs_sub= rp.Subscriber('/occupancy_state', Vector3, self.update_obstacles)
-        self.obs= (0,0,0)
-        self.movimiento= True
-
+        self.obs_sub = rp.Subscriber('/occupancy_state', Vector3, self.update_obstacles)
+        self.obs = (0,0,0)
+        self.movimiento = True
 
     def update_obstacles(self, data: Vector3):
-
-        self.obs=(data.x, data.y, data.z)
-
+        self.obs = (data.x, data.y, data.z)
 
     def aplicar_velocidad(self, speed_command: list):
         for mov in speed_command:
             inicial_time = time.time()
-            elapsed_time=0
+            elapsed_time = 0
             while elapsed_time <= mov[2]:
-                if any(self.obs):
+                while any(self.obs):
                     if self.movimiento:
                         #Hace ruido
                         speed = Twist()
-                        self.vel_applier.publish(speed)
-                    self.movimiento= False
+                    self.vel_applier.publish(speed)
+                    self.movimiento = False
 
                 else:
-                    self.movimiento=True
+                    self.movimiento = True
                     speed = Twist()
                     speed.linear.x, speed.angular.z = mov[0], mov[1]
                     self.vel_applier.publish(speed)
                     self.rate.sleep()
-                    elapsed_time+=time.time()-inicial_time
+                    elapsed_time += time.time() - inicial_time
                 inicial_time = time.time()
 
     def mover_robot_a_destino(self, goal_pose: Pose):  # EDITAR POSEARRAY
