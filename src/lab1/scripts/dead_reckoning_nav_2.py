@@ -19,7 +19,7 @@ class Movement(object):
                                      self.accion_mover)  # investigar PoseArray
         self.current_pose = Pose()
         self.obs_sub = rp.Subscriber('/occupancy_state', Vector3, self.update_obstacles)
-        self.obs = (0,0,0)
+        self.obs = (0, 0, 0)
         self.movimiento = True
 
     def update_obstacles(self, data: Vector3):
@@ -32,7 +32,7 @@ class Movement(object):
             while elapsed_time <= mov[2]:
                 while any(self.obs):
                     if self.movimiento:
-                        #Hace ruido
+                        # Hace ruido
                         speed = Twist()
                     self.vel_applier.publish(speed)
                     self.movimiento = False
@@ -46,11 +46,11 @@ class Movement(object):
                     elapsed_time += time.time() - inicial_time
                 inicial_time = time.time()
 
-    def mover_robot_a_destino(self, goal_pose: Pose):  # EDITAR POSEARRAY
+    def mover_robot_a_destino(self, goal_pose: Pose):
         x_goal, y_goal = goal_pose.position.x, goal_pose.position.y
         yaw_goal = euler_from_quaternion((goal_pose.orientation.x, goal_pose.orientation.y,
                                          goal_pose.orientation.z, goal_pose.orientation.w))[2]
-        instructions = []  # Hay que definir esto bien
+        instructions = []
         x_initial, y_initial = self.current_pose.position.x, self.current_pose.position.y
         yaw_initial = euler_from_quaternion((self.current_pose.orientation.x, self.current_pose.orientation.y,
                                             self.current_pose.orientation.z, self.current_pose.orientation.w))[2]
@@ -63,15 +63,14 @@ class Movement(object):
             instructions.append((0, self.v_ang * dir_ang, abs(ang - yaw_initial) / self.v_ang))
             rp.loginfo(f"""se alineo angular x""")
 
-        if x_initial-x_goal !=0:
+        if x_initial-x_goal != 0:
             instructions.append((self.v, 0, abs(x_initial - x_goal) / self.v))
             rp.loginfo(f"""se movio linear x""")
-
 
         # align y
         yaw_initial = ang
         ang = (math.pi/2 if y_goal - y_initial > 0 else -math.pi/2)
-        dir_ang = (-1 if yaw_initial - ang > 0 else 1)  # sign?
+        dir_ang = (-1 if yaw_initial - ang > 0 else 1)
         if yaw_initial-ang != 0:
             rp.loginfo(f"""se alineo angular y""")
             instructions.append((0, self.v_ang * dir_ang, abs(ang - yaw_initial) / self.v_ang))
@@ -81,18 +80,19 @@ class Movement(object):
 
         # yaw align
         yaw_initial = ang
-        dir_ang = (-1 if yaw_initial - yaw_goal > 0 else 1)  # sign?
+        dir_ang = (-1 if yaw_initial - yaw_goal > 0 else 1)
         if yaw_initial-yaw_goal != 0:
             rp.loginfo(f"""se alineo angular""")
             instructions.append((0, self.v_ang * dir_ang, abs(yaw_goal - yaw_initial) / self.v_ang))
 
         self.aplicar_velocidad(instructions)
         self.current_pose = goal_pose
-        
+
     def accion_mover(self, pose_array: PoseArray):
         for pose in pose_array.poses:
             self.mover_robot_a_destino(pose)
             time.sleep(1)
+
 
 if __name__ == "__main__":
     time.sleep(5)
