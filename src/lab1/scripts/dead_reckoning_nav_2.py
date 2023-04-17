@@ -4,6 +4,7 @@ import rospy as rp
 from geometry_msgs.msg import Twist, PoseArray, Pose, Vector3
 from tf.transformations import euler_from_quaternion
 from sound_play.msg import SoundRequest
+from sound_play.libsoundplay import SoundClient
 import time
 import math
 
@@ -24,6 +25,7 @@ class Movement(object):
                                      self.update_obstacles)
         self.sound_pub = rp.Publisher('sound_play/SoundRequest', SoundRequest,
                                       queue_size=2)
+        self.sound_client = SoundClient()
         self.obs = (0, 0, 0)
         self.muro = ''
         self.movimiento = True
@@ -46,9 +48,8 @@ class Movement(object):
                 while not self.movimiento:
                     if not self.ruido:
                         # Hace ruido
-                        sound = SoundRequest(-3, 1, 1.0, f"Muro {self.muro}")
-                        self.sound_pub.publish(sound)
-                        self.ruido = False
+                        self.sound_client.say(f"Muro {self.muro}")
+                        self.ruido = True
                     speed = Twist()
                     self.vel_applier.publish(speed)
                 else:
