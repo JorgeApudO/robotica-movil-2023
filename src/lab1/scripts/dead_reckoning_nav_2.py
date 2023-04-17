@@ -21,17 +21,18 @@ class Movement(object):
         self.current_pose = Pose()
         self.obs_sub = rp.Subscriber('/occupancy_state', Vector3, self.update_obstacles)
         self.obs = (0, 0, 0)
+        self.muro = ''
         self.movimiento = True
         self.ruido = False
-        self.sound = Sound()
 
     def update_obstacles(self, data: Vector3):
         self.obs = (data.x, data.y, data.z)
         if any(self.obs):
-           self.movimiento = False
+            self.muro = 'izquierda' if self.obs[0] else ('centro' if self.obs[1] else 'derecha')
+            self.movimiento = False
         else:
+            self.muro = ''
             self.movimiento = True
-
 
     def aplicar_velocidad(self, speed_command: list):
         for mov in speed_command:
@@ -41,11 +42,12 @@ class Movement(object):
                 while not self.movimiento:
                     if not self.ruido:
                         # Hace ruido
+                        sound = SoundRequest(-3, 1, 1.0, f"Muro {self.muro}")
                         self.ruido = False
                     speed = Twist()
                     self.vel_applier.publish(speed)
                 else:
-                    self.movimiento = True
+                    self.ruido = True
                     speed = Twist()
                     speed.linear.x, speed.angular.z = mov[0], mov[1]
                     self.vel_applier.publish(speed)
@@ -62,33 +64,33 @@ class Movement(object):
         yaw_initial = euler_from_quaternion((self.current_pose.orientation.x, self.current_pose.orientation.y,
                                             self.current_pose.orientation.z, self.current_pose.orientation.w))[2]
         yaw_initial = self.corregir_angulo(yaw_initial)
-        
+
         # align x
         if x_initial-x_goal != 0:
-            ang = (0 if x_goal - x_initial >= 0 else math.pi)
+            ang = 0 if x_goal - x_initial >= 0 else math.pi
             ang_aplicado = self.corregir_angulo(yaw_initial - ang)
-            dir_ang = (-1 if ang_aplicado > 0  else 1)
+            dir_ang = -1 if ang_aplicado > 0 else 1
             if yaw_initial-ang != 0:
-                instructions.append((0, self.v_ang * dir_ang, self.factor *( abs(ang_aplicado) / self.v_ang)))
+                instructions.append((0, self.v_ang * dir_ang, self.factor * abs(ang_aplicado) / self.v_ang))
             instructions.append((self.v, 0, abs(x_initial - x_goal) / self.v))
             yaw_initial = self.corregir_angulo(ang)
 
         # align y
         if y_initial-y_goal != 0:
 
-            ang = (math.pi/2 if y_goal - y_initial > 0 else -math.pi/2)
+            ang = math.pi/2 if y_goal - y_initial > 0 else -math.pi/2
             ang_aplicado = self.corregir_angulo(yaw_initial - ang)
-            dir_ang = (-1 if ang_aplicado > 0 else 1)
+            dir_ang = -1 if ang_aplicado > 0 else 1
             if yaw_initial-ang != 0:
-                instructions.append((0, self.v_ang * dir_ang, self.factor *( abs(ang_aplicado) / self.v_ang)))
+                instructions.append((0, self.v_ang * dir_ang, self.factor * abs(ang_aplicado) / self.v_ang))
             instructions.append((self.v, 0, abs(y_initial - y_goal) / self.v))
             yaw_initial = self.corregir_angulo(ang)
 
         # yaw align
         if yaw_initial-yaw_goal != 0:
             ang_aplicado = self.corregir_angulo(yaw_initial - yaw_goal)
-            dir_ang = (-1 if ang_aplicado > 0 else 1)
-            instructions.append((0, self.v_ang * dir_ang, self.factor *( abs(ang_aplicado) / self.v_ang)))
+            dir_ang = -1 if ang_aplicado > 0 else 1
+            instructions.append((0, self.v_ang * dir_ang, self.factor * abs(ang_aplicado) / self.v_ang))
 
         self.aplicar_velocidad(instructions)
         self.current_pose = goal_pose
@@ -97,14 +99,15 @@ class Movement(object):
         for pose in pose_array.poses:
             self.mover_robot_a_destino(pose)
             time.sleep(1)
-            
+
     def corregir_angulo(self, ang):
-        if ang>math.pi:
+        if ang > math.pi:
             return math.pi-ang
-        elif ang<-math.pi:
+        elif ang < -math.pi:
             return 2*math.pi+ang
         else:
             return ang
+
 
 if __name__ == "__main__":
     time.sleep(5)
