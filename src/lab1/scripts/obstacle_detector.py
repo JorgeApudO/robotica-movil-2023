@@ -42,7 +42,7 @@ class Turtlebot_Perception( object ):
         # cortar bordes abajo y arriba de matriz
         # revisar si hay objetos entre 450mm y 800mm
         # todo con numpy
-        raw_image[np.isnan(raw_image)] = 0
+        raw_image[np.isnan(raw_image)] = 0.625
         truth_matrix = np.full(raw_image.shape, False, dtype=bool)
         for i, row in enumerate(raw_image):
             for j, val in enumerate(row):
