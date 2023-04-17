@@ -2,7 +2,7 @@
 
 import rospy
 from geometry_msgs.msg import PoseArray,Pose,Point
-from tf.transformations import quaternion_from_euler
+from tf.transformations import quaternion_from_euler, euler_from_quaternion
 from geometry_msgs.msg import Quaternion
 
 from os import path
@@ -17,8 +17,7 @@ def pose_loader():
         parray = PoseArray()
         for p in pose_list:
             pose = Pose()
-            if p[2].isdigit():
-                y = float(p[2])%(2*math.pi)
+            y = float(p[2])
             q = quaternion_from_euler(0, 0, y)
             q =Quaternion(*q)
             pose.orientation = q
@@ -27,7 +26,6 @@ def pose_loader():
     while not rospy.is_shutdown() and pub.get_num_connections() == 0:
         pass
     pub.publish(parray)
-    rospy.loginfo(parray)
 
 if __name__ == '__main__':
     pose_loader()
