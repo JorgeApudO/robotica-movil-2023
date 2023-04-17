@@ -3,6 +3,7 @@
 import rospy as rp
 from geometry_msgs.msg import Twist, PoseArray, Pose, Vector3
 from tf.transformations import euler_from_quaternion
+from sound_play.msg import SoundRequest
 import time
 import math
 
@@ -21,22 +22,28 @@ class Movement(object):
         self.obs_sub = rp.Subscriber('/occupancy_state', Vector3, self.update_obstacles)
         self.obs = (0, 0, 0)
         self.movimiento = True
+        self.ruido = False
+        self.sound = Sound()
 
     def update_obstacles(self, data: Vector3):
         self.obs = (data.x, data.y, data.z)
+        if any(self.obs):
+           self.movimiento = False
+        else:
+            self.movimiento = True
+
 
     def aplicar_velocidad(self, speed_command: list):
         for mov in speed_command:
             inicial_time = time.time()
             elapsed_time = 0
             while elapsed_time <= mov[2]:
-                while any(self.obs):
-                    if self.movimiento:
+                while not self.movimiento:
+                    if not self.ruido:
                         # Hace ruido
-                        speed = Twist()
+                        self.ruido = False
+                    speed = Twist()
                     self.vel_applier.publish(speed)
-                    self.movimiento = False
-
                 else:
                     self.movimiento = True
                     speed = Twist()
@@ -54,36 +61,34 @@ class Movement(object):
         x_initial, y_initial = self.current_pose.position.x, self.current_pose.position.y
         yaw_initial = euler_from_quaternion((self.current_pose.orientation.x, self.current_pose.orientation.y,
                                             self.current_pose.orientation.z, self.current_pose.orientation.w))[2]
+        yaw_initial = self.corregir_angulo(yaw_initial)
+        
         # align x
-        rp.loginfo(f"initial: {x_initial},{y_initial},{yaw_initial}")
-        rp.loginfo(f"goal: {x_goal},{y_goal},{yaw_goal}")
-        ang = (0 if x_goal - x_initial >= 0 else math.pi)
-        dir_ang = (-1 if yaw_initial - ang > 0 else 1)
-        if yaw_initial-ang != 0:
-            instructions.append((0, self.v_ang * dir_ang, abs(ang - yaw_initial) / self.v_ang))
-            rp.loginfo(f"""se alineo angular x""")
-
         if x_initial-x_goal != 0:
+            ang = (0 if x_goal - x_initial >= 0 else math.pi)
+            ang_aplicado = self.corregir_angulo(yaw_initial - ang)
+            dir_ang = (-1 if ang_aplicado > 0  else 1)
+            if yaw_initial-ang != 0:
+                instructions.append((0, self.v_ang * dir_ang, self.factor *( abs(ang_aplicado) / self.v_ang)))
             instructions.append((self.v, 0, abs(x_initial - x_goal) / self.v))
-            rp.loginfo(f"""se movio linear x""")
+            yaw_initial = self.corregir_angulo(ang)
 
         # align y
-        yaw_initial = ang
-        ang = (math.pi/2 if y_goal - y_initial > 0 else -math.pi/2)
-        dir_ang = (-1 if yaw_initial - ang > 0 else 1)
-        if yaw_initial-ang != 0:
-            rp.loginfo(f"""se alineo angular y""")
-            instructions.append((0, self.v_ang * dir_ang, abs(ang - yaw_initial) / self.v_ang))
         if y_initial-y_goal != 0:
+
+            ang = (math.pi/2 if y_goal - y_initial > 0 else -math.pi/2)
+            ang_aplicado = self.corregir_angulo(yaw_initial - ang)
+            dir_ang = (-1 if ang_aplicado > 0 else 1)
+            if yaw_initial-ang != 0:
+                instructions.append((0, self.v_ang * dir_ang, self.factor *( abs(ang_aplicado) / self.v_ang)))
             instructions.append((self.v, 0, abs(y_initial - y_goal) / self.v))
-            rp.loginfo(f"""se movio linear y""")
+            yaw_initial = self.corregir_angulo(ang)
 
         # yaw align
-        yaw_initial = ang
-        dir_ang = (-1 if yaw_initial - yaw_goal > 0 else 1)
         if yaw_initial-yaw_goal != 0:
-            rp.loginfo(f"""se alineo angular""")
-            instructions.append((0, self.v_ang * dir_ang, abs(yaw_goal - yaw_initial) / self.v_ang))
+            ang_aplicado = self.corregir_angulo(yaw_initial - yaw_goal)
+            dir_ang = (-1 if ang_aplicado > 0 else 1)
+            instructions.append((0, self.v_ang * dir_ang, self.factor *( abs(ang_aplicado) / self.v_ang)))
 
         self.aplicar_velocidad(instructions)
         self.current_pose = goal_pose
@@ -92,7 +97,14 @@ class Movement(object):
         for pose in pose_array.poses:
             self.mover_robot_a_destino(pose)
             time.sleep(1)
-
+            
+    def corregir_angulo(self, ang):
+        if ang>math.pi:
+            return math.pi-ang
+        elif ang<-math.pi:
+            return 2*math.pi+ang
+        else:
+            return ang
 
 if __name__ == "__main__":
     time.sleep(5)
