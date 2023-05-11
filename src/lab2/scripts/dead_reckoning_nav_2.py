@@ -4,6 +4,10 @@ from tf.transformations import euler_from_quaternion
 import numpy as np
 
 
+def sawtooth(rad):
+    return (rad - np.pi) % (2*np.pi) - np.pi
+
+
 class Robot():
     def __init__(self):
         rospy.init_node("reckoning_robot")
