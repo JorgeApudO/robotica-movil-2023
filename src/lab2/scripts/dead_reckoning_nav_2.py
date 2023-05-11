@@ -83,11 +83,11 @@ class Robot():
             # Girar
             self.ang_set_point.publish(0)
             # Esperar a que este alineado con goal
-            while self.goal_ang - self.ang > self.ang_threshold:
+            while abs(self.goal_ang - self.ang) > self.ang_threshold:
                 rospy.sleep(self.period)
             # Moverse hasta estar cerca
-            self.dist_set_point.publish(np.linalg.norm(self.goal_pos - self.pos))
-            while self.goal_pos - self.pos > self.dist_threshold:
+            self.dist_set_point.publish(0)
+            while abs(self.goal_pos - self.pos) > self.dist_threshold:
                 rospy.sleep(self.period)
 
     def ang_actuation_fn(self, data):
