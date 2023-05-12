@@ -1,5 +1,5 @@
 import rospy
-from std_msgs import Float64, PoseArray, Twist
+from std_msgs import Float64, PoseArray, Twist, Pose
 from tf.transformations import euler_from_quaternion
 import numpy as np
 
@@ -28,6 +28,12 @@ class Robot():
         # --------------------------------------------------------------------
         self.vel_applier = rospy.Publisher("yocs_cmd_vel_mux/input/navigation",
                                            Twist, queue_size=1)
+
+        # --------------------------------------------------------------------
+        # REAL POSE NODE
+        # --------------------------------------------------------------------
+        self.real_pose_sub = rospy.Subscriber('real_pose', Pose,
+                                              self.real_pose_fn)
 
         # --------------------------------------------------------------------
         # DISTANCE PID CONTROL
@@ -76,10 +82,11 @@ class Robot():
     def accion_mover(self, pose_array: PoseArray):
         for pose in pose_array.poses:
             self.goal_pos = np.array((pose.position.x, pose.position.y))
-            self.goal_ang = euler_from_quaternion((pose.orientation.x,
-                                              pose.orientation.y,
-                                              pose.orientation.z,
-                                              pose.orientation.w))[2]
+            raw_ang = euler_from_quaternion((pose.orientation.x,
+                                             pose.orientation.y,
+                                             pose.orientation.z,
+                                             pose.orientation.w))[2]
+            self.goal_ang = sawtooth(raw_ang)
             # Girar
             self.ang_set_point.publish(0)
             # Esperar a que este alineado con goal
@@ -102,7 +109,9 @@ class Robot():
 
     def publish_odom(self):
         # Publish position and angle to self.dist_state and self.ang_state
-        pass
+        goal_vec = self.goal_pos - self.pos
+        self.dist_state.publish(np.linalg.norm(goal_vec))
+        self.ang_state.publish(np.arctan2(goal_vec[1], goal_vec[0]) - self.ang)
 
     def publish_vel(self):
         # Publish odometry to self.dist_state
@@ -110,6 +119,16 @@ class Robot():
         velocity.linear.x = self.vel
         velocity.angular.z = self.ang_vel
         self.vel_applier.publish(velocity)
+
+    def real_pose_fn(self, data):
+        pos = data.position
+        orient = data.orientation
+
+        self.pos = np.array((pos.x, pos.y))
+
+        raw_ang = euler_from_quaternion((orient.x, orient.y,
+                                         orient.z, orient.w))[2]
+        self.ang = sawtooth(raw_ang)
 
 
 if __name__ == "__main__":
