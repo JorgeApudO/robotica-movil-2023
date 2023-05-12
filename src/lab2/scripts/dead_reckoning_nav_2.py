@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
 import rospy
-from std_msgs import Float64, PoseArray, Twist, Pose
+from std_msgs.msg import Float64
+from geometry_msgs.msg import Twist, PoseArray, Pose
 from tf.transformations import euler_from_quaternion
 import numpy as np
 
@@ -7,21 +9,39 @@ import numpy as np
 def sawtooth(rad):
     return (rad - np.pi) % (2*np.pi) - np.pi
 
+def min_rotation_diff(goal, actual):
+    if abs(goal - actual) > np.pi:
+        if actual < 0:
+            return 2*np.pi + actual - goal
+        else:
+            return actual - goal - 2*np.pi
+    else:
+        return actual - goal
+
 
 class Robot():
     def __init__(self):
         rospy.init_node("reckoning_robot")
 
         # --------------------------------------------------------------------
+        # CONSTANTS
+        # --------------------------------------------------------------------
+        self.dist_threshold = 0.01
+        self.ang_threshold = np.pi / 180
+
+        # --------------------------------------------------------------------
         # INITIAL CONDITIONS
         # --------------------------------------------------------------------
-        self.pos = np.array((0.0, 0.0))
+        self.pos = np.array((1.0, 1.0))
         self.goal_pos = np.array((0.0, 0.0))
         self.ang = 0.0
         self.goal_ang = 0.0
 
         self.vel = 0.0
         self.ang_vel = 0.0
+
+        self.rotating = False
+        self.stop = False
 
         # --------------------------------------------------------------------
         # VEL PUBLISHER NODE
@@ -40,11 +60,13 @@ class Robot():
         # --------------------------------------------------------------------
         self.dist_set_point = rospy.Publisher('/reckoning_dist/setpoint',
                                               Float64, queue_size=1)
+        rospy.loginfo("Waiting dist pid setpoint process")
         while self.dist_set_point.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
         self.dist_state = rospy.Publisher('/reckoning_dist/state',
                                           Float64, queue_size=1)
+        rospy.loginfo("Waiting dist pid state process")
         while self.dist_set_point.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
@@ -56,11 +78,13 @@ class Robot():
         # --------------------------------------------------------------------
         self.ang_set_point = rospy.Publisher('/reckoning_ang/setpoint',
                                              Float64, queue_size=1)
+        rospy.loginfo("Waiting angle pid setpoint process")
         while self.ang_set_point.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
         self.ang_state = rospy.Publisher('/reckoning_ang/state',
                                          Float64, queue_size=1)
+        rospy.loginfo("Waiting ang pid state process")
         while self.ang_state.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
@@ -82,36 +106,54 @@ class Robot():
     def accion_mover(self, pose_array: PoseArray):
         for pose in pose_array.poses:
             self.goal_pos = np.array((pose.position.x, pose.position.y))
-            raw_ang = euler_from_quaternion((pose.orientation.x,
-                                             pose.orientation.y,
-                                             pose.orientation.z,
-                                             pose.orientation.w))[2]
-            self.goal_ang = sawtooth(raw_ang)
+            goal_vec = self.goal_pos - self.pos
+            ang_diff = (np.arctan2(goal_vec[1], goal_vec[0]) - self.ang)
+
             # Girar
-            self.ang_set_point.publish(0)
             # Esperar a que este alineado con goal
-            while abs(self.goal_ang - self.ang) > self.ang_threshold:
+            self.ang_set_point.publish(0)
+            rospy.loginfo("Waiting for alignment")
+            self.rotating = True
+            while abs(ang_diff) > self.ang_threshold:
                 rospy.sleep(self.period)
+                ang_diff = (np.arctan2(goal_vec[1], goal_vec[0]) - self.ang)
+            self.rotating = False
+
             # Moverse hasta estar cerca
             self.dist_set_point.publish(0)
-            while abs(self.goal_pos - self.pos) > self.dist_threshold:
+            rospy.loginfo("Start movement")
+            while np.linalg.norm(goal_vec) > self.dist_threshold:
                 rospy.sleep(self.period)
+                goal_vec = self.goal_pos - self.pos
+
+        self.stop = True
 
     def ang_actuation_fn(self, data):
-        self.ang_vel = float(data.data)
-        rospy.loginfo(f"Angular speed received: {self.ang_vel}")
+        if self.stop:
+            self.ang_vel = 0
+        else:
+            self.ang_vel = float(data.data)
+        # rospy.loginfo(f"Angular speed received: {self.ang_vel}")
         self.publish_vel()
 
     def dist_actuation_fn(self, data):
-        self.vel = float(data.data)
-        rospy.loginfo(f"Speed received: {self.vel}")
+        if self.rotating or self.stop:
+            self.vel = 0
+        else:
+            self.vel = float(data.data) * -1
+        # rospy.loginfo(f"Speed received: {self.vel}")
         self.publish_vel()
 
-    def publish_odom(self):
+    def publish_odom(self, data):
         # Publish position and angle to self.dist_state and self.ang_state
         goal_vec = self.goal_pos - self.pos
         self.dist_state.publish(np.linalg.norm(goal_vec))
-        self.ang_state.publish(np.arctan2(goal_vec[1], goal_vec[0]) - self.ang)
+        goal_ang = np.arctan2(goal_vec[1], goal_vec[0])
+
+        ang_diff = min_rotation_diff(goal_ang, self.ang)
+
+        rospy.loginfo(f"POSITION: {self.pos} GOAL: {self.goal_pos} |  ANGLE DIFF: {ang_diff}  |  VEL: {self.vel}")
+        self.ang_state.publish(ang_diff)
 
     def publish_vel(self):
         # Publish odometry to self.dist_state

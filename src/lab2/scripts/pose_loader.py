@@ -28,7 +28,7 @@ def pose_loader():
     rospy.init_node('pose_loader')
     pub = rospy.Publisher('goal_list', PoseArray, queue_size=10)
     with open("/home/titin/Documents/Clases/" +
-              "robotica-movil-2023/src/lab1/scripts/pose_list.txt", "r") as pl:
+              "robotica-movil-2023/src/lab2/scripts/pose_list.txt", "r") as pl:
         pose_list = [line.strip()[1:-1].split(",") for line in pl]
         parray = PoseArray()
         for p in pose_list:
@@ -41,7 +41,9 @@ def pose_loader():
             parray.poses.append(pose)
     while not rospy.is_shutdown() and pub.get_num_connections() == 0:
         pass
+
     pub.publish(parray)
+    rospy.loginfo("Pose list published")
 
 
 if __name__ == '__main__':
