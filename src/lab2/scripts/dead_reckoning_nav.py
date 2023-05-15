@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rospy as rp
-from geometry_msgs.msg import Twist, PoseArray, Pose
+from geometry_msgs.msg import Twist, PoseArray, Pose, Float64
 from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
 import time
@@ -19,8 +19,8 @@ def corregir_angulo(ang):
 
 class Movement(object):
     def __init__(self) -> None:
-        self._v = 0.2  # m/s
-        self._v_ang = 1  # rads/s
+        self._v = 0.0  # m/s
+        self._v_ang = 0.0  # rads/s
         rp.init_node("Movement_manager")
         self.vel_applier = rp.Publisher("yocs_cmd_vel_mux/input/navigation",
                                         Twist, queue_size=10)
@@ -36,6 +36,24 @@ class Movement(object):
                                            self.odom_pose_manager)
         self.odom_pose = Pose()
 
+        self.pid_set_point_dist = rp.Publisher('/reckoning_dist/setpoint',
+                                               Float64, queue_size=1)
+        while self.pid_set_point_dist.get_num_connections() == 0 and
+        not rp.is_shutdown():
+            rp.sleep(0.2)
+
+        self.dist_state = rp.Publisher('/reckoning_dist/state',
+                                       Float64, queue_size=1)
+        while self.dist_state.get_num_connections() == 0 and
+        not rp.is_shutdown():
+            rp.sleep(0.2)
+
+        self.actuation_dist = rp.Subscriber('/reckoning_dist/control_effort',
+                                            Float64, self.dist_actuation)
+
+        self.period = 1 / self.rate_hz
+        rp.Timer(rp.Duration(self.period), self.get_dist_odom)
+
     @property
     def v(self):
         return self._v
@@ -43,6 +61,14 @@ class Movement(object):
     @property
     def v_ang(self):
         return self._v_ang
+
+    def dist_actuation(self, data):
+        self._v = float(data.data)
+        rp.loginfo(f"Speed received: {self.v}")
+
+    def get_dist_odom(self, data):
+        # Get odometry and update distance to objective
+        pass
 
     def real_pose_manager(self, data):
         self.real_pose = data
@@ -57,41 +83,9 @@ class Movement(object):
             self.vel_applier.publish(speed)
             self.rate.sleep()
 
-    def mover_robot_a_destino(self, goal_pose: Pose):
-        x_goal, y_goal = goal_pose.position.x, goal_pose.position.y
-        goal_pos = np.array((x_goal, y_goal))
-        yaw_goal = euler_from_quaternion((goal_pose.orientation.x,
-                                          goal_pose.orientation.y,
-                                          goal_pose.orientation.z,
-                                          goal_pose.orientation.w))[2]
-        x_initial = self.current_pose.position.x
-        y_initial = self.current_pose.position.y
-        initial_pos = np.array((x_initial, y_initial))
-        yaw_initial = euler_from_quaternion((self.current_pose.orientation.x,
-                                             self.current_pose.orientation.y,
-                                             self.current_pose.orientation.z,
-                                             self.current_pose.orientation.w))[2]
-        yaw_initial = corregir_angulo(yaw_initial)
-
-        instructions = []
-
-        # align yaw
-        ang_aplicado = corregir_angulo(yaw_goal - yaw_initial)
-        direccion_giro = -1 if ang_aplicado > 0 else 1
-        instructions.append((0, self.v_ang * direccion_giro,
-                             abs(ang_aplicado) / self.v_ang))
-
-        # move
-        distance = np.linalg.norm(goal_pos - initial_pos)
-        instructions.append((self.v, 0, distance / self.v))
-
-        self.aplicar_velocidad(instructions)
-        self.current_pose = goal_pose
-
     def accion_mover(self, pose_array: PoseArray):
         for pose in pose_array.poses:
-            self.mover_robot_a_destino(pose)
-            time.sleep(1)
+            pass
 
 
 if __name__ == "__main__":
