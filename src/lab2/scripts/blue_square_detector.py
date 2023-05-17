@@ -1,7 +1,13 @@
+#!/usr/bin/env python3
 import cv2 as cv
+import rospy
 import numpy as np
 import sys
 import time
+
+from cv_bridge import CvBridge
+from sensor_msgs.msg import Image
+from std_msgs.msg import Float64, Int64
 
 
 def get_centers(mask):
@@ -24,6 +30,42 @@ def get_mask(img):
     mask = cv.inRange(hsv, lower_limit, upper_limit)
 
     return mask
+
+
+class Node:
+    def __init__(self):
+        rospy.init_node('blue_square_detector')
+
+        self.bridge = CvBridge()
+
+        # --------------------------------------------------------------------
+        # KINECT IMAGES NODE
+        # --------------------------------------------------------------------
+        self.kinect_sub = rospy.Subscriber('/camera/rgb/image_color',
+                                           Image, self.process_image)
+
+        # --------------------------------------------------------------------
+        # DISTANCE PUBLISHER
+        # --------------------------------------------------------------------
+        self.distance_pub = rospy.Publisher('/blue_square/state',
+                                            Int64, queue_size=1)
+        while self.distance_pub.get_num_connections() == 0 and not rospy.is_shutdown():
+            rospy.sleep(0.1)
+
+    def process_image(self, data: Image):
+        cv_image = self.bridge.imgmsg_to_cv2(data)
+        _, width, _ = cv_image.shape
+
+        img_mask = get_mask(cv_image)
+        cx, cy = get_centers(img_mask)
+
+        if cx < 0:
+            self.publish_dist(0)
+        else:
+            self.publish_dist(width//2 - cx)
+
+    def publish_dist(self, dx: int):
+        self.distance_pub.publish(dx)
 
 
 class Opt:

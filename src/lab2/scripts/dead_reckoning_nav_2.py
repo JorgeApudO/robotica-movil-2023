@@ -132,7 +132,7 @@ class Robot():
 
         self.stop = True
 
-    def ang_actuation_fn(self, data):
+    def ang_actuation_fn(self, data: Float64):
         if self.stop:
             self.ang_vel = 0
         else:
@@ -140,7 +140,7 @@ class Robot():
         # rospy.loginfo(f"Angular speed received: {self.ang_vel}")
         self.publish_vel()
 
-    def dist_actuation_fn(self, data):
+    def dist_actuation_fn(self, data: Float64):
         if self.rotating or self.stop:
             self.vel = 0
         else:
@@ -148,7 +148,7 @@ class Robot():
         # rospy.loginfo(f"Speed received: {self.vel}")
         self.publish_vel()
 
-    def odom_fn(self, data):
+    def odom_fn(self, data: Odometry):
         pose_c = data.pose
         pose = pose_c.pose
 

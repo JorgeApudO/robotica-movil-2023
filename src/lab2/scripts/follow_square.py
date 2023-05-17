@@ -40,11 +40,6 @@ class Robot():
         while self.ang_set_point.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
-        self.ang_state = rospy.Publisher('/blue_square/state',
-                                         Float64, queue_size=1)
-        while self.ang_state.get_num_connections() == 0 and not rospy.is_shutdown():
-            rospy.sleep(0.1)
-
         self.ang_actuation = rospy.Subscriber('/blue_square/control_effect',
                                               Float64, self.ang_actuation_fn)
 
@@ -52,7 +47,6 @@ class Robot():
         # TIMER
         # --------------------------------------------------------------------
         self.period = 0.1
-        rospy.Timer(rospy.Duration(self.period), self.publish_odom)
 
     def ang_actuation_fn(self, data):
         self.ang_vel = float(data.data)
@@ -60,9 +54,6 @@ class Robot():
 
     def odom_fn(self, data):
         pass
-
-    def publish_odom(self, _):
-        self.ang_state.publish(0)
 
     def publish_vel(self):
         vel = Twist()
