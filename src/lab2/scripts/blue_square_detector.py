@@ -22,10 +22,10 @@ def get_centers(mask):
         return (-1, -1)
 
 
-def get_mask(img):
+def get_mask(img, hue):
     hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    lower_limit = np.array([100, 100, 50])
-    upper_limit = np.array([110, 255, 255])
+    lower_limit = np.array([hue - 10, 100, 50])
+    upper_limit = np.array([hue + 10, 255, 255])
 
     mask = cv.inRange(hsv, lower_limit, upper_limit)
 
@@ -37,6 +37,8 @@ class Node:
         rospy.init_node('blue_square_detector')
 
         self.bridge = CvBridge()
+        self.image = None
+        self.mask_hue = None
 
         self.dx = 0
 
@@ -54,22 +56,44 @@ class Node:
         while self.distance_pub.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
-    def process_image(self, data: Image):
+        self.start()
+
+    def mouse_click(self, event, x, y, flags, param) -> None:
+        if event == cv.EVENT_LBUTTONDOWN and self.image is not None:
+            colors = self.image[y, x]
+            hsv = cv.cvtColor(np.uint8([[colors]]), cv.COLOR_BGR2HSV)
+            self.mask_hue = hsv[0][0][0]
+
+    def process_image(self, data: Image) -> None:
         cv_image = self.bridge.imgmsg_to_cv2(data)
-        _, width, _ = cv_image.shape
+        self.image = cv_image
 
-        img_mask = get_mask(cv_image)
-        cx, cy = get_centers(img_mask)
+        if self.mask_hue is not None:
+            _, width, _ = cv_image.shape
 
-        rospy.loginfo(f"CX: {cx}")
+            img_mask = get_mask(cv_image, self.mask_hue)
+            cx, cy = get_centers(img_mask)
 
-        if cx < 0:
-            self.dx = 0
-        else:
-            self.dx = width//2 - cx
+            rospy.loginfo(f"CX: {cx}")
+
+            if cx < 0:
+                self.dx = 0
+            else:
+                self.dx = width//2 - cx
 
     def publish_dist(self, dx: int):
         self.distance_pub.publish(self.dx / 5)
+
+    def start(self) -> None:
+        cv.namedWindow('view')
+        cv.setMouseCallback('view', self.mouse_click)
+
+        run = True
+        while run:
+            if self.mask is None:
+                cv.imshow('view', self.image)
+            else:
+                cv.imshow('view', self.mask)
 
 
 if __name__ == "__main__":
