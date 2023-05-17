@@ -2,6 +2,7 @@
 import rospy
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist, PoseArray, Pose
+from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
 import numpy as np
 
@@ -32,7 +33,7 @@ class Robot():
         # --------------------------------------------------------------------
         # INITIAL CONDITIONS
         # --------------------------------------------------------------------
-        self.pos = np.array((1.0, 1.0))
+        self.pos = np.array((0.0, 0.0))
         self.goal_pos = np.array((0.0, 0.0))
         self.ang = 0.0
         self.goal_ang = 0.0
@@ -50,10 +51,13 @@ class Robot():
                                            Twist, queue_size=1)
 
         # --------------------------------------------------------------------
-        # REAL POSE NODE
+        # POSE NODE
         # --------------------------------------------------------------------
-        self.real_pose_sub = rospy.Subscriber('real_pose', Pose,
-                                              self.real_pose_fn)
+        # self.real_pose_sub = rospy.Subscriber('real_pose', Pose,
+        #                                       self.real_pose_fn)
+
+        self.odom_sub = rospy.Subscriber('odom', Odometry,
+                                         self.odom_fn)
 
         # --------------------------------------------------------------------
         # DISTANCE PID CONTROL
@@ -144,6 +148,21 @@ class Robot():
         # rospy.loginfo(f"Speed received: {self.vel}")
         self.publish_vel()
 
+    def odom_fn(self, data):
+        pose_c = data.pose
+        pose = pose_c.pose
+
+        pos = pose.position
+        orient = pose.orientation
+
+        self.pos = np.array((pos.x, pos.y))
+
+        raw_ang = euler_from_quaternion((orient.x, orient.y,
+                                         orient.z, orient.w))[2]
+        self.ang = sawtooth(raw_ang)
+
+        rospy.loginfo(f"POSITION: {self.pos}")
+
     def publish_odom(self, data):
         # Publish position and angle to self.dist_state and self.ang_state
         goal_vec = self.goal_pos - self.pos
@@ -152,7 +171,7 @@ class Robot():
 
         ang_diff = min_rotation_diff(goal_ang, self.ang)
 
-        rospy.loginfo(f"POSITION: {self.pos} GOAL: {self.goal_pos} |  ANGLE DIFF: {ang_diff}  |  VEL: {self.vel}")
+        # rospy.loginfo(f"POSITION: {self.pos} GOAL: {self.goal_pos} |  ANGLE DIFF: {ang_diff}  |  VEL: {self.vel}")
         self.ang_state.publish(ang_diff)
 
     def publish_vel(self):
