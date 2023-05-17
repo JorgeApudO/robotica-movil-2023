@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import rospy
-import numpy as np
+# import numpy as np
 
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
@@ -60,3 +60,9 @@ class Robot():
         vel.linear.x = self.vel
         vel.angular.z = self.ang_vel
         self.vel_applier.publish(vel)
+
+
+if __name__ == "__main__":
+    robot = Robot()
+    robot.ang_set_point.publish(0)
+    rospy.spin()

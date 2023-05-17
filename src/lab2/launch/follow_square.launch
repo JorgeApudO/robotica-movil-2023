@@ -1,0 +1,15 @@
+<launch>
+	<include file="$(find kobuki_node)/launch/minimal.launch"/>
+	<include file="$(find freenect_launch)/launch/freenect.launch"/>
+
+	<node pkg="lab2" name="Movement_manager" type="follow_square.py" output="screen"/>
+	<node pkg="lab2" name="Square detector" type="blue_square_detector.py" output="screen"/>
+
+	<node pkg="pid" name="square_dist" type="controller" ns="blue_square">
+		<param name="Kp" value="0.1"/>
+		<param name="Ki" value="0"/>
+		<param name="Kd" value="0"/>
+		<param name="upper_limit" value="0.2"/>
+		<param name="lower_limit" value="-0.2"/>
+	</node>
+</launch>

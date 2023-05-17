@@ -2,12 +2,12 @@
 import cv2 as cv
 import rospy
 import numpy as np
-import sys
-import time
+# import sys
+# import time
 
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
-from std_msgs.msg import Float64, Int64
+from std_msgs.msg import Int64
 
 
 def get_centers(mask):
@@ -38,6 +38,8 @@ class Node:
 
         self.bridge = CvBridge()
 
+        self.dx = 0
+
         # --------------------------------------------------------------------
         # KINECT IMAGES NODE
         # --------------------------------------------------------------------
@@ -60,45 +62,49 @@ class Node:
         cx, cy = get_centers(img_mask)
 
         if cx < 0:
-            self.publish_dist(0)
+            self.dx = 0
         else:
-            self.publish_dist(width//2 - cx)
+            self.dx = width//2 - cx
 
     def publish_dist(self, dx: int):
-        self.distance_pub.publish(dx)
-
-
-class Opt:
-    def __init__(self, img):
-        self.frame = img
-
-    def mouse_click(self, event, x, y, flags, param):
-        if event == cv.EVENT_LBUTTONDOWN:
-            b = self.frame[y, x, 0]
-            g = self.frame[y, x, 1]
-            r = self.frame[y, x, 2]
-            print(f"R: {r} | G: {g} | B: {b}")
+        self.distance_pub.publish(self.dx / 5)
 
 
 if __name__ == "__main__":
-    initial_time = time.time()
-    img = cv.imread("imgs/frame000100.png")
+    robot = Node()
+    rospy.spin()
 
-    if img is None:
-        sys.exit("Could not read image")
+# class Opt:
+#     def __init__(self, img):
+#         self.frame = img
 
-    opts = Opt(img)
-    cv.namedWindow("result")
-    cv.setMouseCallback("result", opts.mouse_click)
+#     def mouse_click(self, event, x, y, flags, param):
+#         if event == cv.EVENT_LBUTTONDOWN:
+#             b = self.frame[y, x, 0]
+#             g = self.frame[y, x, 1]
+#             r = self.frame[y, x, 2]
+#             print(f"R: {r} | G: {g} | B: {b}")
 
-    result = get_mask(img)
 
-    cx, cy = get_centers(result)
-    print(time.time() - initial_time)
+# if __name__ == "__main__":
+#     initial_time = time.time()
+#     img = cv.imread("imgs/frame000100.png")
 
-    cv.circle(result, (cx, cy), 5, (0, 0, 0), -1)
+#     if img is None:
+#         sys.exit("Could not read image")
 
-    cv.imshow("result", result)
-    # cv.imshow("mask", mask)
-    k = cv.waitKey(0)
+#     opts = Opt(img)
+#     cv.namedWindow("result")
+#     cv.setMouseCallback("result", opts.mouse_click)
+
+#     result = get_mask(img)
+
+#     cx, cy = get_centers(result)
+#     print(time.time() - initial_time)
+
+#     cv.circle(result, (cx, cy), 5, (0, 0, 0), -1)
+
+#     cv.imshow("result", result)
+#     # cv.imshow("mask", mask)
+#     k = cv.waitKey(0)
 
