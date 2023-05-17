@@ -61,6 +61,8 @@ class Node:
         img_mask = get_mask(cv_image)
         cx, cy = get_centers(img_mask)
 
+        rospy.loginfo(f"CX: {cx}")
+
         if cx < 0:
             self.dx = 0
         else:
