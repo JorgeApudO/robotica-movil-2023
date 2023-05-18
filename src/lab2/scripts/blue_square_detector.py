@@ -38,6 +38,7 @@ class Node:
 
         self.bridge = CvBridge()
         self.image = None
+        self.img_mask = None
         self.mask_hue = None
 
         self.dx = 0
@@ -72,6 +73,7 @@ class Node:
             _, width, _ = cv_image.shape
 
             img_mask = get_mask(cv_image, self.mask_hue)
+            self.img_mask = img_mask
             cx, cy = get_centers(img_mask)
 
             rospy.loginfo(f"CX: {cx}")
@@ -93,7 +95,7 @@ class Node:
             if self.image is not None:
                 if self.mask_hue is None:
                     cv.imshow('view', self.image)
-                else:
+                elif self.img_mask is not None:
                     cv.imshow('view', self.mask)
             cv.waitKey(1)
 
