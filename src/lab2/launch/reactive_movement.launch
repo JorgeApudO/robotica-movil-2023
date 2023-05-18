@@ -3,7 +3,7 @@
 	<param name="/camera/driver/data_skip" value="2"/>
 	<include file="$(find freenect_launch)/launch/freenect.launch"/>
 
-	<node pkg="lab2" name="Reactive_movement" type="reactive_movement.py" output="screen"/>
+	<node pkg="lab2" name="Reactive_movement" type="scripts/reactive_movement.py" output="screen"/>
 	
 
 	<node pkg="pid" name="wall_depth" type="controller" ns="wall">
