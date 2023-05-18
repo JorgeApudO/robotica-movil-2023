@@ -26,27 +26,28 @@ def min_rotation_diff(goal, actual):
 class Robot():
     def __init__(self):
         rospy.init_node("reckoning_robot")
-        self.bridge = CvBridge()
-        self.img_guardadas=0
+        
 
         # --------------------------------------------------------------------
         # CONSTANTS
         # --------------------------------------------------------------------
         self.dist_threshold = 0.01
         self.ang_threshold = np.pi / 180
+
+        self.min_front_dist = 0.25 #Distancia a la que se detiene del frente
+
+        self.bridge = CvBridge()
+        self.img_guardadas = 0
         
 
         # --------------------------------------------------------------------
         # INITIAL CONDITIONS
         # --------------------------------------------------------------------
-        self.distance = np.array((0.0, 0.0))
+        self.distance = np.array((0.0, 0.0, 0.0))
         self.ang = 0.0
 
         self.vel = 0.0
         self.ang_vel = 0.0
-
-        self.rotating = False
-        self.stop = False
 
         # --------------------------------------------------------------------
         # VEL PUBLISHER NODE
@@ -72,6 +73,7 @@ class Robot():
         rospy.loginfo("Waiting wall distance pid setpoint process")
         while self.wall_set_point.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
+        self.wall_set_point.publish(0)
 
         self.wall_distance_state = rospy.Publisher('/wall_distance/state',
                                          Float64, queue_size=1)
@@ -89,43 +91,10 @@ class Robot():
         rospy.Timer(rospy.Duration(self.period), self.publish_depth)
 
 
-
-
-
-
-    def accion_mover(self, pose_array: PoseArray):
-        for pose in pose_array.poses:
-            self.goal_pos = np.array((pose.position.x, pose.position.y))
-            goal_vec = self.goal_pos - self.pos
-            ang_diff = (np.arctan2(goal_vec[1], goal_vec[0]) - self.ang)
-
-            # Girar
-            # Esperar a que este alineado con goal
-            self.ang_set_point.publish(0)
-            rospy.loginfo("Waiting for alignment")
-            self.rotating = True
-            while abs(ang_diff) > self.ang_threshold:
-                rospy.sleep(self.period)
-                ang_diff = (np.arctan2(goal_vec[1], goal_vec[0]) - self.ang)
-            self.rotating = False
-
-            # Moverse hasta estar cerca
-            self.dist_set_point.publish(0)
-            rospy.loginfo("Start movement")
-            while np.linalg.norm(goal_vec) > self.dist_threshold:
-                rospy.sleep(self.period)
-                goal_vec = self.goal_pos - self.pos
-
-        self.stop = True
-
-
-
-
-
-
     def ang_actuation_fn(self, data: Float64):
-        if self.stop:
+        if self.stopper():
             self.ang_vel = 0
+            self.vel = 0
         else:
             self.ang_vel = float(data.data)
         # rospy.loginfo(f"Angular speed received: {self.ang_vel}")
@@ -136,12 +105,16 @@ class Robot():
 
     def process_depth(self, data: Image):
 
-
+        #Procesar distancia en la imagen con numpy
         depth_image = self.bridge.imgmsg_to_cv2(data)
+
+        """
+        Guardar imagenes para poder medir correctamente los pixeles pa cortar
 
         if self.img_guardadas<10:
             cv2.imwrite(f"imagen_prof{self.img_guardadas}.png", depth_image)
             print("imagen guardada")
+        """
 
         #Left depth from image
         depth_left = depth_image[100:300,100:150]
@@ -149,27 +122,22 @@ class Robot():
         #Right depth from image
         depth_right = depth_image[100:300,-150:-100]
 
+        #Center depth from image
+        depth_center = depth_image[100:300,150:-150]
 
+        prom_left = float(depth_left.mean())
+        prom_right = float(depth_right.mean())
+        prom_center = float(depth_center.mean())
+
+        self.distance = np.array((prom_left, prom_right, prom_center))
         
-
-        return(0)
-
-
-
-
-
-
-
         
-        pass
-        #Procesar distancia en la imagen con numpy
 
     def publish_depth(self, data):
         # Publish difference between left and right distance 
         dif_distance= self.distance[0] - self.distance[1]
         self.wall_distance_state.publish(dif_distance)
         
-        pass
 
     def publish_vel(self):
         # Publish odometry to self.dist_state
@@ -181,8 +149,13 @@ class Robot():
     
     def stopper(self):
 
-        if self.flecha_detector():
-            self.stop=True
+        #Podriamos añadirle caso en que ve la flecha suficientemente bien
+        if self.distance[2] <= self.min_front_dist:
+
+            return(True)
+        else:
+            
+            return(False)
 
     def flecha_detector(self):
 
