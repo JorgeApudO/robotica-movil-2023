@@ -140,7 +140,8 @@ class Robot():
         depth_image = self.bridge.imgmsg_to_cv2(data)
 
         if self.img_guardadas<10:
-            cv2.imwrite("imagen_prof.png", depth_image)
+            cv2.imwrite(f"imagen_prof{self.img_guardadas}.png", depth_image)
+            print("imagen guardada")
 
         #Left depth from image
         depth_left = depth_image[100:300,100:150]
