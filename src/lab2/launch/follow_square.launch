@@ -4,7 +4,7 @@
 	<include file="$(find freenect_launch)/launch/freenect.launch"/>
 
 	<node pkg="lab2" name="Movement_manager" type="follow_square.py" output="screen"/>
-	<node pkg="lab2" name="Square detector" type="blue_square_detector.py" output="screen"/>
+	<node pkg="lab2" name="Square_detector" type="blue_square_detector.py" output="screen"/>
 
 	<node pkg="pid" name="square_dist" type="controller" ns="blue_square">
 		<param name="Kp" value="0.1"/>

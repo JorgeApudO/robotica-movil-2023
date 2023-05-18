@@ -7,7 +7,7 @@ import numpy as np
 
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
-from std_msgs.msg import Int64
+from std_msgs.msg import Float64
 
 
 def get_centers(mask):
@@ -52,7 +52,7 @@ class Node:
         # DISTANCE PUBLISHER
         # --------------------------------------------------------------------
         self.distance_pub = rospy.Publisher('/blue_square/state',
-                                            Int64, queue_size=1)
+                                            Float64, queue_size=1)
         while self.distance_pub.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
@@ -90,10 +90,12 @@ class Node:
 
         run = True
         while run:
-            if self.mask is None:
-                cv.imshow('view', self.image)
-            else:
-                cv.imshow('view', self.mask)
+            if self.image is not None:
+                if self.mask_hue is None:
+                    cv.imshow('view', self.image)
+                else:
+                    cv.imshow('view', self.mask)
+            cv.waitKey(1)
 
 
 if __name__ == "__main__":
