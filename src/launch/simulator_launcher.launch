@@ -1,0 +1,34 @@
+
+<launch>
+
+
+    <include file="$(find very_simple_robot_simulator)/launch/minimal_simulator.launch" />
+    <include file="$(find very_simple_robot_simulator)/launch/openni_simulator.launch" />
+    <include file="$(find very_simple_robot_simulator)/launch/world_state.launch" />
+
+
+
+    <node pkg="lab1" name="Movement_manager" type="dead_reackoning_nav.py" />
+    <node pkg="lab1" name="pose loader" type="pose_loader.py" />
+
+</launch>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
