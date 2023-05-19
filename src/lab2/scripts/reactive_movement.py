@@ -6,7 +6,7 @@ from sensor_msgs.msg import Image
 from tf.transformations import euler_from_quaternion
 import numpy as np
 from cv_bridge import CvBridge
-import cv2
+import cv2 as cv
 
 
 
@@ -34,7 +34,7 @@ class Robot():
         self.dist_threshold = 0.01
         self.ang_threshold = np.pi / 180
 
-        self.min_front_dist = 0.25 #Distancia a la que se detiene del frente
+        self.min_front_dist = 0.25 #[m] Distancia a la que se detiene del frente
 
         self.bridge = CvBridge()
         self.img_guardadas = 0
@@ -45,8 +45,8 @@ class Robot():
         # --------------------------------------------------------------------
         self.distance = np.array((0.0, 0.0, 0.0))
         self.ang = 0.0
-
-        self.vel = 0.0
+        self.arrow_rotation = False
+        self.vel = 0.02
         self.ang_vel = 0.0
 
         # --------------------------------------------------------------------
@@ -61,9 +61,12 @@ class Robot():
         # self.real_pose_sub = rospy.Subscriber('real_pose', Pose,
         #                                       self.real_pose_fn)
 
-        self.kinect_sub = rospy.Subscriber('/camera/depth/image_raw',
+        self.deph_sub = rospy.Subscriber('/camera/depth/image_raw',
                                            Image, self.process_depth)
-
+        
+        self.rgb_sub = rospy.Subscriber('/camera/rgb/image_color',
+                                           Image, self.arrow_detector)
+        
 
         # --------------------------------------------------------------------
         # WALL DISTANCE P CONTROL
@@ -92,13 +95,17 @@ class Robot():
 
 
     def ang_actuation_fn(self, data: Float64):
-        if self.stopper():
+        if self.stopped() and not self.arrow_rotation:
             self.ang_vel = 0
             self.vel = 0
         else:
             self.ang_vel = float(data.data)
+            self.vel = 0.02
         # rospy.loginfo(f"Angular speed received: {self.ang_vel}")
         self.publish_vel()
+
+        self.arrow_rotation = False
+
 
 
 
@@ -147,26 +154,37 @@ class Robot():
         self.vel_applier.publish(velocity)
 
     
-    def stopper(self):
-
+    def stopped(self):
         #Podriamos añadirle caso en que ve la flecha suficientemente bien
-        if self.distance[2] <= self.min_front_dist:
+        return self.distance[2] <= self.min_front_dist
 
-            return(True)
-        else:
-            
-            return(False)
-
-    def flecha_detector(self):
-
+    def arrow_detector(self,data):
+        zeros=np.zeros(2)
+        def pos_y_pendiente(pos):
+            x1, y1, x2, y2 = pos 
+            if x2-x1 == 0 or y2-y1 == 0:
+                return zeros
+            return np.array(x1, x2)
         #Deteccion de la flecha
 
-        #color + forma + distancia
+        if self.stopped():
+            self.arrow_rotation = True
+            #el bridge es unico?
+            img =  self.bridge.imgmsg_to_cv2(data)[100:300,:]
+            gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+            edges = cv.Canny(gray, 50, 150, apertureSize=3)
+            lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 100,
+                                    minLineLength=100, maxLineGap=10)[:,0]
 
-
-        pass
-
-        
+            rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions)
+            rectas = rectas[rectas != zeros]
+            
+            #No se si esto esta bien
+            if np.mean(rectas)< img.shape[1]/2:
+                self.wall_distance_state.publish(np.pi/2)
+            else:
+                self.wall_distance_state.publish(-np.pi/2)
+ 
 
 
 
