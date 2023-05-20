@@ -23,6 +23,27 @@ def min_rotation_diff(goal, actual):
         return actual - goal
 
 
+def filter_color(rgb_img, filter_hue):
+    hsv = cv.cvtColor(rgb_img, cv.COLOR_BGR2HSV)
+
+    if filter_hue - 10 < 0:
+        lower = 180 + filter_hue - 10
+    else:
+        lower = filter_hue - 10
+
+    if filter_hue + 10 > 180:
+        upper = filter_hue + 10 - 180
+    else:
+        upper = filter_hue + 10
+
+    lower_limit = np.array([lower, 100, 50])
+    upper_limit = np.array([upper, 255, 255])
+
+    mask = cv.inRange(hsv, lower_limit, upper_limit)
+
+    return mask
+
+
 class Robot():
     def __init__(self):
         rospy.init_node("reckoning_robot")
@@ -73,6 +94,7 @@ class Robot():
         rospy.loginfo("Waiting wall distance pid setpoint process")
         while self.wall_set_point.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
+
         self.wall_set_point.publish(0)
 
         self.wall_distance_state = rospy.Publisher('/wall_distance/state',
@@ -153,13 +175,14 @@ class Robot():
             if x2-x1 == 0 or y2-y1 == 0:
                 return zeros
             return np.array(x1, x2)
-        # Deteccion de la flecha
 
+        # Deteccion de la flecha
         if self.stopped():
             self.arrow_rotation = True
             # el bridge es unico?
             img = self.bridge.imgmsg_to_cv2(data)[100:300, :]
-            gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+            red_filtered = filter_color(img, 0)
+            gray = cv.cvtColor(red_filtered, cv.COLOR_BGR2GRAY)
             edges = cv.Canny(gray, 50, 150, apertureSize=3)
             lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 100,
                                              minLineLength=100,
