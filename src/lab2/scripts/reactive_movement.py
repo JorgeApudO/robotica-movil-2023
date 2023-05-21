@@ -4,6 +4,7 @@ from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist, PoseArray, Pose
 from sensor_msgs.msg import Image
 from tf.transformations import euler_from_quaternion
+
 import numpy as np
 from cv_bridge import CvBridge
 import cv2 as cv
@@ -144,12 +145,14 @@ class Robot():
 
         # Center depth from image
         depth_center = depth_image[100:300, 150:-150]
-
-        prom_left = float(depth_left.mean())
-        prom_right = float(depth_right.mean())
+        depth_left = cv.GaussianBlur(depth_left,(0,0),1)
+        depth_right = cv.GaussianBlur(depth_right,(0,0),1)
+        prom_left = float(depth_left.max()) # no se que tan valido es promediar para izq y der
+        prom_right = float(depth_right.mean()) 
         prom_center = float(depth_center.mean())
-
-        self.distance = np.array((prom_left, prom_right, prom_center))
+    
+        #quizas filtrar imagen y añadir los minimos
+        self.distance = np.array((np.amin(depth_left),np.amin(depth_right),prom_center))
 
     def publish_depth(self, data):
         # Publish difference between left and right distance
@@ -182,6 +185,7 @@ class Robot():
             # el bridge es unico?
             img = self.bridge.imgmsg_to_cv2(data)[100:300, :]
             red_filtered = filter_color(img, 0)
+            # ver si es necesario centrar el robot primero para luego girar
             gray = cv.cvtColor(red_filtered, cv.COLOR_BGR2GRAY)
             edges = cv.Canny(gray, 50, 150, apertureSize=3)
             lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 100,
