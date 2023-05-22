@@ -24,6 +24,13 @@ def min_rotation_diff(goal, actual):
         return actual - goal
 
 
+def pos_y_pendiente(pos):
+    x1, y1, x2, y2 = pos
+    if x2-x1 == 0 or y2-y1 == 0:
+        return np.zeros(2)
+    return np.array(x1, x2)
+
+
 def filter_color(rgb_img, filter_hue):
     hsv = cv.cvtColor(rgb_img, cv.COLOR_BGR2HSV)
 
@@ -145,14 +152,16 @@ class Robot():
 
         # Center depth from image
         depth_center = depth_image[100:300, 150:-150]
-        depth_left = cv.GaussianBlur(depth_left,(0,0),1)
-        depth_right = cv.GaussianBlur(depth_right,(0,0),1)
-        prom_left = float(depth_left.max()) # no se que tan valido es promediar para izq y der
-        prom_right = float(depth_right.mean()) 
+        depth_left = cv.GaussianBlur(depth_left, (0, 0), 1)
+        depth_right = cv.GaussianBlur(depth_right, (0, 0), 1)
+        # no se que tan valido es promediar para izq y der
+        prom_left = float(depth_left.max())
+        prom_right = float(depth_right.mean())
         prom_center = float(depth_center.mean())
-    
-        #quizas filtrar imagen y añadir los minimos
-        self.distance = np.array((np.amin(depth_left),np.amin(depth_right),prom_center))
+
+        # quizas filtrar imagen y añadir los minimos
+        self.distance = np.array(
+            (np.amin(depth_left), np.amin(depth_right), prom_center))
 
     def publish_depth(self, data):
         # Publish difference between left and right distance
@@ -172,12 +181,6 @@ class Robot():
 
     def arrow_detector(self, data):
         zeros = np.zeros(2)
-
-        def pos_y_pendiente(pos):
-            x1, y1, x2, y2 = pos
-            if x2-x1 == 0 or y2-y1 == 0:
-                return zeros
-            return np.array(x1, x2)
 
         # Deteccion de la flecha
         if self.stopped():
