@@ -79,12 +79,14 @@ class Node:
             rospy.loginfo(f"CX: {cx}")
 
             if cx < 0:
-                self.dx = 0
+                dx = 0
             else:
-                self.dx = width//2 - cx
+                dx = width//2 - cx
+
+            self.publish_dist(dx)
 
     def publish_dist(self, dx: int):
-        self.distance_pub.publish(self.dx / 5)
+        self.distance_pub.publish(dx / 5)
 
     def start(self) -> None:
         cv.namedWindow('view')
