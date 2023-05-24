@@ -8,7 +8,7 @@
 
 	<node pkg="pid" name="square_dist" type="controller" ns="blue_square">
 		<param name="Kp" value="0.5"/>
-		<param name="Ki" value="0"/>
+		<param name="Ki" value="0.001"/>
 		<param name="Kd" value="0"/>
 		<param name="upper_limit" value="0.2"/>
 		<param name="lower_limit" value="-0.2"/>

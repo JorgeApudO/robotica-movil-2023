@@ -48,7 +48,7 @@ class Robot():
         # VEL PUBLISHER NODE
         # --------------------------------------------------------------------
         self.vel_applier = rospy.Publisher("yocs_cmd_vel_mux/input/navigation",
-                                           Twist, queue_size=3)
+                                           Twist, queue_size=1)
 
         # --------------------------------------------------------------------
         # POSE NODE
