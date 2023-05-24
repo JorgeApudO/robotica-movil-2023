@@ -3,7 +3,6 @@ import rospy
 # import numpy as np
 
 from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
 from std_msgs.msg import Float64
 import time
 
@@ -28,12 +27,6 @@ class Robot():
                                            Twist, queue_size=1)
 
         # --------------------------------------------------------------------
-        # POSE NODE
-        # --------------------------------------------------------------------
-        self.odom_sub = rospy.Subscriber('odom', Odometry,
-                                         self.odom_fn)
-
-        # --------------------------------------------------------------------
         # ANGLE PID CONTROL
         # --------------------------------------------------------------------
         self.ang_set_point = rospy.Publisher('/blue_square/setpoint',
@@ -48,13 +41,11 @@ class Robot():
         # TIMER
         # --------------------------------------------------------------------
         self.prev_time = time.time()
+        self.period = 0.1
+        rospy.Timer(self.period, self.publish_vel)
 
     def ang_actuation_fn(self, data):
         self.ang_vel = float(data.data)
-        self.publish_vel()
-
-    def odom_fn(self, data):
-        pass
 
     def publish_vel(self):
         rospy.loginfo(f"{time.time() - self.prev_time}")
