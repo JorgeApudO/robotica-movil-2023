@@ -5,6 +5,7 @@ import rospy
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Float64
+import time
 
 
 class Robot():
@@ -46,7 +47,7 @@ class Robot():
         # --------------------------------------------------------------------
         # TIMER
         # --------------------------------------------------------------------
-        self.period = 0.1
+        self.prev_time = time.time()
 
     def ang_actuation_fn(self, data):
         self.ang_vel = float(data.data)
@@ -56,11 +57,13 @@ class Robot():
         pass
 
     def publish_vel(self):
+        rospy.loginfo(f"{time.time() - self.prev_time}")
         vel = Twist()
         vel.linear.x = self.vel
         vel.angular.z = self.ang_vel * -1
         rospy.loginfo(f"VEL: {self.ang_vel}")
         self.vel_applier.publish(vel)
+        self.prev_time = time.time()
 
 
 if __name__ == "__main__":

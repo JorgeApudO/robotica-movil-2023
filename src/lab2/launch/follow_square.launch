@@ -1,6 +1,6 @@
 <launch>
 	<include file="$(find kobuki_node)/launch/minimal.launch"/>
-	<param name="/camera/driver/data_skip" value="2"/>
+	<param name="/camera/driver/data_skip" value="3"/>
 	<include file="$(find freenect_launch)/launch/freenect.launch"/>
 
 	<node pkg="lab2" name="Movement_manager" type="follow_square.py" output="screen"/>
