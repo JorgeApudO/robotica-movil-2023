@@ -76,7 +76,7 @@ class Node:
             self.img_mask = img_mask
             cx, cy = get_centers(img_mask)
 
-            rospy.loginfo(f"CX: {cx}")
+            # rospy.loginfo(f"CX: {cx}")
 
             if cx < 0:
                 dx = 0
@@ -86,6 +86,7 @@ class Node:
             self.publish_dist(dx)
 
     def publish_dist(self, dx: int):
+        rospy.loginfo(f"PUBLISH: {dx / 5}")
         self.distance_pub.publish(dx / 5)
 
     def start(self) -> None:

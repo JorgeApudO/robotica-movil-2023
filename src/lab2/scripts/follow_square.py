@@ -59,6 +59,7 @@ class Robot():
         vel = Twist()
         vel.linear.x = self.vel
         vel.angular.z = self.ang_vel
+        rospy.loginfo(f"VEL: {self.ang_vel}")
         self.vel_applier.publish(vel)
 
 
