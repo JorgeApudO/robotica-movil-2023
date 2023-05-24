@@ -47,7 +47,7 @@ class Node:
         # KINECT IMAGES NODE
         # --------------------------------------------------------------------
         self.kinect_sub = rospy.Subscriber('/camera/rgb/image_color',
-                                           Image, self.process_image)
+                                           Image, self.process_image, queue_size=1)
 
         # --------------------------------------------------------------------
         # DISTANCE PUBLISHER
