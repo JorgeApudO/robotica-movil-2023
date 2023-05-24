@@ -42,7 +42,7 @@ class Robot():
         # --------------------------------------------------------------------
         self.prev_time = time.time()
         self.period = 0.1
-        rospy.Timer(self.period, self.publish_vel)
+        rospy.Timer(rospy.Duration(self.period), self.publish_vel)
 
     def ang_actuation_fn(self, data):
         self.ang_vel = float(data.data)
