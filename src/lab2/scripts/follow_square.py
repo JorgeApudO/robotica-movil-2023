@@ -47,7 +47,7 @@ class Robot():
     def ang_actuation_fn(self, data):
         self.ang_vel = float(data.data)
 
-    def publish_vel(self):
+    def publish_vel(self, data):
         rospy.loginfo(f"{time.time() - self.prev_time}")
         vel = Twist()
         vel.linear.x = self.vel
