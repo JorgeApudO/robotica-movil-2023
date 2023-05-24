@@ -96,7 +96,7 @@ class Node:
                 if self.mask_hue is None:
                     cv.imshow('view', self.image)
                 elif self.img_mask is not None:
-                    cv.imshow('view', self.mask)
+                    cv.imshow('view', self.img_mask)
             cv.waitKey(1)
 
 
@@ -137,4 +137,3 @@ if __name__ == "__main__":
 #     cv.imshow("result", result)
 #     # cv.imshow("mask", mask)
 #     k = cv.waitKey(0)
-
