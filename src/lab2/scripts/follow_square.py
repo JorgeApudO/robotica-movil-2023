@@ -40,21 +40,22 @@ class Robot():
         # --------------------------------------------------------------------
         # TIMER
         # --------------------------------------------------------------------
-        self.prev_time = time.time()
+        # self.prev_time = time.time()
         self.period = 0.1
-        rospy.Timer(rospy.Duration(self.period), self.publish_vel)
+        # rospy.Timer(rospy.Duration(self.period), self.publish_vel)
 
     def ang_actuation_fn(self, data):
         self.ang_vel = float(data.data)
+        self.publish_vel()
 
-    def publish_vel(self, data):
-        rospy.loginfo(f"{time.time() - self.prev_time}")
+    def publish_vel(self, data=None):
+        # rospy.loginfo(f"{time.time() - self.prev_time}")
         vel = Twist()
         vel.linear.x = self.vel
         vel.angular.z = self.ang_vel * -1
         rospy.loginfo(f"VEL: {self.ang_vel}")
         self.vel_applier.publish(vel)
-        self.prev_time = time.time()
+        # self.prev_time = time.time()
 
 
 if __name__ == "__main__":
