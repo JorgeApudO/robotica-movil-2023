@@ -4,7 +4,7 @@ from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist, PoseArray, Pose
 from sensor_msgs.msg import Image
 from tf.transformations import euler_from_quaternion
-
+from nav_msgs.msg import Odometry
 import numpy as np
 from cv_bridge import CvBridge
 import cv2 as cv
@@ -89,11 +89,12 @@ class Robot():
         #                                       self.real_pose_fn)
 
         self.deph_sub = rospy.Subscriber('/camera/depth/image_raw',
-                                         Image, self.process_depth)
+                                         Image, self.process_depth,queue_size = 1)
 
         self.rgb_sub = rospy.Subscriber('/camera/rgb/image_color',
-                                        Image, self.arrow_detector)
-
+                                        Image, self.arrow_detector, queue_size= 1)
+        '''self.odom_sub = rospy.Subscriber('odom', Odometry,
+                                         self.odom_fn)'''
         # --------------------------------------------------------------------
         # WALL DISTANCE P CONTROL
         # --------------------------------------------------------------------
@@ -119,7 +120,20 @@ class Robot():
         # --------------------------------------------------------------------
         self.period = 0.1
         rospy.Timer(rospy.Duration(self.period), self.publish_depth)
+    '''
+    def odom_fn(self, data: Odometry):
+        pose_c = data.pose
+        pose = pose_c.pose
 
+        pos = pose.position
+        orient = pose.orientation
+
+        self.pos = np.array((pos.x, pos.y))
+
+        raw_ang = euler_from_quaternion((orient.x, orient.y,
+                                         orient.z, orient.w))[2]
+        self.ang = sawtooth(raw_ang)
+        '''
     def ang_actuation_fn(self, data: Float64):
         if self.stopped() and not self.arrow_rotation:
             self.ang_vel = 0
@@ -130,7 +144,7 @@ class Robot():
         # rospy.loginfo(f"Angular speed received: {self.ang_vel}")
         self.publish_vel()
 
-        self.arrow_rotation = False
+        
 
     def process_depth(self, data: Image):
         # Procesar distancia en la imagen con numpy
@@ -155,7 +169,7 @@ class Robot():
         depth_left = cv.GaussianBlur(depth_left, (0, 0), 1)
         depth_right = cv.GaussianBlur(depth_right, (0, 0), 1)
         # no se que tan valido es promediar para izq y der
-        prom_left = float(depth_left.max())
+        prom_left = float(depth_left.mean())
         prom_right = float(depth_right.mean())
         prom_center = float(depth_center.mean())
 
@@ -179,11 +193,13 @@ class Robot():
         # Podriamos añadirle caso en que ve la flecha suficientemente bien
         return self.distance[2] <= self.min_front_dist
 
+
     def arrow_detector(self, data):
         zeros = np.zeros(2)
 
         # Deteccion de la flecha
         if self.stopped():
+
             self.arrow_rotation = True
             # el bridge es unico?
             img = self.bridge.imgmsg_to_cv2(data)[100:300, :]
