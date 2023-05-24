@@ -73,7 +73,6 @@ class Node:
             _, width, _ = cv_image.shape
 
             img_mask = get_mask(cv_image, self.mask_hue)
-            self.img_mask = img_mask
             cx, cy = get_centers(img_mask)
 
             # rospy.loginfo(f"CX: {cx}")
@@ -84,9 +83,10 @@ class Node:
                 dx = width//2 - cx
 
             self.publish_dist(dx)
+            self.img_mask = img_mask
 
     def publish_dist(self, dx: int):
-        rospy.loginfo(f"PUBLISH: {dx / 5}")
+        # rospy.loginfo(f"PUBLISH: {dx / 5}")
         self.distance_pub.publish(dx / 5)
 
     def start(self) -> None:
