@@ -63,6 +63,7 @@ class Node:
         if event == cv.EVENT_LBUTTONDOWN and self.image is not None:
             colors = self.image[y, x]
             hsv = cv.cvtColor(np.uint8([[colors]]), cv.COLOR_BGR2HSV)
+            rospy.loginfo(f"Hue: {hsv[0][0][0]}")
             self.mask_hue = hsv[0][0][0]
 
     def process_image(self, data: Image) -> None:
