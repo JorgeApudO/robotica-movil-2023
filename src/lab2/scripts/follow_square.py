@@ -40,7 +40,7 @@ class Robot():
         while self.ang_set_point.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
-        self.ang_actuation = rospy.Subscriber('/blue_square/control_effect',
+        self.ang_actuation = rospy.Subscriber('/blue_square/control_effort',
                                               Float64, self.ang_actuation_fn)
 
         # --------------------------------------------------------------------
