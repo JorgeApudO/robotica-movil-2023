@@ -7,7 +7,7 @@
 	<node pkg="lab2" name="Square_detector" type="blue_square_detector.py" output="screen"/>
 
 	<node pkg="pid" name="square_dist" type="controller" ns="blue_square">
-		<param name="Kp" value="0.2"/>
+		<param name="Kp" value="0.1"/>
 		<param name="Ki" value="0"/>
 		<param name="Kd" value="0"/>
 		<param name="upper_limit" value="0.5"/>
