@@ -135,7 +135,7 @@ class Robot():
     def process_depth(self, data: Image):
         # Procesar distancia en la imagen con numpy
         depth_image = self.bridge.imgmsg_to_cv2(data)
-
+        depth_image[np.isnan(depth_image)] = np.mean(depth_image)
         """
         Guardar imagenes para poder medir correctamente los pixeles pa cortar
 
