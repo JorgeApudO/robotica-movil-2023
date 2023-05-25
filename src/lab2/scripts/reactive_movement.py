@@ -13,7 +13,7 @@ import time
 class Robot():
     def __init__(self):
         rospy.init_node("reckoning_robot")
-        time.sleep(14   )
+        # time.sleep(10)
         # --------------------------------------------------------------------
         # CONSTANTS
         # --------------------------------------------------------------------
@@ -28,11 +28,11 @@ class Robot():
         # --------------------------------------------------------------------
         # INITIAL CONDITIONS
         # --------------------------------------------------------------------
-        self.distance = np.array((0.0, 0.0, 0.7000))
+        self.distance = np.array((0.0, 0.0, 0.80))
         self.ang = 0.0
         self.arrow_rotation = False
         self.get_direction = False
-        self.vel = 0.05
+        self.vel = 0.1
         self.ang_vel = 0.0
 
         # --------------------------------------------------------------------
@@ -64,8 +64,6 @@ class Robot():
         while self.ang_set_point.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
-        self.ang_set_point.publish(0)
-
         self.ang_state = rospy.Publisher('/angle/state',
                                                    Float64, queue_size=1)
         rospy.loginfo("Waiting angle distance pid state process")
@@ -74,7 +72,7 @@ class Robot():
 
         self.ang_actuation = rospy.Subscriber('/angle/control_effort',
                                               Float64, self.ang_actuation_fn)
-
+        self.ang_set_point.publish(0)
         # --------------------------------------------------------------------
         # TIMER
         # --------------------------------------------------------------------
@@ -95,8 +93,9 @@ class Robot():
 
         if self.stopped():
             self.vel = 0
+            rospy.loginfo('paro')
         else:
-            self.vel = 0.05
+            self.vel = 0.1
 
         if self.contin() or self.arrow_rotation:
             self.ang_vel = float(data.data)
@@ -130,7 +129,7 @@ class Robot():
 
     def contin(self):
         if self.arrow_rotation:
-            return abs(self.distance[1]-self.distance[0]) > 0.05
+            return abs(self.distance[1]-self.distance[0]) > 10
         else:
             return False
     
@@ -190,9 +189,9 @@ def pos_y_pendiente(pos):
 
 def get_image_means(self,depth_image):
     # Left depth from image
-    depth_left = depth_image[200:300, :50]
+    depth_left = depth_image[200:300, :40]
     # Right depth from image
-    depth_right = depth_image[200:300, -50:]
+    depth_right = depth_image[200:300, -40:]
     # Center depth from image
     depth_center = depth_image[200:300, 150:-150]
     new = np.concatenate((depth_left,np.concatenate((depth_center,depth_right),axis=1)),axis=1)
@@ -226,8 +225,8 @@ def get_centers(mask):
 def get_red_mask(img):
     hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     
-    mask0 = cv.inRange(hsv, [0, 100, 50], [10, 255, 255])
-    mask1 = cv.inRange(hsv, [170, 100, 50], [180, 255, 255])
+    mask0 = cv.inRange(hsv, np.array([0, 100, 50]), np.array([10, 255, 255]))
+    mask1 = cv.inRange(hsv, np.array([170, 100, 50]), np.array([180, 255, 255]))
     mask = mask0 + mask1
 
     return mask

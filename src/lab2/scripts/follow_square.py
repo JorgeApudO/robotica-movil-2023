@@ -17,7 +17,7 @@ class Robot():
         self.ang = 0.0
         self.goal_ang = 0.0
 
-        self.vel = 0.2
+        self.vel = 0.1
         self.ang_vel = 0.0
 
         # --------------------------------------------------------------------
