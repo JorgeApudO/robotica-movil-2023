@@ -38,14 +38,12 @@ class Movement(object):
 
         self.pid_set_point_dist = rp.Publisher('/reckoning_dist/setpoint',
                                                Float64, queue_size=1)
-        while self.pid_set_point_dist.get_num_connections() == 0 and
-        not rp.is_shutdown():
+        while self.pid_set_point_dist.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.2)
 
         self.dist_state = rp.Publisher('/reckoning_dist/state',
                                        Float64, queue_size=1)
-        while self.dist_state.get_num_connections() == 0 and
-        not rp.is_shutdown():
+        while self.dist_state.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.2)
 
         self.actuation_dist = rp.Subscriber('/reckoning_dist/control_effort',

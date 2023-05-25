@@ -9,7 +9,6 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 from std_msgs.msg import Float64
 
-
 def get_centers(mask):
     bilateral = cv.bilateralFilter(mask, 9, 75, 75)
     median = cv.medianBlur(bilateral, 7)
