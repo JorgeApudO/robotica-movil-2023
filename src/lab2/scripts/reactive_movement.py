@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 import rospy
 from std_msgs.msg import Float64
-from geometry_msgs.msg import Twist, PoseArray, Pose
+from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
 from tf.transformations import euler_from_quaternion
 from nav_msgs.msg import Odometry
 import numpy as np
 from cv_bridge import CvBridge
 import cv2 as cv
-from blue_square_detector import get_centers, get_mask
 
 
 def sawtooth(rad):
