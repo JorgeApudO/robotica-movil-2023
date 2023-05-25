@@ -8,19 +8,19 @@ from nav_msgs.msg import Odometry
 import numpy as np
 from cv_bridge import CvBridge
 import cv2 as cv
-
+import time
 
 class Robot():
     def __init__(self):
         rospy.init_node("reckoning_robot")
-
+        time.sleep(10)
         # --------------------------------------------------------------------
         # CONSTANTS
         # --------------------------------------------------------------------
         self.dist_threshold = 0.01
         self.ang_threshold = np.pi / 180
 
-        self.min_front_dist = 650  # [m] Distancia a la que se detiene
+        self.min_front_dist = 0.75  # [m] Distancia a la que se detiene
 
         self.bridge = CvBridge()
         self.img_guardadas = 0
@@ -28,10 +28,10 @@ class Robot():
         # --------------------------------------------------------------------
         # INITIAL CONDITIONS
         # --------------------------------------------------------------------
-        self.distance = np.array((0.0, 0.0, 700.0))
+        self.distance = np.array((0.0, 0.0, 0.7000))
         self.ang = 0.0
-        self.arrow_rotation = False
-        self.vel = 0.02
+        self.arrow_rotation = True
+        self.vel = 0.05
         self.ang_vel = 0.0
 
         # --------------------------------------------------------------------
@@ -74,6 +74,7 @@ class Robot():
         # --------------------------------------------------------------------
         # TIMER
         # --------------------------------------------------------------------
+        
         self.period = 0.1
         rospy.Timer(rospy.Duration(self.period), self.publish_depth)
 
@@ -88,16 +89,16 @@ class Robot():
 
     def ang_actuation_fn(self, data: Float64):
 
-        if self.stopped() and not self.arrow_rotation:
+        if self.stopped():
             self.vel = 0
-            self.ang_vel = 0
-        elif self.stopped() and self.arrow_rotation:
-            self.vel = 0
+        else:
+            self.vel = 0.05
+
+        if self.contin() or self.arrow_rotation:
             self.ang_vel = float(data.data)
         else:
-            self.vel = 0.02
-            self.ang_vel = float(data.data)
-
+            self.ang_vel = 0
+        self.check_rotate()
         # rospy.loginfo(f"Angular speed received: {self.ang_vel}")
         self.publish_vel()
 
@@ -108,31 +109,33 @@ class Robot():
 
     def publish_depth(self, data):
         # Publish difference between left and right distance
-        dif_distance = self.distance[0] - self.distance[1]
-        self.ang_state.publish(dif_distance)
+        if not self.arrow_rotation:
+            dif_distance =  self.distance[1]-self.distance[0]
+            self.ang_state.publish(dif_distance)
 
     def publish_vel(self):
         # Publish odometry to self.dist_state
         velocity = Twist()
         velocity.linear.x = self.vel
-        velocity.angular.z = self.ang_vel
+        velocity.angular.z =  self.ang_vel
         self.vel_applier.publish(velocity)
 
     def stopped(self):
         # Podriamos añadirle caso en que ve la flecha suficientemente bien
         return self.distance[2] <= self.min_front_dist
-
+    def contin(self):
+        return abs(self.distance[1]-self.distance[0]) > 0.1
+    
+    def check_rotate(self):
+        if self.stopped() and not self.continue_rotating():
+            self.arrow_rotation = True
     def arrow_detector(self, data):
         zeros = np.zeros(2)
 
         # Deteccion de la flecha
-        if self.stopped():
-
-            self.arrow_rotation = True
-            # el bridge es unico?
+        if self.arrow_rotation:
             img = self.bridge.imgmsg_to_cv2(data)[100:300, :]
-            red_filtered = filter_color(img, 0)
-            # ver si es necesario centrar el robot primero para luego girar
+            red_filtered = get_red_mask(img) 
             gray = cv.cvtColor(red_filtered, cv.COLOR_BGR2GRAY)
             edges = cv.Canny(gray, 50, 150, apertureSize=3)
             lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 100,
@@ -173,47 +176,28 @@ def pos_y_pendiente(pos):
     return np.array(x1, x2)
 
 
-def filter_color(rgb_img, filter_hue):
-    hsv = cv.cvtColor(rgb_img, cv.COLOR_BGR2HSV)
-
-    if filter_hue - 10 < 0:
-        lower = 180 + filter_hue - 10
-    else:
-        lower = filter_hue - 10
-
-    if filter_hue + 10 > 180:
-        upper = filter_hue + 10 - 180
-    else:
-        upper = filter_hue + 10
-
-    lower_limit = np.array([lower, 100, 50])
-    upper_limit = np.array([upper, 255, 255])
-
-    mask = cv.inRange(hsv, lower_limit, upper_limit)
-
-    return mask
 
 
 def get_image_means(depth_image):
     # Left depth from image
     depth_left = depth_image[100:300, :30]
-    depth_left = depth_left[depth_left <= 1000]
+    depth_left = depth_left[depth_left <= 10]
     # Right depth from image
     depth_right = depth_image[100:300, -30:]
-    depth_right = depth_right[depth_right <= 1000]
+    depth_right = depth_right[depth_right <= 10]
     # Center depth from image
     depth_center = depth_image[100:300, 150:-150]
-    depth_center = depth_center[depth_center <= 1000]
+    depth_center = depth_center[depth_center <= 10]
 
     prom_center = np.nanmean(depth_center)
     if np.isnan(prom_center):
-        prom_center = 750.0
+        prom_center = 0.0
     prom_left = np.nanmean(depth_left)
     if np.isnan(prom_left):
-        prom_left = 750.0
+        prom_left = 0.0
     prom_right = np.nanmean(depth_right)
     if np.isnan(prom_right):
-        prom_right = 750.0
+        prom_right = 0.0
     rospy.loginfo(f"Current distances {prom_center},{prom_left},{prom_right}")
     return prom_left, prom_right, prom_center
 
@@ -230,12 +214,12 @@ def get_centers(mask):
         return (-1, -1)
 
 
-def get_mask(img, hue):
+def get_red_mask(img):
     hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    lower_limit = np.array([hue - 10, 100, 50])
-    upper_limit = np.array([hue + 10, 255, 255])
-
-    mask = cv.inRange(hsv, lower_limit, upper_limit)
+    
+    mask0 = cv.inRange(hsv, [0, 100, 50], [10, 255, 255])
+    mask1 = cv.inRange(hsv, [170, 100, 50], [180, 255, 255])
+    mask = mask0 + mask1
 
     return mask
 
