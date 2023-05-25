@@ -52,7 +52,7 @@ class Robot():
         self.img_pub = rospy.Publisher('image_filtered',Image, queue_size=2)
 
         self.rgb_sub = rospy.Subscriber('/camera/rgb/image_color',
-                                        Image, self.arrow_detector, queue_size=1)
+                                        Image, self.arrow_alignment, queue_size=1)
         self.odom_sub = rospy.Subscriber('odom', Odometry,
                                          self.odom_fn)
         # --------------------------------------------------------------------
@@ -138,12 +138,10 @@ class Robot():
         if self.stopped() and not self.contin():
             self.arrow_rotation = True
 
-    def arrow_detector(self, data):
+    def arrow_detector(self, img, red_filtered):
         # Deteccion de la flecha
-        if self.arrow_rotation and not self.get_direction:
+        if not self.get_direction:
             zeros = np.zeros(2)
-            img = self.bridge.imgmsg_to_cv2(data)[100:300, :]
-            red_filtered = get_red_mask(img) 
             gray = cv.cvtColor(red_filtered, cv.COLOR_BGR2GRAY)
             edges = cv.Canny(gray, 50, 150, apertureSize=3)
             lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 100,
@@ -163,6 +161,23 @@ class Robot():
         if self.get_direction:
             ang_diff = min_rotation_diff(self.goal_ang, self.ang)
             self.ang_state.publish(ang_diff)
+
+    def arrow_alignment(self, data):
+
+        if self.arrow_rotation:
+
+            img = self.bridge.imgmsg_to_cv2(data)[100:300, :]
+            red_filtered = get_red_mask(img) 
+            cx, cy = get_centers(red_filtered)
+
+            if cx < 0:
+                dx = 0
+            else:
+                dx = width//2 - cx
+
+            self.ang_state.publish(dx)
+
+            self.arrow_detector(img, red_filtered)
 
 
 def sawtooth(rad):
