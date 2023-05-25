@@ -5,10 +5,13 @@ from geometry_msgs.msg import Twist, PoseArray, Pose
 from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
 import numpy as np
+import time
+import os
 
 
 def sawtooth(rad):
     return (rad - np.pi) % (2*np.pi) - np.pi
+
 
 def min_rotation_diff(goal, actual):
     if abs(goal - actual) > np.pi:
@@ -23,19 +26,22 @@ def min_rotation_diff(goal, actual):
 class Robot():
     def __init__(self):
         rospy.init_node("reckoning_robot")
+        rospy.loginfo(os.getcwd())
 
         # --------------------------------------------------------------------
         # CONSTANTS
         # --------------------------------------------------------------------
-        self.dist_threshold = 0.01
-        self.ang_threshold = np.pi / 180
+        self.dist_threshold = 0.001
+        self.ang_threshold = np.pi / 180 / 2
 
         # --------------------------------------------------------------------
         # INITIAL CONDITIONS
         # --------------------------------------------------------------------
         self.pos = np.array((0.0, 0.0))
+        self.real_pos = np.array((0.0, 0.0))
         self.goal_pos = np.array((0.0, 0.0))
         self.ang = 0.0
+        self.real_ang = 0.0
         self.goal_ang = 0.0
 
         self.vel = 0.0
@@ -58,6 +64,9 @@ class Robot():
 
         self.odom_sub = rospy.Subscriber('odom', Odometry,
                                          self.odom_fn)
+
+        self.real_sub = rospy.Subscriber('real_pose', Pose,
+                                         self.real_pose_fn)
 
         # --------------------------------------------------------------------
         # DISTANCE PID CONTROL
@@ -107,11 +116,18 @@ class Robot():
         self.mov_sub = rospy.Subscriber("goal_list", PoseArray,
                                         self.accion_mover)
 
+        self.data = [["time", "pos_x", "pos_y", "ang_ref", "pos_ref", "ang_act", "pos_act", "ang_out", "pos_out"]]
+
     def accion_mover(self, pose_array: PoseArray):
         for pose in pose_array.poses:
-            self.goal_pos = np.array((pose.position.x, pose.position.y))
-            goal_vec = self.goal_pos - self.pos
-            ang_diff = (np.arctan2(goal_vec[1], goal_vec[0]) - self.ang)
+            # for key in self.datos.keys():
+            #     self.datos[key].append([])
+
+            goal_pos = np.array((pose.position.x, pose.position.y))
+            goal_vec = goal_pos - self.pos
+
+            self.goal_ang = np.arctan2(goal_vec[1], goal_vec[0])
+            ang_diff = self.goal_ang - self.ang
 
             # Girar
             # Esperar a que este alineado con goal
@@ -120,9 +136,10 @@ class Robot():
             self.rotating = True
             while abs(ang_diff) > self.ang_threshold:
                 rospy.sleep(self.period)
-                ang_diff = (np.arctan2(goal_vec[1], goal_vec[0]) - self.ang)
+                ang_diff = self.goal_ang - self.ang
             self.rotating = False
 
+            self.goal_pos = goal_pos
             # Moverse hasta estar cerca
             self.dist_set_point.publish(0)
             rospy.loginfo("Start movement")
@@ -131,6 +148,14 @@ class Robot():
                 goal_vec = self.goal_pos - self.pos
 
         self.stop = True
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+
+        with open(os.path.join(dir_path, "data.csv"), 'w') as file:
+            file.writelines([','.join((str(el) for el in line))+'\n' for line in self.data])
+
+        rospy.loginfo(f"Final pos: {self.real_pos}")
+        rospy.loginfo(f"Final error: {np.linalg.norm(self.real_pos)}")
+        rospy.signal_shutdown("finished")
 
     def ang_actuation_fn(self, data: Float64):
         if self.stop:
@@ -148,6 +173,22 @@ class Robot():
         # rospy.loginfo(f"Speed received: {self.vel}")
         self.publish_vel()
 
+    def log_data(self):
+        t = time.time()
+        pos_x = self.real_pos[0] - 1.0
+        pos_y = self.real_pos[1] - 1.0
+
+        ang_ref = 0
+        ang_act = self.ang_vel
+        ang_out = min_rotation_diff(self.goal_ang, self.real_ang)
+
+        pos_ref = 0
+        pos_act = self.vel
+        pos_out = np.linalg.norm(self.goal_pos - (self.real_pos - np.array([1.0, 1.0])))
+
+        self.data.append([t, pos_x, pos_y, ang_ref, pos_ref,
+                          ang_act, pos_act, ang_out, pos_out])
+
     def odom_fn(self, data: Odometry):
         pose_c = data.pose
         pose = pose_c.pose
@@ -161,15 +202,17 @@ class Robot():
                                          orient.z, orient.w))[2]
         self.ang = sawtooth(raw_ang)
 
-        rospy.loginfo(f"POSITION: {self.pos}")
+        rospy.loginfo(f"DISTANCE: {np.linalg.norm(self.goal_pos - (self.real_pos - np.array([1.0, 1.0])))}")
 
     def publish_odom(self, data):
         # Publish position and angle to self.dist_state and self.ang_state
         goal_vec = self.goal_pos - self.pos
         self.dist_state.publish(np.linalg.norm(goal_vec))
-        goal_ang = np.arctan2(goal_vec[1], goal_vec[0])
 
-        ang_diff = min_rotation_diff(goal_ang, self.ang)
+        if not self.rotating:
+            self.goal_ang = np.arctan2(goal_vec[1], goal_vec[0])
+
+        ang_diff = min_rotation_diff(self.goal_ang, self.ang)
 
         # rospy.loginfo(f"POSITION: {self.pos} GOAL: {self.goal_pos} |  ANGLE DIFF: {ang_diff}  |  VEL: {self.vel}")
         self.ang_state.publish(ang_diff)
@@ -181,15 +224,17 @@ class Robot():
         velocity.angular.z = self.ang_vel
         self.vel_applier.publish(velocity)
 
+        self.log_data()
+
     def real_pose_fn(self, data):
         pos = data.position
         orient = data.orientation
 
-        self.pos = np.array((pos.x, pos.y))
+        self.real_pos = np.array((pos.x, pos.y))
 
         raw_ang = euler_from_quaternion((orient.x, orient.y,
                                          orient.z, orient.w))[2]
-        self.ang = sawtooth(raw_ang)
+        self.real_ang = sawtooth(raw_ang)
 
 
 if __name__ == "__main__":
