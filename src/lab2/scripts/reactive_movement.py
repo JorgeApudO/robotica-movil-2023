@@ -127,17 +127,21 @@ class Robot():
     def stopped(self):
         # Podriamos añadirle caso en que ve la flecha suficientemente bien
         return self.distance[2] <= self.min_front_dist
+
     def contin(self):
-        return abs(self.distance[1]-self.distance[0]) > 0.05
+        if self.arrow_rotation:
+            return abs(self.distance[1]-self.distance[0]) > 0.05
+        else:
+            return False
     
     def check_rotate(self):
         if self.stopped() and not self.contin():
             self.arrow_rotation = True
-    def arrow_detector(self, data):
-        zeros = np.zeros(2)
 
+    def arrow_detector(self, data):
         # Deteccion de la flecha
         if self.arrow_rotation and not self.get_direction:
+            zeros = np.zeros(2)
             img = self.bridge.imgmsg_to_cv2(data)[100:300, :]
             red_filtered = get_red_mask(img) 
             gray = cv.cvtColor(red_filtered, cv.COLOR_BGR2GRAY)
@@ -145,17 +149,15 @@ class Robot():
             lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 100,
                                              minLineLength=100,
                                              maxLineGap=10)[:, 0]
-            new = self.bridge.cv2_to_imgmsg(gray, encoding="passthrough")
-
-            self.img_pub.publish(new)
+            
             rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions)
             rectas = rectas[rectas != zeros]
 
             # No se si esto esta bien
             if np.mean(rectas) < img.shape[1]/2:
-                self.goal_ang = np.pi/2
+                self.goal_ang = sawtooth(np.pi/2 + self.ang)
             else:
-                self.goal_ang = (-np.pi/2)
+                self.goal_ang = sawtooth(-np.pi/2 + self.ang)
             self.get_direction = True
 
         if self.get_direction:
