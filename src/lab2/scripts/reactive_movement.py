@@ -13,7 +13,7 @@ import time
 class Robot():
     def __init__(self):
         rospy.init_node("reckoning_robot")
-        time.sleep(10)
+        time.sleep(14   )
         # --------------------------------------------------------------------
         # CONSTANTS
         # --------------------------------------------------------------------
@@ -30,7 +30,8 @@ class Robot():
         # --------------------------------------------------------------------
         self.distance = np.array((0.0, 0.0, 0.7000))
         self.ang = 0.0
-        self.arrow_rotation = True
+        self.arrow_rotation = False
+        self.get_direction = False
         self.vel = 0.05
         self.ang_vel = 0.0
 
@@ -44,8 +45,11 @@ class Robot():
         # POSE NODE
         # --------------------------------------------------------------------
 
-        self.deph_sub = rospy.Subscriber('/camera/depth/image_raw',
+        self.depth_sub = rospy.Subscriber('/camera/depth/image_raw',
                                          Image, self.process_depth, queue_size=1)
+        self.depth_pub = rospy.Publisher('image_raw_2',Image, queue_size=2)
+        
+        self.img_pub = rospy.Publisher('image_filtered',Image, queue_size=2)
 
         self.rgb_sub = rospy.Subscriber('/camera/rgb/image_color',
                                         Image, self.arrow_detector, queue_size=1)
@@ -105,7 +109,7 @@ class Robot():
     def process_depth(self, data: Image):
         # Procesar distancia en la imagen con numpy
         depth_image = self.bridge.imgmsg_to_cv2(data).copy()
-        self.distance = np.array(get_image_means(depth_image))
+        self.distance = np.array(get_image_means(self, depth_image))
 
     def publish_depth(self, data):
         # Publish difference between left and right distance
@@ -124,16 +128,16 @@ class Robot():
         # Podriamos añadirle caso en que ve la flecha suficientemente bien
         return self.distance[2] <= self.min_front_dist
     def contin(self):
-        return abs(self.distance[1]-self.distance[0]) > 0.1
+        return abs(self.distance[1]-self.distance[0]) > 0.05
     
     def check_rotate(self):
-        if self.stopped() and not self.continue_rotating():
+        if self.stopped() and not self.contin():
             self.arrow_rotation = True
     def arrow_detector(self, data):
         zeros = np.zeros(2)
 
         # Deteccion de la flecha
-        if self.arrow_rotation:
+        if self.arrow_rotation and not self.get_direction:
             img = self.bridge.imgmsg_to_cv2(data)[100:300, :]
             red_filtered = get_red_mask(img) 
             gray = cv.cvtColor(red_filtered, cv.COLOR_BGR2GRAY)
@@ -141,17 +145,21 @@ class Robot():
             lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 100,
                                              minLineLength=100,
                                              maxLineGap=10)[:, 0]
+            new = self.bridge.cv2_to_imgmsg(gray, encoding="passthrough")
 
+            self.img_pub.publish(new)
             rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions)
             rectas = rectas[rectas != zeros]
 
             # No se si esto esta bien
             if np.mean(rectas) < img.shape[1]/2:
-                goal_ang = np.pi/2
+                self.goal_ang = np.pi/2
             else:
-                goal_ang = (-np.pi/2)
+                self.goal_ang = (-np.pi/2)
+            self.get_direction = True
 
-            ang_diff = min_rotation_diff(goal_ang, self.ang)
+        if self.get_direction:
+            ang_diff = min_rotation_diff(self.goal_ang, self.ang)
             self.ang_state.publish(ang_diff)
 
 
@@ -178,17 +186,16 @@ def pos_y_pendiente(pos):
 
 
 
-def get_image_means(depth_image):
+def get_image_means(self,depth_image):
     # Left depth from image
-    depth_left = depth_image[100:300, :30]
-    depth_left = depth_left[depth_left <= 10]
+    depth_left = depth_image[200:300, :50]
     # Right depth from image
-    depth_right = depth_image[100:300, -30:]
-    depth_right = depth_right[depth_right <= 10]
+    depth_right = depth_image[200:300, -50:]
     # Center depth from image
-    depth_center = depth_image[100:300, 150:-150]
-    depth_center = depth_center[depth_center <= 10]
-
+    depth_center = depth_image[200:300, 150:-150]
+    new = np.concatenate((depth_left,np.concatenate((depth_center,depth_right),axis=1)),axis=1)
+    new = self.bridge.cv2_to_imgmsg(new, encoding="passthrough")
+    self.depth_pub.publish(new)
     prom_center = np.nanmean(depth_center)
     if np.isnan(prom_center):
         prom_center = 0.0
