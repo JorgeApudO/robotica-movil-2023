@@ -1,0 +1,19 @@
+<launch>
+
+  <include file="$(find very_simple_robot_simulator)/launch/run_all.launch" />
+	<node pkg="lab2" name="Reactive_movement" type="reactive_movement.py" output="screen"/>
+	<node pkg="pid" name="wall_distance" type="controller" ns="wall_distance">
+		<param name="Kp" value="0.1"/>
+		<param name="Ki" value="0"/>
+		<param name="Kd" value="0"/>
+		<param name="upper_limit" value="0.2"/>
+		<param name="lower_limit" value="-0.2"/>
+	</node>
+  <node pkg="pid" name="reckoning_ang" type="controller" ns="reckoning_ang">
+		<param name="Kp" value="0.1"/>
+		<param name="Ki" value="0"/>
+		<param name="Kd" value="0"/>
+		<param name="upper_limit" value="1"/>
+		<param name="lower_limit" value="-0.2"/>
+	</node>
+</launch>

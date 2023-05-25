@@ -86,15 +86,12 @@ class Robot():
         # --------------------------------------------------------------------
         # POSE NODE
         # --------------------------------------------------------------------
-        
-
-
 
         self.deph_sub = rospy.Subscriber('/camera/depth/image_raw',
-                                         Image, self.process_depth,queue_size = 1)
+                                         Image, self.process_depth, queue_size=1)
 
         self.rgb_sub = rospy.Subscriber('/camera/rgb/image_color',
-                                        Image, self.arrow_detector, queue_size= 1)
+                                        Image, self.arrow_detector, queue_size=1)
         self.odom_sub = rospy.Subscriber('odom', Odometry,
                                          self.odom_fn)
         # --------------------------------------------------------------------
@@ -116,7 +113,7 @@ class Robot():
 
         self.ang_actuation = rospy.Subscriber('/wall_distance/control_effort',
                                               Float64, self.ang_actuation_fn)
-        
+
         # --------------------------------------------------------------------
         # ANGLE PID CONTROL
         # --------------------------------------------------------------------
@@ -134,13 +131,13 @@ class Robot():
 
         self.ang_actuation = rospy.Subscriber('/reckoning_ang/control_effort',
                                               Float64, self.ang_actuation_fn)
+        self.ang_set_point.publish(0)
 
         # --------------------------------------------------------------------
         # TIMER
         # --------------------------------------------------------------------
         self.period = 0.1
         rospy.Timer(rospy.Duration(self.period), self.publish_depth)
-        rospy.Timer(rospy.Duration(self.period), self.publish_odom)
 
     def odom_fn(self, data: Odometry):
         pose_c = data.pose
@@ -150,17 +147,6 @@ class Robot():
         raw_ang = euler_from_quaternion((orient.x, orient.y,
                                          orient.z, orient.w))[2]
         self.ang = sawtooth(raw_ang)
-
-    def publish_odom(self, data):
-        # Publish  angle to self.ang_state
-        if self.stopped():
-
-            goal_ang = self.arrow_detector()
-
-            ang_diff = min_rotation_diff(goal_ang, self.ang)
-        
-            self.ang_state.publish(ang_diff)
-
 
     def ang_actuation_fn(self, data: Float64):
 
@@ -173,11 +159,9 @@ class Robot():
         else:
             self.vel = 0.02
             self.ang_vel = float(data.data)
-            
+
         # rospy.loginfo(f"Angular speed received: {self.ang_vel}")
         self.publish_vel()
-
-        
 
     def process_depth(self, data: Image):
         # Procesar distancia en la imagen con numpy
@@ -191,21 +175,21 @@ class Robot():
         """
 
         # Left depth from image
-        depth_left = depth_image[100:300, 100:150]
-
+        depth_left = depth_image[100:300, :30]
+        depth_left = depth_left[depth_left <= 1000]
         # Right depth from image
-        depth_right = depth_image[100:300, -150:-100]
-
+        depth_right = depth_image[100:300, -30:]
+        depth_right = depth_right[depth_right <= 1000]
         # Center depth from image
         depth_center = depth_image[100:300, 150:-150]
-        depth_left = cv.GaussianBlur(depth_left, (0, 0), 1)
-        depth_right = cv.GaussianBlur(depth_right, (0, 0), 1)
-        # no se que tan valido es promediar para izq y der
-        prom_center = float(depth_center.mean())
+        depth_center = depth_center[depth_center <= 1000]
 
-        # quizas filtrar imagen y añadir los minimos
+        prom_center = float(np.nanmean(depth_center))
+        prom_left = float(np.nanmean(depth_left))
+        prom_right = float(np.nanmean(depth_right))
+
         self.distance = np.array(
-            (np.amin(depth_left), np.amin(depth_right), prom_center))
+            (prom_left, prom_right, prom_center))
 
     def publish_depth(self, data):
         # Publish difference between left and right distance
@@ -222,7 +206,6 @@ class Robot():
     def stopped(self):
         # Podriamos añadirle caso en que ve la flecha suficientemente bien
         return self.distance[2] <= self.min_front_dist
-
 
     def arrow_detector(self, data):
         zeros = np.zeros(2)
@@ -244,12 +227,14 @@ class Robot():
             rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions)
             rectas = rectas[rectas != zeros]
 
-            self.ang=0
             # No se si esto esta bien
             if np.mean(rectas) < img.shape[1]/2:
-                return(np.pi/2) 
+                goal_ang = np.pi/2
             else:
-                return(-np.pi/2)
+                goal_ang = (-np.pi/2)
+
+            ang_diff = min_rotation_diff(goal_ang, self.ang)
+            self.ang_state.publish(ang_diff)
 
 
 if __name__ == "__main__":
