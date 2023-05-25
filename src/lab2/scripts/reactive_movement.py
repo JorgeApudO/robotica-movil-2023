@@ -20,7 +20,7 @@ class Robot():
         self.dist_threshold = 0.01
         self.ang_threshold = np.pi / 180
 
-        self.min_front_dist = 0.75  # [m] Distancia a la que se detiene
+        self.min_front_dist = 750  # [m] Distancia a la que se detiene
 
         self.bridge = CvBridge()
         self.img_guardadas = 0
@@ -28,7 +28,7 @@ class Robot():
         # --------------------------------------------------------------------
         # INITIAL CONDITIONS
         # --------------------------------------------------------------------
-        self.distance = np.array((0.0, 0.0, 0.7000))
+        self.distance = np.array((0.0, 0.0, 700))
         self.ang = 0.0
         self.arrow_rotation = False
         self.get_direction = False
@@ -130,7 +130,7 @@ class Robot():
 
     def contin(self):
         if self.arrow_rotation:
-            return abs(self.distance[1]-self.distance[0]) > 0.05
+            return abs(self.distance[1]-self.distance[0]) > 50
         else:
             return False
     
@@ -165,8 +165,9 @@ class Robot():
     def arrow_alignment(self, data):
 
         if self.arrow_rotation:
-
-            img = self.bridge.imgmsg_to_cv2(data)[100:300, :]
+            
+            img = self.bridge.imgmsg_to_cv2(data)
+            _, width, _ = img.shape
             red_filtered = get_red_mask(img) 
             cx, cy = get_centers(red_filtered)
 
