@@ -8,6 +8,7 @@ from nav_msgs.msg import Odometry
 import numpy as np
 from cv_bridge import CvBridge
 import cv2 as cv
+from blue_square_detector import get_centers, get_mask
 
 
 def sawtooth(rad):
@@ -62,7 +63,7 @@ class Robot():
         self.dist_threshold = 0.01
         self.ang_threshold = np.pi / 180
 
-        self.min_front_dist = 0.25  # [m] Distancia a la que se detiene
+        self.min_front_dist = 650  # [m] Distancia a la que se detiene
 
         self.bridge = CvBridge()
         self.img_guardadas = 0
@@ -85,16 +86,17 @@ class Robot():
         # --------------------------------------------------------------------
         # POSE NODE
         # --------------------------------------------------------------------
-        # self.real_pose_sub = rospy.Subscriber('real_pose', Pose,
-        #                                       self.real_pose_fn)
+        
+
+
 
         self.deph_sub = rospy.Subscriber('/camera/depth/image_raw',
                                          Image, self.process_depth,queue_size = 1)
 
         self.rgb_sub = rospy.Subscriber('/camera/rgb/image_color',
                                         Image, self.arrow_detector, queue_size= 1)
-        '''self.odom_sub = rospy.Subscriber('odom', Odometry,
-                                         self.odom_fn)'''
+        self.odom_sub = rospy.Subscriber('odom', Odometry,
+                                         self.odom_fn)
         # --------------------------------------------------------------------
         # WALL DISTANCE P CONTROL
         # --------------------------------------------------------------------
@@ -114,33 +116,64 @@ class Robot():
 
         self.ang_actuation = rospy.Subscriber('/wall_distance/control_effort',
                                               Float64, self.ang_actuation_fn)
+        
+        # --------------------------------------------------------------------
+        # ANGLE PID CONTROL
+        # --------------------------------------------------------------------
+        self.ang_set_point = rospy.Publisher('/reckoning_ang/setpoint',
+                                             Float64, queue_size=1)
+        rospy.loginfo("Waiting angle pid setpoint process")
+        while self.ang_set_point.get_num_connections() == 0 and not rospy.is_shutdown():
+            rospy.sleep(0.1)
+
+        self.ang_state = rospy.Publisher('/reckoning_ang/state',
+                                         Float64, queue_size=1)
+        rospy.loginfo("Waiting ang pid state process")
+        while self.ang_state.get_num_connections() == 0 and not rospy.is_shutdown():
+            rospy.sleep(0.1)
+
+        self.ang_actuation = rospy.Subscriber('/reckoning_ang/control_effort',
+                                              Float64, self.ang_actuation_fn)
 
         # --------------------------------------------------------------------
         # TIMER
         # --------------------------------------------------------------------
         self.period = 0.1
         rospy.Timer(rospy.Duration(self.period), self.publish_depth)
-    '''
+        rospy.Timer(rospy.Duration(self.period), self.publish_odom)
+
     def odom_fn(self, data: Odometry):
         pose_c = data.pose
         pose = pose_c.pose
-
-        pos = pose.position
         orient = pose.orientation
-
-        self.pos = np.array((pos.x, pos.y))
 
         raw_ang = euler_from_quaternion((orient.x, orient.y,
                                          orient.z, orient.w))[2]
         self.ang = sawtooth(raw_ang)
-        '''
+
+    def publish_odom(self, data):
+        # Publish  angle to self.ang_state
+        if self.stopped():
+
+            goal_ang = self.arrow_detector()
+
+            ang_diff = min_rotation_diff(goal_ang, self.ang)
+        
+            self.ang_state.publish(ang_diff)
+
+
     def ang_actuation_fn(self, data: Float64):
+
         if self.stopped() and not self.arrow_rotation:
-            self.ang_vel = 0
             self.vel = 0
-        else:
+            self.ang_vel = 0
+        elif self.stopped() and self.arrow_rotation:
+            self.vel = 0
             self.ang_vel = float(data.data)
+        else:
             self.vel = 0.02
+            self.ang_vel = float(data.data)
+            
         # rospy.loginfo(f"Angular speed received: {self.ang_vel}")
         self.publish_vel()
 
@@ -149,7 +182,6 @@ class Robot():
     def process_depth(self, data: Image):
         # Procesar distancia en la imagen con numpy
         depth_image = self.bridge.imgmsg_to_cv2(data).copy()
-        depth_image[np.isnan(depth_image)] = np.mean(depth_image)
         """
         Guardar imagenes para poder medir correctamente los pixeles pa cortar
 
@@ -169,8 +201,6 @@ class Robot():
         depth_left = cv.GaussianBlur(depth_left, (0, 0), 1)
         depth_right = cv.GaussianBlur(depth_right, (0, 0), 1)
         # no se que tan valido es promediar para izq y der
-        prom_left = float(depth_left.mean())
-        prom_right = float(depth_right.mean())
         prom_center = float(depth_center.mean())
 
         # quizas filtrar imagen y añadir los minimos
@@ -214,11 +244,12 @@ class Robot():
             rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions)
             rectas = rectas[rectas != zeros]
 
+            self.ang=0
             # No se si esto esta bien
             if np.mean(rectas) < img.shape[1]/2:
-                self.wall_distance_state.publish(np.pi/2)
+                return(np.pi/2) 
             else:
-                self.wall_distance_state.publish(-np.pi/2)
+                return(-np.pi/2)
 
 
 if __name__ == "__main__":
