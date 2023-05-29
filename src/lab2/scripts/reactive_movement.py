@@ -148,9 +148,11 @@ class Robot():
             edges = cv.Canny(red_filtered, 50, 150, apertureSize=3)
             lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 30,
                                              minLineLength=60,
-                                             maxLineGap=10)[:, 0]
+                                             maxLineGap=10)
 
-            rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions)
+            rospy.loginfo(lines_positions)
+
+            rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions[:, 0])
             rectas = rectas[rectas != np.zeros(2)]
 
             cx, _ = get_centers(red_filtered)
