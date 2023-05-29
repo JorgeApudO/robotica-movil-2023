@@ -17,10 +17,11 @@ class Robot():
         # --------------------------------------------------------------------
         # CONSTANTS
         # --------------------------------------------------------------------
+        self.pond_unidades = 1
         self.dist_threshold = 0.01
         self.ang_threshold = np.pi / 180
 
-        self.min_front_dist = 0.75  # [m] Distancia a la que se detiene
+        self.min_front_dist = 0.75*self.pond_unidades  # [m] Distancia a la que se detiene
 
         self.bridge = CvBridge()
         self.img_guardadas = 0
@@ -28,7 +29,7 @@ class Robot():
         # --------------------------------------------------------------------
         # INITIAL CONDITIONS
         # --------------------------------------------------------------------
-        self.distance = np.array((0.0, 0.0, 0.80))
+        self.distance = np.array((0.0, 0.0, 0.80*self.pond_unidades))
         self.ang = 0.0
         self.arrow_rotation = False
         self.get_direction = False
@@ -76,7 +77,7 @@ class Robot():
         # --------------------------------------------------------------------
         # TIMER
         # --------------------------------------------------------------------
-        
+
         self.period = 0.1
         rospy.Timer(rospy.Duration(self.period), self.publish_depth)
 
@@ -107,8 +108,9 @@ class Robot():
 
     def process_depth(self, data: Image):
         # Procesar distancia en la imagen con numpy
-        depth_image = self.bridge.imgmsg_to_cv2(data).copy()
-        self.distance = np.array(get_image_means(self, depth_image))
+        if not self.arrow_rotation:
+            depth_image = self.bridge.imgmsg_to_cv2(data).copy()
+            self.distance = np.array(get_image_means(depth_image))
 
     def publish_depth(self, data):
         # Publish difference between left and right distance
@@ -128,10 +130,8 @@ class Robot():
         return self.distance[2] <= self.min_front_dist
 
     def contin(self):
-        if self.arrow_rotation:
-            return abs(self.distance[1]-self.distance[0]) > 10
-        else:
-            return False
+        return abs(self.distance[1]-self.distance[0]) > 0.01*self.pond_unidades
+
     
     def check_rotate(self):
         if self.stopped() and not self.contin():
@@ -187,16 +187,16 @@ def pos_y_pendiente(pos):
 
 
 
-def get_image_means(self,depth_image):
+def get_image_means(depth_image):
     # Left depth from image
     depth_left = depth_image[200:300, :40]
     # Right depth from image
     depth_right = depth_image[200:300, -40:]
     # Center depth from image
     depth_center = depth_image[200:300, 150:-150]
-    new = np.concatenate((depth_left,np.concatenate((depth_center,depth_right),axis=1)),axis=1)
-    new = self.bridge.cv2_to_imgmsg(new, encoding="passthrough")
-    self.depth_pub.publish(new)
+    #new = np.concatenate((depth_left,np.concatenate((depth_center,depth_right),axis=1)),axis=1)
+    #new = self.bridge.cv2_to_imgmsg(new, encoding="passthrough")
+    #self.depth_pub.publish(new)
     prom_center = np.nanmean(depth_center)
     if np.isnan(prom_center):
         prom_center = 0.0
