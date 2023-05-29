@@ -82,6 +82,8 @@ class Robot():
 
         self.period = 0.1
         rospy.Timer(rospy.Duration(self.period), self.publish_depth)
+        cv.namedWindow("out")
+        self.show_img = None
 
     def odom_fn(self, data: Odometry):
         pose_c = data.pose
@@ -116,6 +118,8 @@ class Robot():
 
     def publish_depth(self, data):
         # Publish difference between left and right distance
+        if self.show_img is not None:
+            cv.imshow("out", self.show_img)
         if not self.arrow_rotation:
             dif_distance = self.distance[1]-self.distance[0]
             self.ang_state.publish(dif_distance)
@@ -158,6 +162,8 @@ class Robot():
             cx, _ = get_centers(red_filtered)
 
             rospy.loginfo(f"RECTAS: {rectas}\nCX: {cx}")
+
+            self.show_img = edges
 
             # No se si esto esta bien
             if np.mean(rectas) < cx:
