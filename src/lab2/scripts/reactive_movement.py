@@ -10,6 +10,7 @@ from cv_bridge import CvBridge
 import cv2 as cv
 import time
 
+
 class Robot():
     def __init__(self):
         rospy.init_node("reckoning_robot")
@@ -21,7 +22,8 @@ class Robot():
         self.dist_threshold = 0.01
         self.ang_threshold = np.pi / 180
 
-        self.min_front_dist = 0.75*self.pond_unidades  # [m] Distancia a la que se detiene
+        # [m] Distancia a la que se detiene
+        self.min_front_dist = 0.75*self.pond_unidades
 
         self.bridge = CvBridge()
         self.img_guardadas = 0
@@ -47,10 +49,10 @@ class Robot():
         # --------------------------------------------------------------------
 
         self.depth_sub = rospy.Subscriber('/camera/depth/image_raw',
-                                         Image, self.process_depth, queue_size=1)
-        self.depth_pub = rospy.Publisher('image_raw_2',Image, queue_size=2)
-        
-        self.img_pub = rospy.Publisher('image_filtered',Image, queue_size=2)
+                                          Image, self.process_depth, queue_size=1)
+        self.depth_pub = rospy.Publisher('image_raw_2', Image, queue_size=2)
+
+        self.img_pub = rospy.Publisher('image_filtered', Image, queue_size=2)
 
         self.rgb_sub = rospy.Subscriber('/camera/rgb/image_color',
                                         Image, self.arrow_detector, queue_size=1)
@@ -60,13 +62,13 @@ class Robot():
         # ANGLE P CONTROL
         # --------------------------------------------------------------------
         self.ang_set_point = rospy.Publisher('/angle/setpoint',
-                                              Float64, queue_size=1)
+                                             Float64, queue_size=1)
         rospy.loginfo("Waiting angle distance pid setpoint process")
         while self.ang_set_point.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
         self.ang_state = rospy.Publisher('/angle/state',
-                                                   Float64, queue_size=1)
+                                         Float64, queue_size=1)
         rospy.loginfo("Waiting angle distance pid state process")
         while self.ang_state.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.sleep(0.1)
@@ -115,14 +117,14 @@ class Robot():
     def publish_depth(self, data):
         # Publish difference between left and right distance
         if not self.arrow_rotation:
-            dif_distance =  self.distance[1]-self.distance[0]
+            dif_distance = self.distance[1]-self.distance[0]
             self.ang_state.publish(dif_distance)
 
     def publish_vel(self):
         # Publish odometry to self.dist_state
         velocity = Twist()
         velocity.linear.x = self.vel
-        velocity.angular.z =  self.ang_vel
+        velocity.angular.z = self.ang_vel
         self.vel_applier.publish(velocity)
 
     def stopped(self):
@@ -132,7 +134,6 @@ class Robot():
     def contin(self):
         return abs(self.distance[1]-self.distance[0]) > 0.01*self.pond_unidades
 
-    
     def check_rotate(self):
         if self.stopped() and not self.contin():
             self.arrow_rotation = True
@@ -140,17 +141,16 @@ class Robot():
     def arrow_detector(self, data):
         # Deteccion de la flecha
         if self.arrow_rotation and not self.get_direction:
-            zeros = np.zeros(2)
-            img = self.bridge.imgmsg_to_cv2(data)[100:300, :]
-            red_filtered = get_red_mask(img) 
-            gray = cv.cvtColor(red_filtered, cv.COLOR_BGR2GRAY)
-            edges = cv.Canny(gray, 50, 150, apertureSize=3)
-            lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 100,
-                                             minLineLength=100,
+            img = self.bridge.imgmsg_to_cv2(data)[200:400, :]
+            red_filtered = get_red_mask(img)
+            # gray = cv.cvtColor(red_filtered, cv.COLOR_BGR2GRAY)
+            edges = cv.Canny(red_filtered, 50, 150, apertureSize=3)
+            lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 30,
+                                             minLineLength=60,
                                              maxLineGap=10)[:, 0]
-            
+
             rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions)
-            rectas = rectas[rectas != zeros]
+            rectas = rectas[rectas != np.zeros(2)]
 
             # No se si esto esta bien
             if np.mean(rectas) < img.shape[1]/2:
@@ -180,11 +180,9 @@ def min_rotation_diff(goal, actual):
 
 def pos_y_pendiente(pos):
     x1, y1, x2, y2 = pos
-    if x2-x1 == 0 or y2-y1 == 0:
+    if x2-x1 == 0 or abs(y2-y1) < 0:
         return np.zeros(2)
     return np.array(x1, x2)
-
-
 
 
 def get_image_means(depth_image):
@@ -194,9 +192,9 @@ def get_image_means(depth_image):
     depth_right = depth_image[200:300, -40:]
     # Center depth from image
     depth_center = depth_image[200:300, 150:-150]
-    #new = np.concatenate((depth_left,np.concatenate((depth_center,depth_right),axis=1)),axis=1)
-    #new = self.bridge.cv2_to_imgmsg(new, encoding="passthrough")
-    #self.depth_pub.publish(new)
+    # new = np.concatenate((depth_left,np.concatenate((depth_center,depth_right),axis=1)),axis=1)
+    # new = self.bridge.cv2_to_imgmsg(new, encoding="passthrough")
+    # self.depth_pub.publish(new)
     prom_center = np.nanmean(depth_center)
     if np.isnan(prom_center):
         prom_center = 0.0
@@ -224,9 +222,10 @@ def get_centers(mask):
 
 def get_red_mask(img):
     hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    
+
     mask0 = cv.inRange(hsv, np.array([0, 100, 50]), np.array([10, 255, 255]))
-    mask1 = cv.inRange(hsv, np.array([170, 100, 50]), np.array([180, 255, 255]))
+    mask1 = cv.inRange(hsv, np.array(
+        [170, 100, 50]), np.array([180, 255, 255]))
     mask = mask0 + mask1
 
     return mask
