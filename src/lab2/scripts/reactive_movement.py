@@ -18,7 +18,7 @@ class Robot():
         # --------------------------------------------------------------------
         # CONSTANTS
         # --------------------------------------------------------------------
-        self.pond_unidades = 1
+        self.pond_unidades = 1000
         self.dist_threshold = 0.01
         self.ang_threshold = np.pi / 180
 
@@ -96,7 +96,7 @@ class Robot():
 
         if self.stopped():
             self.vel = 0
-            rospy.loginfo('paro')
+            # rospy.loginfo('paro')
         else:
             self.vel = 0.1
 
@@ -141,6 +141,7 @@ class Robot():
     def arrow_detector(self, data):
         # Deteccion de la flecha
         if self.arrow_rotation and not self.get_direction:
+            rospy.loginfo("BEGINNING ARROW DETECTION")
             img = self.bridge.imgmsg_to_cv2(data)[200:400, :]
             red_filtered = get_red_mask(img)
             # gray = cv.cvtColor(red_filtered, cv.COLOR_BGR2GRAY)
@@ -154,11 +155,15 @@ class Robot():
 
             cx, _ = get_centers(red_filtered)
 
+            rospy.loginfo(f"RECTAS: {rectas}\nCX: {cx}")
+
             # No se si esto esta bien
             if np.mean(rectas) < cx:
                 self.goal_ang = sawtooth(np.pi/2 + self.ang)
+                rospy.loginfo("IZQUIERDA")
             else:
                 self.goal_ang = sawtooth(-np.pi/2 + self.ang)
+                rospy.loginfo("DERECHA")
             self.get_direction = True
 
         if self.get_direction:
