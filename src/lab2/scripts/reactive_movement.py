@@ -152,8 +152,10 @@ class Robot():
             rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions)
             rectas = rectas[rectas != np.zeros(2)]
 
+            cx, _ = get_centers(red_filtered)
+
             # No se si esto esta bien
-            if np.mean(rectas) < img.shape[1]/2:
+            if np.mean(rectas) < cx:
                 self.goal_ang = sawtooth(np.pi/2 + self.ang)
             else:
                 self.goal_ang = sawtooth(-np.pi/2 + self.ang)
