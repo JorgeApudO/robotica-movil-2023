@@ -79,11 +79,12 @@ class Robot():
         # --------------------------------------------------------------------
         # TIMER
         # --------------------------------------------------------------------
+        cv.namedWindow("out")
+        self.show_img = None
+        self.first_run = False
 
         self.period = 0.1
         rospy.Timer(rospy.Duration(self.period), self.publish_depth)
-        cv.namedWindow("out")
-        self.show_img = None
 
     def odom_fn(self, data: Odometry):
         pose_c = data.pose
@@ -144,7 +145,8 @@ class Robot():
 
     def arrow_detector(self, data):
         # Deteccion de la flecha
-        if self.arrow_rotation and not self.get_direction:
+        if self.arrow_rotation and not self.get_direction and not self.first_run:
+            self.first_run = True
             rospy.loginfo("BEGINNING ARROW DETECTION")
             img = self.bridge.imgmsg_to_cv2(data)[200:400, :]
             red_filtered = get_red_mask(img)
