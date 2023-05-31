@@ -153,27 +153,42 @@ class Robot():
             # gray = cv.cvtColor(red_filtered, cv.COLOR_BGR2GRAY)
             edges = cv.Canny(red_filtered, 50, 150, apertureSize=3)
             lines_positions = cv.HoughLinesP(edges, 1, np.pi/180, 30,
-                                             minLineLength=60,
+                                             minLineLength=20,
                                              maxLineGap=10)
 
             rospy.loginfo(lines_positions)
 
-            rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions[:, 0])
-            rectas = rectas[rectas != np.zeros(2)]
+            rospy.loginfo(f"Shape: {lines_positions[:, 0].shape}")
+
+            
+            
+            #rectas = np.apply_along_axis(pos_y_pendiente, 1, lines_positions[:, 0])
+            rectas =np.array([pos_y_pendiente(linea) for linea in lines_positions[:,0]])
+            # rectas = rectas[rectas != np.zeros(2)]
+
+            rectas =[recta for i in rectas if any(i) != np.zeros(2)]
 
             cx, _ = get_centers(red_filtered)
 
             rospy.loginfo(f"RECTAS: {rectas}\nCX: {cx}")
 
             self.show_img = edges
+            if rectas.size != 0:
 
-            # No se si esto esta bien
-            if np.mean(rectas) < cx:
-                self.goal_ang = sawtooth(np.pi/2 + self.ang)
-                rospy.loginfo("IZQUIERDA")
+                # No se si esto esta bien
+                if np.mean(rectas) < cx:
+                    self.goal_ang = sawtooth(np.pi/2 + self.ang)
+                    rospy.loginfo("IZQUIERDA")
+                else:
+                    self.goal_ang = sawtooth(-np.pi/2 + self.ang)
+                    rospy.loginfo("DERECHA")
             else:
-                self.goal_ang = sawtooth(-np.pi/2 + self.ang)
-                rospy.loginfo("DERECHA")
+                if cx - img.shape[1]/2< 0:
+                    self.goal_ang = sawtooth(-np.pi/2 + self.ang)
+                    rospy.loginfo("DERECHA")
+                else:
+                    self.goal_ang = sawtooth(np.pi/2 + self.ang)
+                    rospy.loginfo("IZQUIERDA")
             self.get_direction = True
 
         if self.get_direction:
@@ -197,7 +212,7 @@ def min_rotation_diff(goal, actual):
 
 def pos_y_pendiente(pos):
     x1, y1, x2, y2 = pos
-    if x2-x1 == 0 or abs(y2-y1) < 0:
+    if abs(x2-x1) < 5 or abs(y2-y1) < 10:
         return np.zeros(2)
     return np.array(x1, x2)
 
