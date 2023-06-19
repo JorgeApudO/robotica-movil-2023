@@ -2,6 +2,8 @@
 	<include file="$(find very_simple_robot_simulator)/launch/minimal_simulator.launch"/>
 	<include file="$(find very_simple_robot_simulator)/launch/lidar_simulator.launch"/>
 
+	<node name="map_server" pkg="map_server" type="map_server" args="$(find lab3)/scripts/mapa.yaml"/>
 
+	<node pkg="lab3" name="Localization_robot" type="robot.py" output="screen"/>
 	
 </launch>

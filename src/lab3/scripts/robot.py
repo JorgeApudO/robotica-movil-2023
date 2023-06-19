@@ -6,14 +6,15 @@ from nav_msgs.msg import OccupancyGrid
 from sensor_msgs.msg import LaserScan
 
 
-LOWER_ANGLE_LIMIT = -57
-UPPER_ANGLE_LIMIT = 57
+LOWER_ANGLE_LIMIT = -27 * np.pi / 180
+UPPER_ANGLE_LIMIT = 27 * np.pi / 180
 
 
 class Robot:
     states = [""]
 
     def __init__(self):
+        rp.init_node("localization_robot")
         # ---
         # Initial conditions
         self.__state = ""
@@ -49,15 +50,42 @@ class Robot:
 
         data = map.data
 
-        self.map_matrix = [[data[i*height + j] for j in range(width)] for i in range(height)]
+        self.map_matrix = np.array([[data[i*height + j]
+                                    for j in range(width)] for i in range(height)])
         self.map_data = info
+
+        rp.loginfo(self.map_matrix)
+        rp.loginfo(self.map_data)
 
     def update_laser(self, data):
         angle_min = float(data.angle_min)
+        angle_max = float(data.angle_max)
         angle_inc = float(data.angle_increment)
 
-        ranges = np.array(data.ranges)
+        ranges = data.ranges
+
+        index_min = int(np.ceil((LOWER_ANGLE_LIMIT - angle_min) / angle_inc))
+        index_max = len(
+            ranges) - int(np.ceil((angle_max - UPPER_ANGLE_LIMIT) / angle_inc))
+
+        '''
+        rp.loginfo(f"\nlimits: {LOWER_ANGLE_LIMIT}, {UPPER_ANGLE_LIMIT}\n" +
+                   f"angle_min_max: {angle_min}, {angle_max}\n" +
+                   f"indexes: {index_min}, {index_max}\n" +
+                   f"inc*index: {index_min*angle_inc}, {index_max*angle_inc}\n" +
+                   f"len: {len(ranges)}")
+        '''
+
+        ranges = np.array(ranges[index_min:index_max+1])
 
         ranges[ranges < float(data.range_min)] = np.NaN
         ranges[ranges > float(data.range_max)] = np.NaN
 
+        self.lidar_scan = ranges
+
+        rp.loginfo(ranges)
+
+
+if __name__ == "__main__":
+    robot = Robot()
+    rp.spin()
