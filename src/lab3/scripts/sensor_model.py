@@ -4,6 +4,8 @@ import numpy as np
 from statistics import NormalDist
 from nav_msgs.msg import OccupancyGrid
 from std_msgs.msg import Float64MultiArray
+from geometry_msgs.msg import Pose
+
 
 class SensorModel:
 
@@ -52,13 +54,15 @@ class SensorModel:
                 y = self.pose.y + (
                     self.sensor_pos[1]*np.cos(self.sensor_pos[2]) + self.sensor_pos[0]*np.sin(self.sensor_pos[2])
                     + laser[0]*np.sin(self.sensor_pos[2]+laser[1]))
+                
                 zpos = np.array([x,y])
-                dist = min(self.occupied - zpos) # pseudo codigo pa encontrar distancia minima entre los ocupados y la pose medida por el sensor.
+                dif = zpos - self.occupied
+                dists = np.linalg.norm(dif, axis = 1)
+                dist = np.min(dists)
 
                 q = q * self.Ndist.pdf(dist)
 
         return q
-
 
 
         
