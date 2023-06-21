@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+
+  <include file="$(find very_simple_robot_simulator)/launch/minimal_simulator.launch" />
+  <include file="$(find very_simple_robot_simulator)/launch/lidar_simulator.launch" />
+
+  <node pkg="very_simple_robot_simulator" name ="world_state_gui" type ="world_state_gui.py">
+   <param name="/map_file" type="yaml" value="$(find ayud_slam)/maps/mapa.yaml"/>
+  </node>
+
+  <node pkg="ayud_slam" name="particles_manager" type="particles_manager.py" output = "screen"/>
+  
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find ayud_slam)/rviz/pf_cfg.rviz"/>
+  
+</launch>
