@@ -2,8 +2,12 @@
 	<include file="$(find very_simple_robot_simulator)/launch/minimal_simulator.launch"/>
 	<include file="$(find very_simple_robot_simulator)/launch/lidar_simulator.launch"/>
 
-	<node name="map_server" pkg="map_server" type="map_server" args="$(find lab3)/scripts/mapa.yaml"/>
+	<node pkg="very_simple_robot_simulator" name="world_state_gui" type="world_state_gui.py">
+		<param name="/map_file" type="yaml" value="$(find lab3)/scripts/mapa.yaml"/>
+	</node>
 
-	<node pkg="lab3" name="Localization_robot" type="robot.py" output="screen"/>
+	<node pkg="lab3" name="localization" type="robot.py" output="screen">
+		<param name="flip_map" value="1"/>
+	</node>
 	
 </launch>

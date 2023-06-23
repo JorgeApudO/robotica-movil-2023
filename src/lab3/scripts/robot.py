@@ -4,6 +4,9 @@ import numpy as np
 
 from nav_msgs.msg import OccupancyGrid
 from sensor_msgs.msg import LaserScan
+from geometry_msgs.msg import Pose
+
+from tf.transformations import quaternion_from_euler
 
 
 LOWER_ANGLE_LIMIT = -27 * np.pi / 180
@@ -15,6 +18,10 @@ class Robot:
 
     def __init__(self):
         rp.init_node("localization_robot")
+        pub_initial_pose(0.5, 0.5, 0)
+
+        self.flip = bool(rp.get_param('/localization/flip_map', 0))
+        rp.loginfo(self.flip)
         # ---
         # Initial conditions
         self.__state = ""
@@ -51,6 +58,9 @@ class Robot:
         map_matrix = 100 - np.array(map.data).reshape((height, width))
         map_matrix = (map_matrix * (255/100.0)).astype(np.uint8)
 
+        if self.flip:
+            map_matrix = np.flip(map_matrix, axis=0)
+
         self.map_matrix = map_matrix
         self.resolution = info.resolution
 
@@ -83,7 +93,27 @@ class Robot:
 
         self.lidar_scan = ranges
 
-        rp.loginfo(ranges)
+        # rp.loginfo(ranges)
+
+
+def pub_initial_pose(x, y, yaw):
+    pub_init_pose = rp.Publisher('initial_pose', Pose, queue_size=1)
+
+    while pub_init_pose.get_num_connections() == 0 and not rp.is_shutdown():
+        rp.sleep(0.2)
+
+    init_pose = Pose()
+    init_pose.position.x = x
+    init_pose.position.y = y
+
+    x, y, z, w = quaternion_from_euler(0, 0, yaw)
+
+    init_pose.orientation.x = x
+    init_pose.orientation.y = y
+    init_pose.orientation.z = z
+    init_pose.orientation.w = w
+
+    pub_init_pose.publish(init_pose)
 
 
 if __name__ == "__main__":
