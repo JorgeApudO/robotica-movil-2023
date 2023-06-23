@@ -48,11 +48,11 @@ class Robot:
         width = int(info.width)
         height = int(info.height)
 
-        data = map.data
+        map_matrix = 100 - np.array(map.data).reshape((height, width))
+        map_matrix = (map_matrix * (255/100.0)).astype(np.uint8)
 
-        self.map_matrix = np.array([[data[i*height + j]
-                                    for j in range(width)] for i in range(height)])
-        self.map_data = info
+        self.map_matrix = map_matrix
+        self.resolution = info.resolution
 
         rp.loginfo(self.map_matrix)
         rp.loginfo(self.map_data)
