@@ -4,17 +4,29 @@ import numpy as np
 
 from nav_msgs.msg import OccupancyGrid
 from sensor_msgs.msg import LaserScan
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Float64MultiArray, Int8
+from geometry_msgs.msg import Pose
+
+from tf.transformations import quaternion_from_euler
+
 
 LOWER_ANGLE_LIMIT = -27 * np.pi / 180
 UPPER_ANGLE_LIMIT = 27 * np.pi / 180
 
+QUIETO = "quieto"
+MOVIMIENTO = "movimiento"
+
 
 class Robot:
-    states = [""]
+    states = {QUIETO, MOVIMIENTO}
 
     def __init__(self):
         rp.init_node("localization_robot")
+        pub_initial_pose(0.5, 0.5, 0)
+
+        self.flip = bool(rp.get_param('/localization/flip_map', 0))
+        rp.loginfo(self.flip)
+        
         # ---
         # Initial conditions
         self.__state = ""
@@ -38,6 +50,8 @@ class Robot:
         self.measurement_pub = rp.Publisher('distances', Float64MultiArray,
                                     queue_size = 2)
         rp.Timer(rp.Duration(self.period), self.publish_lidar)
+        
+        self.done_sub = rp.Subscriber('done_flag', Int8, self.move_state) # VER DONDE PUBLICAR ESTO
 
     @property
     def state(self):
@@ -55,11 +69,14 @@ class Robot:
         width = int(info.width)
         height = int(info.height)
 
-        data = map.data
+        map_matrix = 100 - np.array(map.data).reshape((height, width))
+        map_matrix = (map_matrix * (255/100.0)).astype(np.uint8)
 
-        self.map_matrix = np.array([[data[i*height + j]
-                                    for j in range(width)] for i in range(height)])
-        self.map_data = info
+        if self.flip:
+            map_matrix = np.flip(map_matrix, axis=0)
+
+        self.map_matrix = map_matrix
+        self.resolution = info.resolution
 
         rp.loginfo(self.map_matrix)
         rp.loginfo(self.map_data)
@@ -82,14 +99,40 @@ class Robot:
 
         self.lidar_scan = ranges
 
-        rp.loginfo(ranges)
+        # rp.loginfo(ranges)
 
     def publish_lidar(self, data):
-
-        lidar_info = np.array((x, LOWER_ANGLE_LIMIT + i*self.angle_inc
+        if self.state == QUIETO:
+            lidar_info = np.array((x, LOWER_ANGLE_LIMIT + i*self.angle_inc
                                ) for i, x in enumerate(self.lidar_scan))
-        
-        self.measurement_pub.publish(lidar_info)
+            self.measurement_pub.publish(lidar_info)
+ 
+    def move_state(self,data):
+        if data:
+            self.state = MOVIMIENTO
+        else:
+            self.state = QUIETO
+
+def pub_initial_pose(x, y, yaw):
+    pub_init_pose = rp.Publisher('initial_pose', Pose, queue_size=1)
+
+    while pub_init_pose.get_num_connections() == 0 and not rp.is_shutdown():
+        rp.sleep(0.2)
+
+    init_pose = Pose()
+    init_pose.position.x = x
+    init_pose.position.y = y
+
+    x, y, z, w = quaternion_from_euler(0, 0, yaw)
+
+    init_pose.orientation.x = x
+    init_pose.orientation.y = y
+    init_pose.orientation.z = z
+    init_pose.orientation.w = w
+
+    pub_init_pose.publish(init_pose)
+
+    
         
 
 if __name__ == "__main__":

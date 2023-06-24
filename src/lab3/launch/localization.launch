@@ -1,3 +1,7 @@
 <launch>
 	<node name="map_server" pkg="map_server" type="map_server" args="$(find lab3)/scripts/mapa.yaml"/>
+
+	<node pkg="lab3" name="localization" type="robot.py" output="screen">
+		<param name="flip_map" value="0"/>
+	</node>
 </launch>
