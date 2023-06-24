@@ -4,7 +4,7 @@ import numpy as np
 
 from nav_msgs.msg import OccupancyGrid
 from sensor_msgs.msg import LaserScan
-
+from std_msgs.msg import Float64MultiArray
 
 LOWER_ANGLE_LIMIT = -27 * np.pi / 180
 UPPER_ANGLE_LIMIT = 27 * np.pi / 180
@@ -31,6 +31,13 @@ class Robot:
         # ---
         # Lidar data
         rp.Subscriber("/scan", LaserScan, self.update_laser)
+
+        # ---
+        # Sensor data publisher
+        self.period = 0.1
+        self.measurement_pub = rp.Publisher('distances', Float64MultiArray,
+                                    queue_size = 2)
+        rp.Timer(rp.Duration(self.period), self.publish_lidar)
 
     @property
     def state(self):
@@ -60,21 +67,13 @@ class Robot:
     def update_laser(self, data):
         angle_min = float(data.angle_min)
         angle_max = float(data.angle_max)
-        angle_inc = float(data.angle_increment)
+        self.angle_inc = float(data.angle_increment)
 
         ranges = data.ranges
 
-        index_min = int(np.ceil((LOWER_ANGLE_LIMIT - angle_min) / angle_inc))
+        index_min = int(np.ceil((LOWER_ANGLE_LIMIT - angle_min) / self.angle_inc))
         index_max = len(
-            ranges) - int(np.ceil((angle_max - UPPER_ANGLE_LIMIT) / angle_inc))
-
-        '''
-        rp.loginfo(f"\nlimits: {LOWER_ANGLE_LIMIT}, {UPPER_ANGLE_LIMIT}\n" +
-                   f"angle_min_max: {angle_min}, {angle_max}\n" +
-                   f"indexes: {index_min}, {index_max}\n" +
-                   f"inc*index: {index_min*angle_inc}, {index_max*angle_inc}\n" +
-                   f"len: {len(ranges)}")
-        '''
+            ranges) - int(np.ceil((angle_max - UPPER_ANGLE_LIMIT) / self.angle_inc))
 
         ranges = np.array(ranges[index_min:index_max+1])
 
@@ -85,6 +84,13 @@ class Robot:
 
         rp.loginfo(ranges)
 
+    def publish_lidar(self, data):
+
+        lidar_info = np.array((x, LOWER_ANGLE_LIMIT + i*self.angle_inc
+                               ) for i, x in enumerate(self.lidar_scan))
+        
+        self.measurement_pub.publish(lidar_info)
+        
 
 if __name__ == "__main__":
     robot = Robot()

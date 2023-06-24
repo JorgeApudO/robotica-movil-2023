@@ -9,21 +9,17 @@ from geometry_msgs.msg import Pose
 
 class SensorModel:
 
-    def __init__(self, map_data, sigma = 1, zmax = None, sensor_pos = (0,0,0)):
+    def __init__(self, occupied, sigma = 1, zmax = None, sensor_pos = (0,0,0)):
         rp.init_node("Sensor_model")
 
-        self.map = map_data #No se si va a ser necesario pasarlo a metros
+        self.occupied = occupied
         self.Ndist = NormalDist(mu = 0, sigma = sigma)
         self.zmax = zmax
         self.sensor_pos = sensor_pos #pose del sensor respecto al centro del robot
         #asumo que estan todos en el mismo lugar y no varia segun el laser
-        self.medition_sub = rp.Subscriber(Float64MultiArray,'distances', self.apply_model, 
+        self.measurement_sub = rp.Subscriber('distances', Float64MultiArray, self.apply_model, 
                                     queue_size = 2)
-        self.pose_sub = rp.Subscriber(Pose,'position',self.get_pose,queue_size = 2)
-
-        self.medition = np.array()
-        self.occupied = np.array()
-        #Creo q lo mejor va a ser definir un array de solo los lugares ocupados y ahi tomar el min dist
+        self.pose_sub = rp.Subscriber('position',Pose ,self.get_pose,queue_size = 2)
         
     def occupied_data(self):
         pass 
