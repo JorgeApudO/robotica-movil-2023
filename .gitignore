@@ -53,3 +53,5 @@ CATKIN_IGNORE
 # pose_loader
 src/lab1/scripts/pose_loader.py
 
+# Python cosas
+venv/
