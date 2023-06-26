@@ -10,10 +10,11 @@ import cv2 as cv
 class Robot_mov_manager():
     def __init__(self):
         rp.init_node("movement_manager")
-
+        
         # ---
         # State
         self.enable = False
+        self.move = True
 
         # ---
         # Enable movement
@@ -26,7 +27,7 @@ class Robot_mov_manager():
         self.ang_threshold = np.pi / 180
 
         # [m] Distancia a la que se detiene
-        self.min_front_dist = 0.5*self.pond_unidades
+        self.min_front_dist = 0.4*self.pond_unidades
 
         # ---
         # INITIAL CONDITIONS
@@ -36,6 +37,8 @@ class Robot_mov_manager():
         self.ang_vel = 0.0
         self.localized = False
 
+        # Lidar data
+        rp.Subscriber("/scan", LaserScan, self.update_dist)
         # ---
         # VEL PUBLISHER NODE
         self.vel_applier = rp.Publisher("yocs_cmd_vel_mux/input/navigation",
@@ -62,24 +65,39 @@ class Robot_mov_manager():
 
         self.ang_actuation = rp.Subscriber('/angle/control_effort',
                                            Float64, self.ang_actuation_fn)
-        self.ang_set_point.publish(0)
+        #Sigamos un muro ahora, mas facil girar 90 grados                    
+        self.ang_set_point.publish(0.5*self.pond_unidades)
+    
+    def update_dist(self,data):
+        #nose como viene la data del lidar
+
+        #sacar 3 puntos, izq, centro y der, igual que antes.
+        self.rotate = centro < self.min_front_dist
+
+        self.distances = np.array(izq, der, centro)
+        pass
 
     def ang_actuation_fn(self, data: Float64):
         if self.localized:
             self.vel = 0
             self.ang_vel = 0
+        
+        if self.rotate:
+            self.ang_vel = 1
+            self.vel = 0 
 
         if self.move:
-            self.vel = 0
+            self.vel = 0.2
+            self.ang_vel = data
 
-            self.publish_vel()
+        self.publish_vel()
 
     def publish_depth(self, data):
         # Publish difference between left and right distance
         if self.show_img is not None:
             cv.imshow("out", self.show_img)
         if not self.arrow_rotation:
-            dif_distance = self.distance[1]-self.distance[0]
+            dif_distance = self.distance[1]
             self.ang_state.publish(dif_distance)
 
     def publish_vel(self):
