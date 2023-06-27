@@ -5,9 +5,14 @@ import numpy as np
 from random import gauss, random
 from copy import deepcopy
 
-from std_msgs.msg import Float64MultiArray, Bool
+from std_msgs.msg import Float64MultiArray, Int8
 
 TARGET_DEVIATION = 0.01
+
+PARTICLE = 1 # sensor model and particle 
+WAIT = 2 # procesando info
+MOVEMENT = 3 # move robot
+DONE = 4 #Finish
 
 class PFMap:
     def __init__(self):
@@ -16,10 +21,11 @@ class PFMap:
         self.weights = None
         self.particles = None
 
-        rp.Subscriber("probabilities", Float64MultiArray, self.update_weights)
+        rp.Subscriber("/probabilities", Float64MultiArray, self.update_weights)
 
-        self.enable_movement = rp.Publisher("enable_movement", Bool, queue_size=1)
-
+        self.change_state = rp.Publisher("/task_done", Int8, queue_size=1)
+        self.final_pose = rp.Publisher("/final_pose",Float64MultiArray, queue_size=1)
+        
         self.robot_position = np.array((0, 0))
         self.robot_angle = 0.0
 
@@ -36,10 +42,11 @@ class PFMap:
         self.weights = np.array(weights)
         self.resample()
 
-        if np.std(self.particles) < TARGET_DEVIATION:
-            self.enable_movement.publish(False)
+        if np.std(self.particles) < TARGET_DEVIATION: # Seudo-Codigo?
+            self.change_state.publish(DONE)
+            self.final_pose.publish(pose) # get pose by some method
         else:
-            self.enable_movement.publish(True)
+            self.change_state.publish(MOVEMENT)
     
     def move(self, turn_angle, forward_distance):
         for particle in self.particles:

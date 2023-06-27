@@ -1,58 +1,58 @@
 #!/usr/bin/env python3
 import rospy as rp
-from std_msgs.msg import Float64, Bool
+from std_msgs.msg import Float64, Bool, Float64MultiArray, Int8
 from geometry_msgs.msg import Twist
 from tf.transformations import euler_from_quaternion
 import numpy as np
 import cv2 as cv
 
 
+PARTICLE = 1 # sensor model and particle 
+WAIT = 2 # procesando info
+MOVEMENT = 3 # move robot
+DONE = 4 #Finish
+
 class Robot_mov_manager():
     def __init__(self):
         rp.init_node("movement_manager")
-        
         # ---
         # State
         self.enable = False
-        self.move = True
-
         # ---
+
         # Enable movement
         rp.Subscriber("/enable_movement", Bool, self.update_state)
-
         # ---
+
+        # Change state
+        self.change_state = rp.Publisher("/task_done", Int8, queue_size=1)
+        # ---
+
         # CONSTANTS
         self.pond_unidades = 1000
-        self.dist_threshold = 0.01
-        self.ang_threshold = np.pi / 180
-
-        # [m] Distancia a la que se detiene
-        self.min_front_dist = 0.4*self.pond_unidades
-
+        self.min_front_dist = 0.5*self.pond_unidades
         # ---
+
         # INITIAL CONDITIONS
-        self.distance = np.array((0.0, 0.0, 0.80*self.pond_unidades))
-        self.ang = 0.0
+        self.distance = np.array((0.4*self.pond_unidades, 0.8*self.pond_unidades))
         self.vel = 0.1
         self.ang_vel = 0.0
-        self.localized = False
-
-        # Lidar data
-        rp.Subscriber("/scan", LaserScan, self.update_dist)
+        self.control_cont = 0
         # ---
+
+        # LIDAR
+        rp.Subscriber("/depth_data", Float64MultiArray, self.update_dist)
+        # ---
+
         # VEL PUBLISHER NODE
         self.vel_applier = rp.Publisher("yocs_cmd_vel_mux/input/navigation",
                                         Twist, queue_size=1)
-
         # ---
-        # LOCALIZATION CONFIRMATION
-        self.localized_sub = rp.Subscriber(
-            "localization", Float64, self.manager)
-
-        # ---
+        
         # CONTROL NODE
         self.ang_set_point = rp.Publisher('/angle/setpoint',
                                           Float64, queue_size=1)
+        
         rp.loginfo("Waiting angle distance pid setpoint process")
         while self.ang_set_point.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.1)
@@ -65,70 +65,57 @@ class Robot_mov_manager():
 
         self.ang_actuation = rp.Subscriber('/angle/control_effort',
                                            Float64, self.ang_actuation_fn)
-        #Sigamos un muro ahora, mas facil girar 90 grados                    
-        self.ang_set_point.publish(0.5*self.pond_unidades)
-    
+        self.ang_set_point.publish(0.4*self.pond_unidades)
+        # ---
+
+        # HIGH LEVEL MOVEMENT CONTROL!
+        rp.Timer(rp.Duration(0.1), self.control)
+ 
     def update_dist(self,data):
-        #nose como viene la data del lidar
 
-        #sacar 3 puntos, izq, centro y der, igual que antes.
+        izq, centro = get_distances(data)
         self.rotate = centro < self.min_front_dist
-
-        self.distances = np.array(izq, der, centro)
-        pass
+        self.distances = np.array(izq, centro)
+        self.ang_state.publish(izq)
 
     def ang_actuation_fn(self, data: Float64):
-        if self.localized:
-            self.vel = 0
-            self.ang_vel = 0
-        
-        if self.rotate:
-            self.ang_vel = 1
-            self.vel = 0 
-
-        if self.move:
-            self.vel = 0.2
-            self.ang_vel = data
-
+        if self.enable:
+            if self.rotate:
+                self.ang_vel = 1
+                self.vel = 0
+            else:
+                self.vel = 0.1
+                self.ang_vel = data
+        else: 
+            self.reset()
         self.publish_vel()
 
-    def publish_depth(self, data):
-        # Publish difference between left and right distance
-        if self.show_img is not None:
-            cv.imshow("out", self.show_img)
-        if not self.arrow_rotation:
-            dif_distance = self.distance[1]
-            self.ang_state.publish(dif_distance)
-
     def publish_vel(self):
-        # Publish odometry to self.dist_state
         velocity = Twist()
         velocity.linear.x = self.vel
         velocity.angular.z = self.ang_vel
         self.vel_applier.publish(velocity)
 
-    def manager(self, data: Float64):
-
-        if not data:
-            self.vel = 0
-            self.ang_vel = 0
-            self.localized = True
-            self.notify()
-        else:
-            self.move = True
-
-    def notify(self):
-        # Avisar por los parlantes y todo eso
-        pass
-
     def update_state(self, data):
-        if data.data != self.enable:
-            self.enable = not self.enable
+        self.enable = data.data
 
+    def control(self,data):
+        if self.enable:
+            self.control_cont+=1
+            if self.control_cont == 20: #2 segs
+                self.change_state.publish(PARTICLE)
+                self.reset()
+        else:
+            self.reset()
+            
+    def reset(self):
+        self.vel = 0
+        self.ang_vel = 0
+        self.enable = False
+        self.control_cont = 0
 
 def sawtooth(rad):
     return (rad - np.pi) % (2*np.pi) - np.pi
-
 
 def min_rotation_diff(goal, actual):
     if abs(goal - actual) > np.pi:
@@ -138,8 +125,24 @@ def min_rotation_diff(goal, actual):
             return actual - goal - 2*np.pi
     else:
         return actual - goal
-
+    
+def get_distances(data):
+    izq = np.NaN
+    contador = 0
+    while izq == np.NaN:
+        izq = data.data[contador]
+        contador += 1
+    # ---
+    centro = np.array(0, np.inf)
+    contador = 0
+    while centro[1] >= 5 * (np.pi / 180):
+        centro = data.data[contador]
+        contador += 1
+        
+    izq = izq[0]*np.sin(izq[1])
+    centro = centro[0]*np.sin(centro[1])
+    return izq, centro
 
 if __name__ == "__main__":
     robot_mov = Robot_mov_manager()
-    rospy.spin()
+    rp.spin()

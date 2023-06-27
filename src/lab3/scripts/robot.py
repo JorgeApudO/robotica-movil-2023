@@ -13,17 +13,17 @@ from tf.transformations import quaternion_from_euler
 LOWER_ANGLE_LIMIT = -27 * np.pi / 180
 UPPER_ANGLE_LIMIT = 27 * np.pi / 180
 
-QUIETO = 0
-ROTACION = 1
-MOVIMIENTO = 2
-SCAN = 3
 
+PARTICLE = 1 # sensor model and particle 
+WAIT = 2 # procesando info
+MOVEMENT = 3 # move robot
+DONE = 4 #Finish
 
-class Robot:
-    states = {QUIETO, ROTACION, MOVIMIENTO, SCAN}
+class RobotBrain:
+    states = {PARTICLE, WAIT, MOVEMENT, DONE}
 
     def __init__(self):
-        rp.init_node("localization_robot")
+        rp.init_node("Robot_Brain")
         pub_initial_pose(0.5, 0.5, 0)
 
         self.flip = bool(rp.get_param('/localization/flip_map', 0))
@@ -40,8 +40,7 @@ class Robot:
 
         # ---
         # State updater
-        rp.Subscriber("/state", Int8, self.update_state)
-
+        rp.Subscriber("/task_done", Int8, self.update_state)
         # ---
         # Map loader
         rp.Subscriber("/map", OccupancyGrid, self.load_map_grid)
@@ -54,15 +53,12 @@ class Robot:
         # Movement manager
         self.movement_pub = rp.Publisher(
             "/enable_movement", Bool, queue_size=1)
-
         # ---
         # Sensor data publisher
         self.measurement_pub = rp.Publisher('/distances', Float64MultiArray,
                                             queue_size=2)
-
-        self.done_sub = rp.Subscriber(
-            '/done_flag', Int8, self.move_state)  # VER DONDE PUBLICAR ESTO
-
+        self.movement_depth_pub = rp.Publisher('/depth_data', Float64MultiArray,
+                                            queue_size=2)
         self.period = 0.1
         rp.Timer(rp.Duration(self.period), self.update)
 
@@ -95,16 +91,16 @@ class Robot:
         rp.loginfo(self.map_data)
 
     def update(self, *args):
-        if self.state == SCAN:
+        if self.state == PARTICLE:
             self.publish_lidar()
-        elif self.state == MOVIMIENTO:
+            self.state = WAIT
+            self.movement_pub.publish(False)
+        elif self.state == MOVEMENT:
+            self.publish_lidar()
             self.movement_pub.publish(True)
-        elif self.state == ROTACION:
-            pass
-        elif self.state == QUIETO:
-            pass
-        else:
-            pass
+        elif self.state == DONE:
+            self.movement_pub.publish(False)
+            self.notify()
 
     def update_laser(self, data):
         angle_min = float(data.angle_min)
@@ -133,14 +129,16 @@ class Robot:
     def publish_lidar(self):
         lidar_info = np.array((x, LOWER_ANGLE_LIMIT + i*self.angle_inc)
                               for i, x in enumerate(self.lidar_scan))
-        self.measurement_pub.publish(lidar_info)
+        if self.state == MOVEMENT:
+            self.movement_depth_pub.publish(lidar_info)
 
-    def move_state(self, data):
-        if data:
-            self.state = MOVIMIENTO
-        else:
-            self.state = QUIETO
+        elif self.state == PARTICLE:
+            self.measurement_pub.publish(lidar_info)
+            
 
+    def notify(self):
+        # Avisar por los parlantes y todo eso
+        pass
 
 def pub_initial_pose(x, y, yaw):
     pub_init_pose = rp.Publisher('initial_pose', Pose, queue_size=1)
@@ -163,5 +161,5 @@ def pub_initial_pose(x, y, yaw):
 
 
 if __name__ == "__main__":
-    robot = Robot()
+    robot = RobotBrain()
     rp.spin()
