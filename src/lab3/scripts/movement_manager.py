@@ -7,10 +7,11 @@ import numpy as np
 import cv2 as cv
 
 
-PARTICLE = 1 # sensor model and particle 
-WAIT = 2 # procesando info
-MOVEMENT = 3 # move robot
-DONE = 4 #Finish
+PARTICLE = 1  # sensor model and particle
+WAIT = 2  # procesando info
+MOVEMENT = 3  # move robot
+DONE = 4  # Finish
+
 
 class Robot_mov_manager():
     def __init__(self):
@@ -34,7 +35,8 @@ class Robot_mov_manager():
         # ---
 
         # INITIAL CONDITIONS
-        self.distance = np.array((0.4*self.pond_unidades, 0.8*self.pond_unidades))
+        self.distance = np.array(
+            (0.4*self.pond_unidades, 0.8*self.pond_unidades))
         self.vel = 0.1
         self.ang_vel = 0.0
         self.control_cont = 0
@@ -48,11 +50,11 @@ class Robot_mov_manager():
         self.vel_applier = rp.Publisher("yocs_cmd_vel_mux/input/navigation",
                                         Twist, queue_size=1)
         # ---
-        
+
         # CONTROL NODE
         self.ang_set_point = rp.Publisher('/angle/setpoint',
                                           Float64, queue_size=1)
-        
+
         rp.loginfo("Waiting angle distance pid setpoint process")
         while self.ang_set_point.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.1)
@@ -70,8 +72,8 @@ class Robot_mov_manager():
 
         # HIGH LEVEL MOVEMENT CONTROL!
         rp.Timer(rp.Duration(0.1), self.control)
- 
-    def update_dist(self,data):
+
+    def update_dist(self, data):
 
         izq, centro = get_distances(data)
         self.rotate = centro < self.min_front_dist
@@ -86,7 +88,7 @@ class Robot_mov_manager():
             else:
                 self.vel = 0.1
                 self.ang_vel = data
-        else: 
+        else:
             self.reset()
         self.publish_vel()
 
@@ -99,23 +101,25 @@ class Robot_mov_manager():
     def update_state(self, data):
         self.enable = data.data
 
-    def control(self,data):
+    def control(self, data):
         if self.enable:
-            self.control_cont+=1
-            if self.control_cont == 20: #2 segs
+            self.control_cont += 1
+            if self.control_cont == 20:  # 2 segs
                 self.change_state.publish(PARTICLE)
                 self.reset()
         else:
             self.reset()
-            
+
     def reset(self):
         self.vel = 0
         self.ang_vel = 0
         self.enable = False
         self.control_cont = 0
 
+
 def sawtooth(rad):
     return (rad - np.pi) % (2*np.pi) - np.pi
+
 
 def min_rotation_diff(goal, actual):
     if abs(goal - actual) > np.pi:
@@ -125,7 +129,8 @@ def min_rotation_diff(goal, actual):
             return actual - goal - 2*np.pi
     else:
         return actual - goal
-    
+
+
 def get_distances(data):
     izq = np.NaN
     contador = 0
@@ -138,10 +143,11 @@ def get_distances(data):
     while centro[1] >= 5 * (np.pi / 180):
         centro = data.data[contador]
         contador += 1
-        
+
     izq = izq[0]*np.sin(izq[1])
     centro = centro[0]*np.sin(centro[1])
     return izq, centro
+
 
 if __name__ == "__main__":
     robot_mov = Robot_mov_manager()

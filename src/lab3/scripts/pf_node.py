@@ -9,10 +9,11 @@ from std_msgs.msg import Float64MultiArray, Int8
 
 TARGET_DEVIATION = 0.01
 
-PARTICLE = 1 # sensor model and particle 
-WAIT = 2 # procesando info
-MOVEMENT = 3 # move robot
-DONE = 4 #Finish
+PARTICLE = 1  # sensor model and particle
+WAIT = 2  # procesando info
+MOVEMENT = 3  # move robot
+DONE = 4  # Finish
+
 
 class PFMap:
     def __init__(self):
@@ -24,8 +25,16 @@ class PFMap:
         rp.Subscriber("/probabilities", Float64MultiArray, self.update_weights)
 
         self.change_state = rp.Publisher("/task_done", Int8, queue_size=1)
-        self.final_pose = rp.Publisher("/final_pose",Float64MultiArray, queue_size=1)
-        
+        rp.loginfo("Waiting change state subscriber")
+        while self.change_state.get_num_connections() == 0 and not rp.is_shutdown():
+            rp.sleep(0.1)
+
+        self.final_pose = rp.Publisher(
+            "/final_pose", Float64MultiArray, queue_size=1)
+        rp.loginfo("Waiting final pose subscriber")
+        while self.final_pose.get_num_connections() == 0 and not rp.is_shutdown():
+            rp.sleep(0.1)
+
         self.robot_position = np.array((0, 0))
         self.robot_angle = 0.0
 
@@ -37,17 +46,17 @@ class PFMap:
         self.robot_angle = w
 
         self.move(turn, dist)
-    
+
     def update_weights(self, weights):
         self.weights = np.array(weights)
         self.resample()
 
-        if np.std(self.particles) < TARGET_DEVIATION: # Seudo-Codigo?
+        if np.std(self.particles) < TARGET_DEVIATION:  # Seudo-Codigo?
             self.change_state.publish(DONE)
-            self.final_pose.publish(pose) # get pose by some method
+            self.final_pose.publish(pose)  # get pose by some method
         else:
             self.change_state.publish(MOVEMENT)
-    
+
     def move(self, turn_angle, forward_distance):
         for particle in self.particles:
             particle.move(turn_angle, forward_distance)
@@ -61,20 +70,20 @@ class PFMap:
         for i in range(nop):
             cumulative_prob.append(current)
             current += normalized_prob[i]
-        
+
         resampled = np.array()
 
         for i in range(nop):
             curr = random()
             j = nop - 1
-            
+
             while cumulative_prob[j] > curr:
                 j -= 1
-            
+
             resampled.append(deepcopy(self.particles[j]))
 
         self.particles = resampled
-        
+
 
 class Particle:
     def __init__(self, x, y, w, noises=(0.0, 0.0, 0.0)):
@@ -82,8 +91,8 @@ class Particle:
         self.y = y
         self.w = w
 
-        self.set_noises(*noises) 
-    
+        self.set_noises(*noises)
+
     def set_noises(self, wn, dn, sn):
         self.turn_noise = wn
         self.move_noise = dn
@@ -92,16 +101,16 @@ class Particle:
     def set_position(self, x, y, w):
         w %= (2 * np.pi)
         self.x, self.y, self.w = x, y, w
-    
+
     def rotate(self, dw):
         self.w += (dw + gauss(0, self.turn_noise))
         self.w %= 2*np.pi
-    
+
     def forward(self, dd):
         dist = dd + gauss(0, self.move_noise)
         self.x += dist * np.cos(self.w)
         self.y += dist * np.sin(self.w)
-    
+
     def move(self, angle, distance):
         self.turn(angle)
         self.forward(distance)

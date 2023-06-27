@@ -14,10 +14,11 @@ LOWER_ANGLE_LIMIT = -27 * np.pi / 180
 UPPER_ANGLE_LIMIT = 27 * np.pi / 180
 
 
-PARTICLE = 1 # sensor model and particle 
-WAIT = 2 # procesando info
-MOVEMENT = 3 # move robot
-DONE = 4 #Finish
+PARTICLE = 1  # sensor model and particle
+WAIT = 2  # procesando info
+MOVEMENT = 3  # move robot
+DONE = 4  # Finish
+
 
 class RobotBrain:
     states = {PARTICLE, WAIT, MOVEMENT, DONE}
@@ -27,11 +28,10 @@ class RobotBrain:
         pub_initial_pose(0.5, 0.5, 0)
 
         self.flip = bool(rp.get_param('/localization/flip_map', 0))
-        rp.loginfo(self.flip)
 
         # ---
         # Initial conditions
-        self.__state = ""
+        self.__state = PARTICLE
         self.map_matrix = None
         self.map_data = None
 
@@ -41,6 +41,7 @@ class RobotBrain:
         # ---
         # State updater
         rp.Subscriber("/task_done", Int8, self.update_state)
+
         # ---
         # Map loader
         rp.Subscriber("/map", OccupancyGrid, self.load_map_grid)
@@ -50,15 +51,29 @@ class RobotBrain:
         rp.Subscriber("/scan", LaserScan, self.update_laser)
 
         # ---
-        # Movement manager
-        self.movement_pub = rp.Publisher(
-            "/enable_movement", Bool, queue_size=1)
+        # Movement manager publisher
+        self.movement_pub = rp.Publisher("/enable_movement",
+                                         Bool, queue_size=1)
+        rp.loginfo("Waiting movement subscriber")
+        while self.movement_pub.get_num_connections() == 0 and not rp.is_shutdown():
+            rp.sleep(0.1)
+
         # ---
         # Sensor data publisher
         self.measurement_pub = rp.Publisher('/distances', Float64MultiArray,
                                             queue_size=2)
+        rp.loginfo("Waiting measurement subscriber")
+        while self.measurement_pub.get_num_connections() == 0 and not rp.is_shutdown():
+            rp.sleep(0.1)
+
         self.movement_depth_pub = rp.Publisher('/depth_data', Float64MultiArray,
-                                            queue_size=2)
+                                               queue_size=2)
+        rp.loginfo("Waiting depth subscriber")
+        while self.movement_depth_pub.get_num_connections() == 0 and not rp.is_shutdown():
+            rp.sleep(0.1)
+
+        # ---
+        # Timer
         self.period = 0.1
         rp.Timer(rp.Duration(self.period), self.update)
 
@@ -109,10 +124,10 @@ class RobotBrain:
 
         ranges = data.ranges
 
-        index_min = int(
-            np.ceil((LOWER_ANGLE_LIMIT - angle_min) / self.angle_inc))
-        index_max = len(
-            ranges) - int(np.ceil((angle_max - UPPER_ANGLE_LIMIT) / self.angle_inc))
+        index_min = int(np.ceil(
+            (LOWER_ANGLE_LIMIT - angle_min) / self.angle_inc))
+        index_max = len(ranges) - int(np.ceil(
+            (angle_max - UPPER_ANGLE_LIMIT) / self.angle_inc))
 
         ranges = np.array(ranges[index_min:index_max+1])
 
@@ -134,11 +149,11 @@ class RobotBrain:
 
         elif self.state == PARTICLE:
             self.measurement_pub.publish(lidar_info)
-            
 
     def notify(self):
         # Avisar por los parlantes y todo eso
         pass
+
 
 def pub_initial_pose(x, y, yaw):
     pub_init_pose = rp.Publisher('initial_pose', Pose, queue_size=1)
