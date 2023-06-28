@@ -9,7 +9,7 @@ from tf.transformations import euler_from_quaternion
 
 from std_msgs.msg import Float64MultiArray, Int8
 from geometry_msgs.msg import Pose
-from nav_msgs.msg import OccupancyGrid
+from nav_msgs.msg import OccupancyGrid, Odometry
 
 TARGET_DEVIATION = 0.01
 MAX_PARTICLES = 100
@@ -37,7 +37,7 @@ class PFMap:
         self.particles = None
 
         self.odom_data = np.zeros(3, dtype=np.float32)
-        self.last_pose = None
+        self.last_pose = np.zeros(3, dtype=np.float32)
 
         self.lidar_ready = False
         self.odom_ready = False
@@ -49,10 +49,9 @@ class PFMap:
 
         # ---
         # Odometry subscriber
+        rp.Subscriber("/update_odom", Odometry, self.update_odom)
 
-        rp.Subscriber("/probabilities", Float64MultiArray, self.update_weights)
-
-        self.change_state = rp.Publisher("/task_done", Int8, queue_size=1)
+        self.change_state = rp.Publisher("/state_man", Int8, queue_size=1)
         rp.loginfo("Waiting change state subscriber")
         while self.change_state.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.1)
@@ -126,6 +125,12 @@ class PFMap:
 
             self.infered_pose = self.compute_pose()
 
+            if np.std(self.particles) < TARGET_DEVIATION:  # Seudo-Codigo?
+                self.change_state.publish(DONE)
+                self.final_pose.publish(self.infered_pose)
+            else:
+                self.change_state.publish(MOVEMENT)
+
     def update_lidar(self, data):
         angle_min = float(data.angle_min)
         angle_max = float(data.angle_max)
@@ -167,16 +172,6 @@ class PFMap:
             self.last_pose = pose
 
         self.update()
-
-    def update_weights(self, weights):
-        self.weights = np.array(weights)
-        self.resample()
-
-        if np.std(self.particles) < TARGET_DEVIATION:  # Seudo-Codigo?
-            self.change_state.publish(DONE)
-            self.final_pose.publish(self.infered_pose)
-        else:
-            self.change_state.publish(MOVEMENT)
 
 
 def rotation_matrix(theta):
