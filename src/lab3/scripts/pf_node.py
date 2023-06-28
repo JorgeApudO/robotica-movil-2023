@@ -4,6 +4,7 @@ import rospy as rp
 import numpy as np
 from random import gauss, random
 from copy import deepcopy
+from statistics import NormalDist
 
 from tf.transformations import euler_from_quaternion
 
@@ -11,9 +12,12 @@ from std_msgs.msg import Float64MultiArray, Int8
 from geometry_msgs.msg import Pose
 from nav_msgs.msg import OccupancyGrid, Odometry
 
+from sklearn.neighbors import KDTree
+
 TARGET_DEVIATION = 0.01
 MAX_PARTICLES = 100
 NORMAL_DISPERSION = 0.5
+SENSOR_DISPERSION = 0.1
 
 LOWER_ANGLE_LIMIT = -27 * np.pi / 180
 UPPER_ANGLE_LIMIT = 27 * np.pi / 180
@@ -33,8 +37,8 @@ class PFMap:
         self.particles = np.zeros((MAX_PARTICLES, 3))
         self.weights = np.ones(MAX_PARTICLES) / float(MAX_PARTICLES)
 
-        self.weights = None
-        self.particles = None
+        #self.weights = None
+        #self.particles = None
 
         self.odom_data = np.zeros(3, dtype=np.float32)
         self.last_pose = np.zeros(3, dtype=np.float32)
@@ -51,7 +55,16 @@ class PFMap:
         # Odometry subscriber
         rp.Subscriber("/update_odom", Odometry, self.update_odom)
 
+<<<<<<< HEAD
         self.change_state = rp.Publisher("/state_man", Int8, queue_size=1)
+||||||| 8b46bc4
+        rp.Subscriber("/probabilities", Float64MultiArray, self.update_weights)
+
+        self.change_state = rp.Publisher("/task_done", Int8, queue_size=1)
+=======
+
+        self.change_state = rp.Publisher("/task_done", Int8, queue_size=1)
+>>>>>>> 61710ad6a961d736cc84770d4fb92432220d9481
         rp.loginfo("Waiting change state subscriber")
         while self.change_state.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.1)
@@ -69,15 +82,33 @@ class PFMap:
 
     def load_map_grid(self, data):
         self.map_info = data.info
+        self.resolution = self.map_info.resolution
+        self.origin = self.map_info.origin
 
         # 0: vacio, -1: desconocido, 100: obstaculo
         array_255 = np.array(data.data).reshape(
             (data.info.height, data.info.width))
 
         # 0: ocupado, 1: vacio
-        self.permissible = np.zeros_like(array_255, dtype=bool)
-        self.permissible[array_255 == 0] = 1
+        self.map = np.zeros_like(array_255, dtype=bool)
+        self.map[array_255 == 0] = 1
+
+        global_indices = np.ndindex(*self.map.shape)
+        self.global_coord = np.apply_along_axis(self.cell_position, 1, global_indices)
+        
+        indices_0 = np.transpose((self.map == 0).nonzero())
+        coord_0 = np.apply_along_axis(self.cell_position, 1, indices_0)
+        self.occupied = KDTree(coord_0)
+
+        min_dist_occupied = self.occupied.query(self.global_coord, k=1)[0][:]
+
+        ndist = NormalDist(mu = 0, sigma = SENSOR_DISPERSION)
+        prob_pos = np.apply_along_axis(ndist.pdf, 1, min_dist_occupied)
+        
+        self.likelihoodfield = np.reshape(prob_pos, self.map.shape)
+
         self.map_ready = True
+
 
     def motion_model(self, movement):
         cos = np.cos(self.particles[:, 2])
@@ -104,7 +135,7 @@ class PFMap:
 
         self.sensor_model(obs)
 
-        self.normalizee_weights()
+        self.normalize_weights()
 
     def resample(self):
         new_particles = np.random.choice(
@@ -112,8 +143,28 @@ class PFMap:
         self.particles = new_particles
 
     def sensor_model(self, observation):
-        """Update weights based on observation"""
-        pass
+        
+        lidar_info = np.array((x, LOWER_ANGLE_LIMIT + i*self.angle_inc)
+                              for i, x in enumerate(observation))
+        
+        q_array = np.array()
+        for particula in self.particles:
+            q = 1
+            for laser, angle in lidar_info:
+                if laser != np.NaN:
+                    #Tomamos la ubicacion del robot como la ubicacion del lidar
+                    x = (particula[0] + laser * np.cos(particula[2] + angle))
+                    y = (particula[1] + laser * np.sin(particula[2] + angle))
+
+                    x = (((x - (self.origin.position.x)) / self.resolution) - 0.5) // 1 
+                    y = (((y - (self.origin.position.y)) / self.resolution) - 0.5) // 1
+
+                    q = q * self.likelihoodfield[x][y]
+
+            q_array.append(q)
+
+        q_array /= np.sum(q_array)
+        self.weights = q_array
 
     def update(self):
         if self.lidar_ready and self.odom_ready and self.map_ready:
@@ -172,7 +223,29 @@ class PFMap:
             self.last_pose = pose
 
         self.update()
+<<<<<<< HEAD
 
+||||||| 8b46bc4
+
+    def update_weights(self, weights):
+        self.weights = np.array(weights)
+        self.resample()
+
+        if np.std(self.particles) < TARGET_DEVIATION:  # Seudo-Codigo?
+            self.change_state.publish(DONE)
+            self.final_pose.publish(self.infered_pose)
+        else:
+            self.change_state.publish(MOVEMENT)
+
+=======
+    
+    
+    def cell_position(self, pos):
+    
+        x = (pos[0] + 0.5) * self.resolution + self.origin.position.x
+        y = (pos[1] + 0.5) * self.resolution + self.origin.position.y
+        return np.array((x, y))
+>>>>>>> 61710ad6a961d736cc84770d4fb92432220d9481
 
 def rotation_matrix(theta):
     c, s = np.cos(theta), np.sin(theta)
@@ -182,3 +255,6 @@ def rotation_matrix(theta):
 def quaternion_to_angle(q):
     _, _, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
     return yaw
+
+#Basado 
+
