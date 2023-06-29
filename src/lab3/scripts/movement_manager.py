@@ -140,7 +140,6 @@ def min_rotation_diff(goal, actual):
 def get_distances(data):
     izq = np.array([np.NaN,0])
     contador = 0
-    rp.loginfo(f"data: {data}")
     while izq[0] == np.NaN:
         izq = data[contador]
         contador += 1
