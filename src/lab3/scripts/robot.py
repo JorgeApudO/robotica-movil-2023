@@ -97,7 +97,7 @@ class RobotBrain:
             rp.logerr(f"<> State {new} not found")
 
     def update(self, *args):
-        rp.loginfo(f"{self.state}")
+        # rp.loginfo(f"{self.state}")
         if self.state == PARTICLE:
             self.publish_lidar()
             self.publish_odom()

@@ -49,6 +49,8 @@ class PFMap:
         self.odom_ready = False
         self.map_ready = False
 
+        self.init_particles()
+
         # ---
         # Map loader
         rp.Subscriber("/map", OccupancyGrid, self.load_map_grid)
