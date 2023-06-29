@@ -121,6 +121,7 @@ class PFMap:
 
         indices_0 = np.transpose((self.map == 0).nonzero())
         coord_0 = np.apply_along_axis(self.cell_position, 1, indices_0)
+        rp.loginfo(coord_0.shape)
         self.occupied = KDTree(coord_0)
         self.map_ready = True
 
@@ -203,7 +204,7 @@ class PFMap:
                     particle_array.append([x,y])
             particle_array = np.array(particle_array)
             min_dist_occupied = self.occupied.query(particle_array)
-            rp.loginfo(f"kdtree min: {min_dist_occupied}")
+            #rp.loginfo(f"kdtree min: {min_dist_occupied}")
                     
             prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
             self.likelihoodfield = np.reshape(prob_pos, self.map.shape)
