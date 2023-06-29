@@ -79,7 +79,11 @@ class PFMap:
         rp.loginfo("Ready final pose subscriber")
 
     def compute_pose(self):
-        return np.dot(self.particles, self.weights)
+        x = np.dot(self.particles[:,0], self.weights)
+        y = np.dot(self.particles[:,1], self.weights)
+        w = np.dot(self.particles[:,2], self.weights)
+
+        return x, y, w
 
     def init_particles(self):
         x, y = np.where(self.map == 1)
