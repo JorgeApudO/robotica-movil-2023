@@ -110,7 +110,7 @@ class Robot_mov_manager():
     def control(self, data):
         if self.enable:
             self.control_cont += 1
-            if self.control_cont == 20:  # 2 segs
+            if self.control_cont == 15:  # 1.5 segs
                 self.change_state.publish(PARTICLE)
                 self.reset()
         else:
@@ -152,6 +152,7 @@ def get_distances(data):
 
     izq = izq[0]*np.sin(izq[1])
     centro = centro[0]*np.sin(centro[1])
+    rp.loginfo(f"{izq}, {centro}")
     return izq, centro
 
 def lidar_manage(data):
