@@ -8,7 +8,7 @@ from scipy.stats import norm
 
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 
-from std_msgs.msg import Float64MultiArray, Int8, Header
+from std_msgs.msg import  Int8, Header
 from geometry_msgs.msg import Pose, PoseArray, Quaternion, PoseStamped
 from nav_msgs.msg import OccupancyGrid, Odometry
 from sensor_msgs.msg import LaserScan
@@ -203,7 +203,7 @@ class PFMap:
             q_array.append(q)
         q_array = np.array(q_array)
         q_array /= np.sum(q_array)
-        self.weights = q_array
+        self.weights = q_array.T
 
     def update(self):
         if self.lidar_ready and self.odom_ready and self.map_ready:
