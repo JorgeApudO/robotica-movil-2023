@@ -200,15 +200,23 @@ class PFMap:
                          self.resolution) - 0.5) // 1
                     y = (((y - (self.origin.position.y)) /
                          self.resolution) - 0.5) // 1
-
-                    particle_array.append([x,y])
-            particle_array = np.array(particle_array)
-            min_dist_occupied = self.occupied.query(particle_array)
-            #rp.loginfo(f"kdtree min: {min_dist_occupied}")
-            prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
-            self.likelihoodfield = np.reshape(prob_pos, self.map.shape)
+                    min_dist_occupied = self.occupied.query([[x,y]])
+                    particle_array = np.array(particle_array)
+                    #rp.loginfo(f"kdtree min: {min_dist_occupied}")
+                    prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
+                    self.likelihoodfield = np.reshape(prob_pos, self.map.shape)
 
             q = q * self.likelihoodfield[x][y]
+
+            """
+            particle_array = np.array(particle_array)
+            min_dist_occupied = self.occupied.query(particle_array)
+            prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
+            likelihood_field = np.reshape(prob_pos, self.map.shape)
+
+            x, y = np.unravel_index(np.argmax(likelihood_field), likelihood_field.shape)
+            q = q * likelihood_field[x][y]
+            """
 
             q_array.append(q)
         q_array = np.array(q_array)
