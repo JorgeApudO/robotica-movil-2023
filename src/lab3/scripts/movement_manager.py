@@ -43,6 +43,8 @@ class Robot_mov_manager():
         self.vel = 0.1
         self.ang_vel = 0.0
         self.control_cont = 0
+        self.rutine = [0,0,0,0.08]
+        self.actual = 0
         # ---
 
         # LIDAR
@@ -92,8 +94,9 @@ class Robot_mov_manager():
                 self.ang_vel = -1
                 self.vel = 0
             else:
-                self.vel = 0.08
+                self.vel = self.rutine[self.actual]
                 self.ang_vel = float(data.data)
+                
         else:
             self.reset()
         self.publish_vel()
@@ -113,6 +116,8 @@ class Robot_mov_manager():
             self.control_cont += 1
             if self.control_cont == 10:  # 1.0 segs
                 self.change_state.publish(PARTICLE)
+                self.actual+=1
+                self.actual%=self.actual
                 self.reset()
         else:
             self.reset()

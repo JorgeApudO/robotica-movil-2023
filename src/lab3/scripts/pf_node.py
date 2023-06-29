@@ -4,7 +4,6 @@ import rospy as rp
 import numpy as np
 from random import gauss, random
 from copy import deepcopy
-from scipy.stats import norm
 
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 
@@ -191,6 +190,7 @@ class PFMap:
         # self.weights = np.where( (self.particles[:,0] <= x_lim) & 
         #                         (self.particles[:,0] >= 0), self.weights, 0 )
 
+        #ver si eliminar esto 
         for _ in range(5):
             new_particles_idx = np.random.choice(
                 self.particles.shape[0], MAX_PARTICLES, p=self.weights)
