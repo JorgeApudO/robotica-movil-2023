@@ -189,23 +189,26 @@ class PFMap:
         q_array = np.array([])
         for particula in self.particles:
             q = 1
+            particle_array =np.empty(len(lidar_info))
             for laser, angle in lidar_info:
                 if laser != np.NaN:
                     # Tomamos la ubicacion del robot como la ubicacion del lidar
                     x = (particula[0] + laser * np.cos(particula[2] + angle))
                     y = (particula[1] + laser * np.sin(particula[2] + angle))
-
                     x = (((x - (self.origin.position.x)) /
                          self.resolution) - 0.5) // 1
                     y = (((y - (self.origin.position.y)) /
                          self.resolution) - 0.5) // 1
-                    min_dist_occupied = self.occupied.query(np.array((x,y)).T)
-                    rp.loginfo(f"kdtree min: {min_dist_occupied}")
-                    
-                    prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
-                    self.likelihoodfield = np.reshape(prob_pos, self.map.shape)
 
-                    q = q * self.likelihoodfield[x][y]
+                    particle_array.append([x,y])
+            
+            min_dist_occupied = self.occupied.query(particle_array)
+            rp.loginfo(f"kdtree min: {min_dist_occupied}")
+                    
+            prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
+            self.likelihoodfield = np.reshape(prob_pos, self.map.shape)
+
+            q = q * self.likelihoodfield[x][y]
 
             q_array.append(q)
 
