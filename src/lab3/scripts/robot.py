@@ -9,6 +9,8 @@ from geometry_msgs.msg import Pose
 
 from tf.transformations import quaternion_from_euler
 
+from sound_play.libsoundplay import SoundClient
+
 
 LOWER_ANGLE_LIMIT = -27 * np.pi / 180
 UPPER_ANGLE_LIMIT = 27 * np.pi / 180
@@ -21,7 +23,7 @@ DONE = 4  # Finish
 
 
 class RobotBrain:
-    states = {PARTICLE, WAIT, MOVEMENT, DONE}
+    states = {PARTICLE, WAIT, MOVEMENT}
 
     def __init__(self):
         rp.init_node("Robot_Brain")
@@ -35,10 +37,14 @@ class RobotBrain:
 
         self.angle_increment = None
         self.lidar_scan = None
-
         # ---
         # State updater
         rp.Subscriber("/state_man", Int8, self.update_state)
+
+
+        # ---
+        self.sound = SoundClient()
+        rp.Subscriber("/final_pose", Pose, self.notify)
 
         # ---
         # Lidar data
@@ -99,12 +105,10 @@ class RobotBrain:
             self.movement_pub.publish(False)
         elif self.state == WAIT:
             self.movement_pub.publish(False)
+
         elif self.state == MOVEMENT:
             self.publish_lidar()
             self.movement_pub.publish(True)
-        elif self.state == DONE:
-            self.movement_pub.publish(False)
-            self.notify()
 
     def update_laser(self, data):
         self.lidar_data = data
@@ -147,10 +151,9 @@ class RobotBrain:
     def publish_odom(self):
         self.odom_pub.publish(self.odom)
 
-    def notify(self):
-        # Avisar por los parlantes y todo eso
-        pass
-
+    def notify(self,data):
+        pose = data.data 
+        self.sound.say(f"Localizado {pose.position.x}, {pose.position.y}, {pose.orientation.w}")
 
 def pub_initial_pose(x, y, yaw):
     pub_init_pose = rp.Publisher('initial_pose', Pose, queue_size=1)

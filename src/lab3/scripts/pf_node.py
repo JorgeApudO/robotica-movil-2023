@@ -6,10 +6,10 @@ from random import gauss, random
 from copy import deepcopy
 from statistics import NormalDist
 
-from tf.transformations import euler_from_quaternion
+from tf.transformations import euler_from_quaternion, quaternion_from_euler
 
 from std_msgs.msg import Float64MultiArray, Int8
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, PoseArray, Quaternion, PoseStamped
 from nav_msgs.msg import OccupancyGrid, Odometry
 from sensor_msgs.msg import LaserScan
 
@@ -26,8 +26,6 @@ UPPER_ANGLE_LIMIT = 27 * np.pi / 180
 PARTICLE = 1  # sensor model and particle
 WAIT = 2  # procesando info
 MOVEMENT = 3  # move robot
-DONE = 4  # Finish
-
 
 class PFMap:
     def __init__(self):
@@ -73,6 +71,12 @@ class PFMap:
         rp.loginfo("Waiting final pose subscriber")
         while self.final_pose.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.1)
+
+        # ---
+        # Particles rviz
+        self.rviz_pub = rp.Publisher('/rviz/particles', PoseArray, queue_size=1)
+        self.pose_pub = rp.Publisher('/rviz/position', PoseStamped, queue_size=1)
+
         rp.loginfo("Ready final pose subscriber")
 
     def compute_pose(self):
@@ -142,6 +146,18 @@ class PFMap:
         self.sensor_model(obs)
 
         self.normalize_weights()
+    
+    def publish_particles(self):
+        if isinstance(self.infered_pose, np.ndarray):
+            ps = PoseStamped()
+            ps.pose.position.x = self.infered_pose[0]
+            ps.pose.position.y = self.infered_pose[1]
+            ps.pose.orientation = Quaternion(*quaternion_from_euler(0, 0, self.infered_pose[2]))
+            self.pose_pub.publish(ps)
+
+        pa = PoseArray()
+        pa.poses = map(particle_to_pose, self.particles)
+        self.rviz_pub.publish(pa)
 
     def resample(self):
         new_particles = np.random.choice(
@@ -166,7 +182,9 @@ class PFMap:
                          self.resolution) - 0.5) // 1
                     y = (((y - (self.origin.position.y)) /
                          self.resolution) - 0.5) // 1
-                    min_dist_occupied = self.occupied.query(np.linalg.norm(np.array((x,y))))[0][:]
+                    min_dist_occupied = self.occupied.query(np.linalg.norm(np.array((x,y))))
+                    rp.loginfo(f"kdtree min: {min_dist_occupied}")
+                    
                     prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
                     self.likelihoodfield = np.reshape(prob_pos, self.map.shape)
 
@@ -185,16 +203,22 @@ class PFMap:
 
             self.pf(mov, obs)
 
-            self.infered_pose = self.compute_pose()
+            infered_pose = self.compute_pose()
+            self.infered_pose = Pose()
+            self.infered_pose.position.x = infered_pose[0]
+            self.infered_pose.position.y = infered_pose[1]
+            self.infered_pose.orientation = infered_pose[2]
 
-            if np.std(self.particles) < TARGET_DEVIATION:  # Seudo-Codigo?
-                self.change_state.publish(DONE)
+            if np.std(self.particles) < TARGET_DEVIATION:
+                self.change_state.publish(WAIT)
                 self.final_pose.publish(self.infered_pose)
             else:
                 self.change_state.publish(MOVEMENT)
 
             self.odom_ready = False
             self.lidar_ready = False
+        
+        self.publish_particles()
 
     def update_lidar(self, data):
         angle_min = float(data.angle_min)
@@ -263,7 +287,7 @@ def map_to_world(poses, map_info):
 
     tmp = np.copy(poses[:,0])
     poses[:,0] = cos*poses[:,0] - sin*poses[:,1]
-    poses[:,1] = sin*temp + sin*poses[:,1]
+    poses[:,1] = sin*tmp + sin*poses[:,1]
 
     poses[:,:2] *= float(res)
 
@@ -271,6 +295,12 @@ def map_to_world(poses, map_info):
     poses[:,1] += map_info.origin.position.y
     poses[:,2] += ang
 
+def particle_to_pose(particle):
+    pose = Pose()
+    pose.position.x = particle[0]
+    pose.position.y = particle[1]
+    pose.orientation = Quaternion(*quaternion_from_euler(0, 0, particle[2]))
+    return pose
 
 # Basado
 if __name__ == "__main__":
