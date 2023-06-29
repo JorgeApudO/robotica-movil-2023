@@ -97,6 +97,8 @@ class RobotBrain:
             self.publish_odom()
             self.state = WAIT
             self.movement_pub.publish(False)
+        elif self.state == WAIT:
+            self.movement_pub.publish(False)
         elif self.state == MOVEMENT:
             self.publish_lidar()
             self.movement_pub.publish(True)

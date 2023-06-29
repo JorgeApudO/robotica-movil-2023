@@ -17,8 +17,8 @@ from sklearn.neighbors import KDTree
 
 TARGET_DEVIATION = 0.01
 MAX_PARTICLES = 100
-NORMAL_DISPERSION = 0.5
-SENSOR_DISPERSION = 0.1
+NORMAL_DISPERSION = 0.01
+SENSOR_DISPERSION = 0.5
 
 LOWER_ANGLE_LIMIT = -27 * np.pi / 180
 UPPER_ANGLE_LIMIT = 27 * np.pi / 180
@@ -39,6 +39,7 @@ class PFMap:
         self.particle_idxs = np.arange(MAX_PARTICLES)
         self.particles = np.zeros((MAX_PARTICLES, 3))
         self.weights = np.ones(MAX_PARTICLES) / float(MAX_PARTICLES)
+        self.ndist = NormalDist(mu = 0, sigma = SENSOR_DISPERSION)
 
         # self.weights = None
         # self.particles = None
@@ -78,7 +79,17 @@ class PFMap:
         return np.dot(self.particles, self.weights)
 
     def init_particles(self):
-        pass
+        x, y = np.where(self.map == 1)
+        indices = np.random.randint(0, len(x), size=MAX_PARTICLES)
+
+        states = np.zeros((MAX_PARTICLES, 3))
+        states[:,0] = y[indices]
+        states[:,1] = x[indices]
+        states[:,2] = np.random.random(MAX_PARTICLES) * np.pi * 2
+
+        map_to_world(states, self.map_info)
+        self.particles = states
+        self.weights[:] = 1.0 / MAX_PARTICLES
 
     def load_map_grid(self, data):
         self.map_info = data.info
@@ -103,14 +114,6 @@ class PFMap:
         indices_0 = np.transpose((self.map == 0).nonzero())
         coord_0 = np.apply_along_axis(self.cell_position, 1, indices_0)
         self.occupied = KDTree(coord_0)
-
-        min_dist_occupied = self.occupied.query(self.global_coord, k=1)[0][:]
-
-        ndist = NormalDist(mu=0, sigma=SENSOR_DISPERSION)
-        prob_pos = np.apply_along_axis(ndist.pdf, 1, min_dist_occupied)
-
-        self.likelihoodfield = np.reshape(prob_pos, self.map.shape)
-
         self.map_ready = True
 
     def motion_model(self, movement):
@@ -163,6 +166,9 @@ class PFMap:
                          self.resolution) - 0.5) // 1
                     y = (((y - (self.origin.position.y)) /
                          self.resolution) - 0.5) // 1
+                    min_dist_occupied = self.occupied.query(np.linalg.norm(np.array((x,y))))[0][:]
+                    prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
+                    self.likelihoodfield = np.reshape(prob_pos, self.map.shape)
 
                     q = q * self.likelihoodfield[x][y]
 
@@ -248,6 +254,22 @@ def rotation_matrix(theta):
 def quaternion_to_angle(q):
     _, _, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
     return yaw
+
+def map_to_world(poses, map_info):
+    res = map_info.resolution
+    ang = quaternion_to_angle(map_info.origin.orientation)
+
+    cos, sin = np.cos(ang), np.sin(ang)
+
+    tmp = np.copy(poses[:,0])
+    poses[:,0] = cos*poses[:,0] - sin*poses[:,1]
+    poses[:,1] = sin*temp + sin*poses[:,1]
+
+    poses[:,:2] *= float(res)
+
+    poses[:,0] += map_info.origin.position.x
+    poses[:,1] += map_info.origin.position.y
+    poses[:,2] += ang
 
 
 # Basado

@@ -21,5 +21,7 @@
 		<param name="upper_limit" value="0.5"/>
 		<param name="lower_limit" value="-0.5"/>
 	</node>
+
+	<node type="rviz" name="rviz" pkg="rviz"/>
 	
 </launch>
