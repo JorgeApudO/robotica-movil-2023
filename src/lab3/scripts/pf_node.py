@@ -136,9 +136,9 @@ class PFMap:
         cos = np.cos(self.particles[:, 2])
         sin = np.sin(self.particles[:, 2])
 
-        dx = cos*movement[0] - sin*movement[0] + np.random.normal(
+        dx = cos*movement[0] - sin*movement[1] + np.random.normal(
             0.0, NORMAL_DISPERSION, MAX_PARTICLES)
-        dy = cos*movement[1] + sin*movement[1] + np.random.normal(
+        dy = cos*movement[0] + sin*movement[1] + np.random.normal(
             0.0, NORMAL_DISPERSION, MAX_PARTICLES)
         dw = movement[2] + np.random.normal(
             0.0, NORMAL_DISPERSION, MAX_PARTICLES)

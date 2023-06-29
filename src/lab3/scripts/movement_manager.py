@@ -107,6 +107,7 @@ class Robot_mov_manager():
 
     def update_state(self, data):
         self.enable = data.data
+        rp.loginfo(f"enable movement: {self.enable}")
 
     def control(self, data):
         if self.enable:
