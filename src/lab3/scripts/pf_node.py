@@ -94,6 +94,7 @@ class PFMap:
         map_to_world(states, self.map_info)
         self.particles = states
         self.weights[:] = 1.0 / MAX_PARTICLES
+        self.publish_particles()
         rp.loginfo("PARTICLES INITIALIZED")
 
     def load_map_grid(self, data):
