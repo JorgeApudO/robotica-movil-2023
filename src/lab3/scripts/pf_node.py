@@ -204,7 +204,7 @@ class PFMap:
                     prob_array.append(prob_pos)
             
             q = sum(prob_array) / len(prob_pos)
-            rp.loginfo(f"q value: {q}")
+            # rp.loginfo(f"q value: {q}")
             q_array.append(q)
         q_array = np.array(q_array)
         q_array /= np.sum(q_array)
