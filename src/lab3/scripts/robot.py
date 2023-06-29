@@ -140,10 +140,11 @@ class RobotBrain:
         self.odom = data
 
     def publish_lidar(self):
-        lidar_info = np.array([(x, LOWER_ANGLE_LIMIT + i*self.angle_inc)
-                              for i, x in enumerate(self.lidar_scan)])
         if self.state == MOVEMENT:
-            self.movement_depth_pub.publish(lidar_info)
+            lidar_info = np.array([(x, LOWER_ANGLE_LIMIT + i*self.angle_inc)
+                              for i, x in enumerate(self.lidar_scan)])
+            multiarray = Float64MultiArray(data=lidar_info)
+            self.movement_depth_pub.publish(multiarray)
 
         elif self.state == PARTICLE:
             self.measurement_pub.publish(self.lidar_data)
