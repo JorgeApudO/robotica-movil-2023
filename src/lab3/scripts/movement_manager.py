@@ -83,7 +83,7 @@ class Robot_mov_manager():
         data = lidar_manage(data)
         izq, centro = get_distances(data)
         self.rotate = centro < self.min_front_dist
-        self.distances = np.array(izq, centro)
+        self.distances = np.array([izq, centro])
         self.ang_state.publish(izq)
 
     def ang_actuation_fn(self, data: Float64):
