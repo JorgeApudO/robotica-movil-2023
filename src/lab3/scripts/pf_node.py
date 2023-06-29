@@ -299,7 +299,7 @@ def map_to_world(poses, map_info):
 
     tmp = np.copy(poses[:,0])
     poses[:,0] = cos*poses[:,0] - sin*poses[:,1]
-    poses[:,1] = sin*tmp + sin*poses[:,1]
+    poses[:,1] = sin * tmp + cos*poses[:,1]
 
     poses[:,:2] *= float(res)
 
