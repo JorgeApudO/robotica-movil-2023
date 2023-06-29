@@ -200,7 +200,7 @@ class PFMap:
                     min_dist_occupied = self.occupied.query([[x,y]])[1]
                     #rp.loginfo(f"kdtree min: {min_dist_occupied}")
                     prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
-                    rp.loginfo(f"q value: {prob_pos}")
+                    rp.loginfo(f"prob value: {prob_pos}")
                     prob_array.append(prob_pos)
             
             q = sum(prob_array) / len(prob_pos)
