@@ -93,7 +93,7 @@ class Robot_mov_manager():
                 self.vel = 0
             else:
                 self.vel = 0.1
-                self.ang_vel = data
+                self.ang_vel = float(data.data)
         else:
             self.reset()
         self.publish_vel()
