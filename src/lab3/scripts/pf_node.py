@@ -188,7 +188,7 @@ class PFMap:
         for particula in self.particles:
             q = 1
             particle_array = list()
-            for laser, angle in obs:
+            for laser, angle in observation:
                 if not np.isnan(laser):
                     # Tomamos la ubicacion del robot como la ubicacion del lidar
                     x = (particula[0] + laser * np.cos(particula[2] + angle))
@@ -237,7 +237,7 @@ class PFMap:
         angle_min = float(data.angle_min)
         angle_max = float(data.angle_max)
         self.angle_inc = float(data.angle_increment)
-
+        
         ranges = data.ranges
 
         index_min = int(np.ceil(
