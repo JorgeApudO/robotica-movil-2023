@@ -202,6 +202,7 @@ class PFMap:
                     particle_array = np.array(particle_array)
                     #rp.loginfo(f"kdtree min: {min_dist_occupied}")
                     prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
+                    rp.loginfo(f"prob: {prob_pos}")
                     q = q * prob_pos
 
             q_array.append(q)
