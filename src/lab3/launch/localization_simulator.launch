@@ -6,8 +6,20 @@
 		<param name="/map_file" type="yaml" value="$(find lab3)/scripts/mapa.yaml"/>
 	</node>
 
-	<node pkg="lab3" name="localization" type="robot.py" output="screen">
+	<node pkg="lab3" name="localization" type="robot.py" output="screen" />
+
+	<node pkg="lab3" name="pf_man" type="pf_node.py" output="screen">
 		<param name="flip_map" value="1"/>
+	</node>
+
+	<node pkg="lab3" name="movement_manager" type="movement_manager.py" output="screen" />
+
+	<node pkg="pid" name="wall_depth" type="controller" ns="angle">
+		<param name="Kp" value="0.4"/>
+		<param name="Ki" value="0"/>
+		<param name="Kd" value="0"/>
+		<param name="upper_limit" value="0.5"/>
+		<param name="lower_limit" value="-0.5"/>
 	</node>
 	
 </launch>

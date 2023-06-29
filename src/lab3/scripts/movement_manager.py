@@ -26,7 +26,7 @@ class Robot_mov_manager():
         # ---
 
         # Change state
-        self.change_state = rp.Publisher("/task_done", Int8, queue_size=1)
+        self.change_state = rp.Publisher("/state_man", Int8, queue_size=1)
         # ---
 
         # CONSTANTS
@@ -58,12 +58,14 @@ class Robot_mov_manager():
         rp.loginfo("Waiting angle distance pid setpoint process")
         while self.ang_set_point.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.1)
+        rp.loginfo("Ready angle distance pid setpoint process")
 
         self.ang_state = rp.Publisher('/angle/state',
                                       Float64, queue_size=1)
         rp.loginfo("Waiting angle distance pid state process")
         while self.ang_state.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.1)
+        rp.loginfo("Ready angle distance pid state process")
 
         self.ang_actuation = rp.Subscriber('/angle/control_effort',
                                            Float64, self.ang_actuation_fn)

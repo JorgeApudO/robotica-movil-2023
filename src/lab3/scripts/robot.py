@@ -2,7 +2,7 @@
 import rospy as rp
 import numpy as np
 
-from nav_msgs.msg import OccupancyGrid
+from nav_msgs.msg import OccupancyGrid, Odometry
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import Float64MultiArray, Int8, Bool
 from geometry_msgs.msg import Pose
@@ -27,8 +27,6 @@ class RobotBrain:
         rp.init_node("Robot_Brain")
         pub_initial_pose(0.5, 0.5, 0)
 
-        self.flip = bool(rp.get_param('/localization/flip_map', 0))
-
         # ---
         # Initial conditions
         self.__state = PARTICLE
@@ -40,15 +38,16 @@ class RobotBrain:
 
         # ---
         # State updater
-        rp.Subscriber("/task_done", Int8, self.update_state)
-
-        # ---
-        # Map loader
-        rp.Subscriber("/map", OccupancyGrid, self.load_map_grid)
+        rp.Subscriber("/state_man", Int8, self.update_state)
 
         # ---
         # Lidar data
         rp.Subscriber("/scan", LaserScan, self.update_laser)
+
+        # ---
+        # Odometry manager
+        rp.Subscriber('odom', Odometry, self.update_odom)
+        self.odom_pub = rp.Publisher("/update_odom", Odometry, queue_size=1)
 
         # ---
         # Movement manager publisher
@@ -57,20 +56,23 @@ class RobotBrain:
         rp.loginfo("Waiting movement subscriber")
         while self.movement_pub.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.1)
+        rp.loginfo("Ready movement subscriber")
 
         # ---
         # Sensor data publisher
-        self.measurement_pub = rp.Publisher('/distances', Float64MultiArray,
+        self.measurement_pub = rp.Publisher('/distances', LaserScan,
                                             queue_size=2)
         rp.loginfo("Waiting measurement subscriber")
         while self.measurement_pub.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.1)
+        rp.loginfo("Ready measurement subscriber")
 
         self.movement_depth_pub = rp.Publisher('/depth_data', Float64MultiArray,
                                                queue_size=2)
         rp.loginfo("Waiting depth subscriber")
         while self.movement_depth_pub.get_num_connections() == 0 and not rp.is_shutdown():
             rp.sleep(0.1)
+        rp.loginfo("Ready depth subscriber")
 
         # ---
         # Timer
@@ -88,26 +90,11 @@ class RobotBrain:
         else:
             rp.logerr(f"<> State {new} not found")
 
-    def load_map_grid(self, map):
-        info = map.info
-        width = int(info.width)
-        height = int(info.height)
-
-        map_matrix = 100 - np.array(map.data).reshape((height, width))
-        map_matrix = (map_matrix * (255/100.0)).astype(np.uint8)
-
-        if self.flip:
-            map_matrix = np.flip(map_matrix, axis=0)
-
-        self.map_matrix = map_matrix
-        self.resolution = info.resolution
-
-        rp.loginfo(self.map_matrix)
-        rp.loginfo(self.map_data)
-
     def update(self, *args):
+        rp.loginfo(f"{self.state}")
         if self.state == PARTICLE:
             self.publish_lidar()
+            self.publish_odom()
             self.state = WAIT
             self.movement_pub.publish(False)
         elif self.state == MOVEMENT:
@@ -118,6 +105,8 @@ class RobotBrain:
             self.notify()
 
     def update_laser(self, data):
+        self.lidar_data = data
+
         angle_min = float(data.angle_min)
         angle_max = float(data.angle_max)
         self.angle_inc = float(data.angle_increment)
@@ -141,6 +130,9 @@ class RobotBrain:
     def update_state(self, data):
         self.state = data.data
 
+    def update_odom(self, data):
+        self.odom = data
+
     def publish_lidar(self):
         lidar_info = np.array((x, LOWER_ANGLE_LIMIT + i*self.angle_inc)
                               for i, x in enumerate(self.lidar_scan))
@@ -148,7 +140,10 @@ class RobotBrain:
             self.movement_depth_pub.publish(lidar_info)
 
         elif self.state == PARTICLE:
-            self.measurement_pub.publish(lidar_info)
+            self.measurement_pub.publish(self.lidar_data)
+
+    def publish_odom(self):
+        self.odom_pub.publish(self.odom)
 
     def notify(self):
         # Avisar por los parlantes y todo eso
