@@ -272,6 +272,8 @@ class PFMap:
         delta = np.array([pos - self.last_pose[:2]])
         local_delta = rot.dot(delta.T).T
 
+        rp.loginfo(f"delta: {local_delta}")
+
         self.odom_data = np.array(
             [local_delta[0, 0], local_delta[0, 1], yaw - self.last_pose[2]])
         self.last_pose = pose
