@@ -231,9 +231,6 @@ class PFMap:
                 self.final_pose.publish(self.infered_pose)
             else:
                 self.change_state.publish(MOVEMENT)
-
-            self.odom_ready = False
-            self.lidar_ready = False
         
         self.publish_particles()
 
