@@ -16,7 +16,7 @@ from sensor_msgs.msg import LaserScan
 from sklearn.neighbors import KDTree
 
 TARGET_DEVIATION = 0.01
-MAX_PARTICLES = 150
+MAX_PARTICLES = 200
 NORMAL_DISPERSION = 0.001
 SENSOR_DISPERSION = 0.5
 
@@ -194,13 +194,13 @@ class PFMap:
                                 (self.particles[:,0] >= 0), self.weights, 0 )
         
         x, y = np.where(self.map == 1)
-        indices = np.random.randint(0, len(x), size=20)
-        states = np.zeros((20, 3))
+        indices = np.random.randint(0, len(x), size=5)
+        states = np.zeros((5, 3))
         states[:,0] = y[indices]
         states[:,1] = x[indices]
-        states[:,2] = np.random.random(20) * np.pi * 2
+        states[:,2] = np.random.random(5) * np.pi * 2
         map_to_world(states, self.map_info)
-        new_weights = np.full(20, 1/20)
+        new_weights = np.full(5, 1/5)
         self.particles = np.concatenate((self.particles, states))
         self.weights = np.concatenate((self.weights, new_weights))
         self.normalize_weights()
