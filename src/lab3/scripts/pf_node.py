@@ -211,7 +211,7 @@ class PFMap:
             q = q * self.likelihoodfield[x][y]
 
             q_array.append(q)
-
+        q_array = np.array(q_array)
         q_array /= np.sum(q_array)
         self.weights = q_array
 
