@@ -174,11 +174,12 @@ class PFMap:
         self.rviz_pub.publish(pa)
 
     def resample(self):
-        rp.loginfo(self.particles.shape)
-        rp.loginfo(self.weights.shape)
-        new_particles = np.random.choice(
-            self.particles, MAX_PARTICLES, p=self.weights)
-        self.particles = new_particles
+        # rp.loginfo(f"{self.particles.shape}")
+        # rp.loginfo(f"{self.weights.shape}")
+        new_particles_idx = np.random.choice(
+            self.particles.shape[0], MAX_PARTICLES, p=self.weights)
+
+        self.particles = self.particles[new_particles_idx]
 
     def sensor_model(self, observation):
 
