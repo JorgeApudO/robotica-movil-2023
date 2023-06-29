@@ -143,6 +143,8 @@ class PFMap:
         dw = movement[2] + np.random.normal(
             0.0, NORMAL_DISPERSION, MAX_PARTICLES)
 
+        rp.loginfo(f"dx: {dx}\tdy: {dy}\tdw: {dw}")
+
         self.particles[:, 0] += dx
         self.particles[:, 1] += dy
         self.particles[:, 2] += dw
@@ -289,7 +291,6 @@ class PFMap:
 def rotation_matrix(theta):
     c, s = np.cos(theta), np.sin(theta)
     return np.array([[c, -s], [s, c]])
-
 
 def quaternion_to_angle(q):
     _, _, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
