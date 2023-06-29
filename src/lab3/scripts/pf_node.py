@@ -123,7 +123,7 @@ class PFMap:
         coord_0 = np.apply_along_axis(self.cell_position, 1, indices_0)
         self.occupied = KDTree(coord_0)
         self.map_ready = True
-        
+
         rp.loginfo("MAP LOADED")
         self.init_particles()
         self.update()
@@ -174,6 +174,8 @@ class PFMap:
         self.rviz_pub.publish(pa)
 
     def resample(self):
+        rp.loginfo(self.particles.shape)
+        rp.loginfo(self.weights.shape)
         new_particles = np.random.choice(
             self.particles, MAX_PARTICLES, p=self.weights)
         self.particles = new_particles
