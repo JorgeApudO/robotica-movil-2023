@@ -17,7 +17,7 @@ from sklearn.neighbors import KDTree
 
 TARGET_DEVIATION = 0.01
 MAX_PARTICLES = 100
-NORMAL_DISPERSION = 0.01
+NORMAL_DISPERSION = 0.001
 SENSOR_DISPERSION = 0.5
 
 LOWER_ANGLE_LIMIT = -27 * np.pi / 180
@@ -260,7 +260,7 @@ class PFMap:
         self.observation = lidar_info
         self.lidar_ready = True
 
-        self.update()
+        # self.update()
 
     def update_odom(self, data):
         pos = np.array([
