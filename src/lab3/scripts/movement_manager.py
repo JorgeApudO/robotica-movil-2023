@@ -117,7 +117,7 @@ class Robot_mov_manager():
             if self.control_cont == 10:  # 1.0 segs
                 self.change_state.publish(PARTICLE)
                 self.actual+=1
-                self.actual%=self.actual
+                self.actual%=self.actual/4
                 self.reset()
         else:
             self.reset()
