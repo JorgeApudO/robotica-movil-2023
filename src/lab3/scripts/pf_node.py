@@ -88,7 +88,9 @@ class PFMap:
 
         states = np.zeros((MAX_PARTICLES, 3))
         states[:,0] = y[indices]
+        rp.loginfo(f"{y[indices]}")
         states[:,1] = x[indices]
+        rp.loginfo(f"{x[indices]}")
         states[:,2] = np.random.random(MAX_PARTICLES) * np.pi * 2
 
         map_to_world(states, self.map_info)
