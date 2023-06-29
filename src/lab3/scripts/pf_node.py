@@ -198,7 +198,7 @@ class PFMap:
                          self.resolution) - 0.5) // 1
                     min_dist_occupied = self.occupied.query([[x,y]])[1]
                     rp.loginfo(f"kdtree min: {min_dist_occupied}")
-                    prob_pos = np.exp( - (min_dist_occupied ** 2) / (2 * SENSOR_DISPERSION))
+                    prob_pos = (1/(np.sqrt(2*np.pi)*SENSOR_DISPERSION)) * np.exp( - (min_dist_occupied ** 2) / (2 * SENSOR_DISPERSION**2))
                     rp.loginfo(f"prob value: {prob_pos}")
                     prob_array.append(prob_pos)
             q = sum(prob_array) / len(prob_pos)
