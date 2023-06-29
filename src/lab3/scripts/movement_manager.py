@@ -144,7 +144,7 @@ def get_distances(data):
         izq = data[contador]
         contador += 1
     # ---
-    centro = np.array(0, np.inf)
+    centro = np.array([0, np.inf])
     contador = 0
     while centro[1] >= 5 * (np.pi / 180):
         centro = data[contador]

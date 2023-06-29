@@ -177,6 +177,7 @@ class PFMap:
     def resample(self):
         # rp.loginfo(f"{self.particles.shape}")
         # rp.loginfo(f"{self.weights.shape}")
+        rp.loginfo(f"weights shape: {self.weights.shape}")
         new_particles_idx = np.random.choice(
             self.particles.shape[0], MAX_PARTICLES, p=self.weights)
 
