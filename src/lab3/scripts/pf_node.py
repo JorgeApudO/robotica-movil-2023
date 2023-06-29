@@ -203,6 +203,7 @@ class PFMap:
             q_array.append(q)
         q_array = np.array(q_array)
         q_array /= np.sum(q_array)
+        rp.loginfo(f"{q_array}")
         self.weights = q_array.T
 
     def update(self):
