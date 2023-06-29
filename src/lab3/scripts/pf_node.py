@@ -186,7 +186,7 @@ class PFMap:
         lidar_info = np.array((x, LOWER_ANGLE_LIMIT + i*self.angle_inc)
                               for i, x in enumerate(observation))
 
-        q_array = np.array()
+        q_array = np.array([])
         for particula in self.particles:
             q = 1
             for laser, angle in lidar_info:
