@@ -35,7 +35,7 @@ class Robot_mov_manager():
 
         # CONSTANTS
         self.pond_unidades = 1
-        self.min_front_dist = 0.5*self.pond_unidades
+        self.min_front_dist = 3*self.pond_unidades
         # ---
 
         # INITIAL CONDITIONS
