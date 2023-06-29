@@ -35,7 +35,7 @@ class Robot_mov_manager():
 
         # CONSTANTS
         self.pond_unidades = 1
-        self.min_front_dist = 0.2*self.pond_unidades
+        self.min_front_dist = 0.3*self.pond_unidades
         # ---
 
         # INITIAL CONDITIONS
@@ -73,7 +73,7 @@ class Robot_mov_manager():
 
         self.ang_actuation = rp.Subscriber('/angle/control_effort',
                                            Float64, self.ang_actuation_fn)
-        self.ang_set_point.publish(0.5*self.pond_unidades)
+        self.ang_set_point.publish(0.4*self.pond_unidades)
         # ---
 
         # HIGH LEVEL MOVEMENT CONTROL!
@@ -89,7 +89,7 @@ class Robot_mov_manager():
     def ang_actuation_fn(self, data: Float64):
         if self.enable:
             if self.rotate:
-                self.ang_vel = 1
+                self.ang_vel = -1
                 self.vel = 0
             else:
                 self.vel = 0.1
@@ -110,7 +110,7 @@ class Robot_mov_manager():
     def control(self, data):
         if self.enable:
             self.control_cont += 1
-            if self.control_cont == 15:  # 1.5 segs
+            if self.control_cont == 10:  # 1.0 segs
                 self.change_state.publish(PARTICLE)
                 self.reset()
         else:
