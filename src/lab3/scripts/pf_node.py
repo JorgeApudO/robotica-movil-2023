@@ -269,8 +269,8 @@ class PFMap:
 
     
         rot = rotation_matrix(-self.last_pose[2])
-        local_delta = np.array([pos - self.last_pose[:2]])
-        # local_delta = rot.dot(delta.T).T
+        delta = np.array([pos - self.last_pose[:2]])
+        local_delta = rot.dot(delta.T).T
 
         rp.loginfo(f"delta: {local_delta}")
 
