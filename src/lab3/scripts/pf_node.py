@@ -8,7 +8,7 @@ from statistics import NormalDist
 
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 
-from std_msgs.msg import Float64MultiArray, Int8
+from std_msgs.msg import Float64MultiArray, Int8, Header
 from geometry_msgs.msg import Pose, PoseArray, Quaternion, PoseStamped
 from nav_msgs.msg import OccupancyGrid, Odometry
 from sensor_msgs.msg import LaserScan
@@ -161,6 +161,12 @@ class PFMap:
 
         pa = PoseArray()
         pa.poses = list(map(particle_to_pose, self.particles))
+
+        header = Header()
+        header.stamp = rp.Time.now()
+        header.frame_id = "map"
+
+        pa.header = header
         self.rviz_pub.publish(pa)
 
     def resample(self):
