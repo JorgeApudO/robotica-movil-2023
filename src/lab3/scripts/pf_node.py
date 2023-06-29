@@ -94,6 +94,7 @@ class PFMap:
         map_to_world(states, self.map_info)
         self.particles = states
         self.weights[:] = 1.0 / MAX_PARTICLES
+        rp.loginfo("PARTICLES INITIALIZED")
 
     def load_map_grid(self, data):
         self.map_info = data.info
@@ -119,6 +120,7 @@ class PFMap:
         coord_0 = np.apply_along_axis(self.cell_position, 1, indices_0)
         self.occupied = KDTree(coord_0)
         self.map_ready = True
+        rp.loginfo("MAP LOADED")
         self.init_particles()
 
     def motion_model(self, movement):
