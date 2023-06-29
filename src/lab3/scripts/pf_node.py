@@ -143,7 +143,7 @@ class PFMap:
         dw = movement[2] + np.random.normal(
             0.0, NORMAL_DISPERSION, MAX_PARTICLES)
 
-        rp.loginfo(f"dx: {dx}\tdy: {dy}\tdw: {dw}")
+        # rp.loginfo(f"dx: {dx}\tdy: {dy}\tdw: {dw}")
 
         self.particles[:, 0] += dx
         self.particles[:, 1] += dy

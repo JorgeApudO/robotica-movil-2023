@@ -93,7 +93,7 @@ class Robot_mov_manager():
                 self.ang_vel = -1
                 self.vel = 0
             else:
-                self.vel = 0.1
+                self.vel = 0.08
                 self.ang_vel = float(data.data)
         else:
             self.reset()
@@ -153,7 +153,7 @@ def get_distances(data):
 
     izq = izq[0]*abs(np.sin(izq[1]))
     centro = centro[0]*abs(np.sin(centro[1]))
-    rp.loginfo(f"izq:{izq}, centro:{centro}")
+    #rp.loginfo(f"izq:{izq}, centro:{centro}")
     return izq, centro
 
 def lidar_manage(data):
