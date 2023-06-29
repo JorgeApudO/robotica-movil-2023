@@ -179,7 +179,7 @@ class PFMap:
         # rp.loginfo(f"{self.weights.shape}")
         rp.loginfo(f"weights: {self.weights}")
         new_particles_idx = np.random.choice(
-            self.particles.shape[0], MAX_PARTICLES, p=self.weights.T)
+            self.particles.shape[0], MAX_PARTICLES, p=self.weights)
 
         self.particles = self.particles[new_particles_idx]
 
