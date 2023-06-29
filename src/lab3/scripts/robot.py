@@ -19,7 +19,6 @@ UPPER_ANGLE_LIMIT = 27 * np.pi / 180
 PARTICLE = 1  # sensor model and particle
 WAIT = 2  # procesando info
 MOVEMENT = 3  # move robot
-DONE = 4  # Finish
 
 
 class RobotBrain:
@@ -40,7 +39,6 @@ class RobotBrain:
         # ---
         # State updater
         rp.Subscriber("/state_man", Int8, self.update_state)
-
 
         # ---
         self.sound = SoundClient()
@@ -119,10 +117,8 @@ class RobotBrain:
 
         ranges = data.ranges
 
-        index_min = int(np.ceil(
-            (LOWER_ANGLE_LIMIT - angle_min) / self.angle_inc))
-        index_max = len(ranges) - int(np.ceil(
-            (angle_max - UPPER_ANGLE_LIMIT) / self.angle_inc))
+        index_min = int(np.ceil((LOWER_ANGLE_LIMIT - angle_min) / self.angle_inc))
+        index_max = len(ranges) - int(np.ceil((angle_max - UPPER_ANGLE_LIMIT) / self.angle_inc))
 
         ranges = np.array(ranges[index_min:index_max+1])
 

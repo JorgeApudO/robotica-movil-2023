@@ -11,7 +11,6 @@ import cv2 as cv
 PARTICLE = 1  # sensor model and particle
 WAIT = 2  # procesando info
 MOVEMENT = 3  # move robot
-DONE = 4  # Finish
 
 LOWER_ANGLE_LIMIT = -27 * np.pi / 180
 UPPER_ANGLE_LIMIT = 27 * np.pi / 180

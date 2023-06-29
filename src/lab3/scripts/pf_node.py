@@ -17,7 +17,8 @@ from sklearn.neighbors import KDTree
 
 TARGET_DEVIATION = 0.01
 MAX_PARTICLES = 400
-NORMAL_DISPERSION = 0.001
+NORMAL_DISPERSION = 0.01
+ANGLE_DISPERSION = 0.05
 SENSOR_DISPERSION = 0.5
 
 LOWER_ANGLE_LIMIT = -27 * np.pi / 180
@@ -108,8 +109,7 @@ class PFMap:
         self.origin = self.map_info.origin
 
         # 0: vacio, -1: desconocido, 100: obstaculo
-        array_255 = np.array(data.data).reshape(
-            (data.info.height, data.info.width))
+        array_255 = np.array(data.data).reshape((data.info.height, data.info.width))
 
         if self.flip:
             array_255 = np.flip(array_255, axis=0)
@@ -119,8 +119,7 @@ class PFMap:
         self.map[array_255 == 0] = 1
 
         global_indices = np.array(list(np.ndindex(*self.map.shape)))
-        self.global_coord = np.apply_along_axis(
-            self.cell_position, 1, global_indices)
+        self.global_coord = np.apply_along_axis(self.cell_position, 1, global_indices)
 
         indices_0 = np.transpose((self.map == 0).nonzero())
         coord_0 = np.apply_along_axis(self.cell_position, 1, indices_0)
@@ -136,12 +135,11 @@ class PFMap:
         cos = np.cos(self.particles[:, 2])
         sin = np.sin(self.particles[:, 2])
 
-        dx = cos*movement[0] - sin*movement[1] + np.random.normal(
-            0.0, NORMAL_DISPERSION, MAX_PARTICLES)
-        dy = sin*movement[0] + cos*movement[1] + np.random.normal(
-            0.0, NORMAL_DISPERSION, MAX_PARTICLES)
-        dw = movement[2] + np.random.normal(
-            0.0, NORMAL_DISPERSION, MAX_PARTICLES)
+        dx = cos*movement[0] - sin*movement[1] + np.random.normal(0.0, NORMAL_DISPERSION, 
+                                                                  MAX_PARTICLES)
+        dy = sin*movement[0] + cos*movement[1] + np.random.normal(0.0, NORMAL_DISPERSION, 
+                                                                    MAX_PARTICLES)
+        dw = movement[2] + np.random.normal(0.0, ANGLE_DISPERSION, MAX_PARTICLES)
 
         # rp.loginfo(f"dx: {dx}\tdy: {dy}\tdw: {dw}")
 

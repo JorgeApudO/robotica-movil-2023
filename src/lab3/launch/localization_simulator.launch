@@ -15,11 +15,11 @@
 	<node pkg="lab3" name="movement_manager" type="movement_manager.py" output="screen" />
 
 	<node pkg="pid" name="wall_depth" type="controller" ns="angle">
-		<param name="Kp" value="0.4"/>
+		<param name="Kp" value="0.5"/>
 		<param name="Ki" value="0"/>
 		<param name="Kd" value="0"/>
-		<param name="upper_limit" value="0.5"/>
-		<param name="lower_limit" value="-0.5"/>
+		<param name="upper_limit" value="0.8"/>
+		<param name="lower_limit" value="-0.8"/>
 	</node>
 
 	<node type="rviz" name="rviz" pkg="rviz" args="-d $(find lab3)/rviz/pf.rviz"/>
