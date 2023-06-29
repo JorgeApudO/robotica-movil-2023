@@ -34,7 +34,7 @@ class Robot_mov_manager():
 
         # CONSTANTS
         self.pond_unidades = 1
-        self.min_front_dist = 3*self.pond_unidades
+        self.min_front_dist = 0.6*self.pond_unidades
         # ---
 
         # INITIAL CONDITIONS
@@ -43,7 +43,7 @@ class Robot_mov_manager():
         self.vel = 0.1
         self.ang_vel = 0.0
         self.control_cont = 0
-        self.rutine = [0,0,0,0.08]
+        self.rutine = [1,1,1,0]
         self.actual = 0
         # ---
 
@@ -90,11 +90,11 @@ class Robot_mov_manager():
     def ang_actuation_fn(self, data: Float64):
         self.rotate = self.distances[1] < self.min_front_dist
         if self.enable:
-            if self.rotate:
+            if self.rotate or self.routine[self.actual]:
                 self.ang_vel = -1
                 self.vel = 0
             else:
-                self.vel = self.rutine[self.actual]
+                self.vel = 0.08
                 self.ang_vel = float(data.data)
                 
         else:
