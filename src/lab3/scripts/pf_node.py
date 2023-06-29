@@ -184,7 +184,7 @@ class PFMap:
         # rp.loginfo(f"{self.weights.shape}")
         # rp.loginfo(f"weights: {self.weights}")
 
-        y_lim, x_lim = self.map.shape.astype(np.float32)*self.resolution
+        y_lim, x_lim = np.array(self.map.shape, dtype=np.float32)*self.resolution
 
         self.weights = np.where( 0 <= self.particles[:,0] <= x_lim, self.weights, 0 )
         self.weights = np.where( 0 <= self.particles[:,1] <= y_lim, self.weights, 0 )
