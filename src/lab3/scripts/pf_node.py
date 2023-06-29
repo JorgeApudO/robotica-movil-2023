@@ -4,7 +4,7 @@ import rospy as rp
 import numpy as np
 from random import gauss, random
 from copy import deepcopy
-from statistics import NormalDist
+from scipy.stats import norm
 
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 
@@ -37,7 +37,6 @@ class PFMap:
         self.particle_idxs = np.arange(MAX_PARTICLES)
         self.particles = np.zeros((MAX_PARTICLES, 3))
         self.weights = np.ones(MAX_PARTICLES) / float(MAX_PARTICLES)
-        self.ndist = NormalDist(mu = 0, sigma = SENSOR_DISPERSION)
 
         # self.weights = None
         # self.particles = None
@@ -199,10 +198,11 @@ class PFMap:
                          self.resolution) - 0.5) // 1
                     min_dist_occupied = self.occupied.query([[x,y]])[1]
                     #rp.loginfo(f"kdtree min: {min_dist_occupied}")
-                    prob_pos = np.apply_along_axis(self.ndist.pdf, 1, min_dist_occupied)
+                    
+                    prob_pos = np.apply_along_axis(norm.cdf, 1, min_dist_occupied,
+                                                            args = (0,NORMAL_DISPERSION))
                     rp.loginfo(f"prob value: {prob_pos}")
                     prob_array.append(prob_pos)
-            
             q = sum(prob_array) / len(prob_pos)
             # rp.loginfo(f"q value: {q}")
             q_array.append(q)
