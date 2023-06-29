@@ -123,8 +123,10 @@ class PFMap:
         coord_0 = np.apply_along_axis(self.cell_position, 1, indices_0)
         self.occupied = KDTree(coord_0)
         self.map_ready = True
+        
         rp.loginfo("MAP LOADED")
         self.init_particles()
+        self.update()
 
     def motion_model(self, movement):
         cos = np.cos(self.particles[:, 2])
@@ -262,17 +264,15 @@ class PFMap:
         yaw = quaternion_to_angle(data.pose.pose.orientation)
         pose = np.array([pos[0], pos[1], yaw])
 
-        if isinstance(self.last_pose, np.ndarray):
-            rot = rotation_matrix(-self.last_pose[2])
-            delta = np.array([pos - self.last_pose[:2]])
-            local_delta = rot.dot(delta.T).T
+    
+        rot = rotation_matrix(-self.last_pose[2])
+        delta = np.array([pos - self.last_pose[:2]])
+        local_delta = rot.dot(delta.T).T
 
-            self.odom_data = np.array(
-                [local_delta[0, 0], local_delta[0, 1], yaw - self.last_pose[2]])
-            self.last_pose = pose
-            self.odom_ready = True
-        else:
-            self.last_pose = pose
+        self.odom_data = np.array(
+            [local_delta[0, 0], local_delta[0, 1], yaw - self.last_pose[2]])
+        self.last_pose = pose
+        self.odom_ready = True
 
         self.update()
 
@@ -298,8 +298,8 @@ def map_to_world(poses, map_info):
     cos, sin = np.cos(ang), np.sin(ang)
 
     tmp = np.copy(poses[:,0])
-    poses[:,0] = cos*poses[:,0] - sin*poses[:,1]
-    poses[:,1] = sin * tmp + cos*poses[:,1]
+    poses[:,0] = cos * poses[:,0] - sin * poses[:,1]
+    poses[:,1] = sin * tmp + cos * poses[:,1]
 
     poses[:,:2] *= float(res)
 
