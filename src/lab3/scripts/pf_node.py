@@ -200,7 +200,6 @@ class PFMap:
                     prob_pos = (1/(np.sqrt(2*np.pi)*SENSOR_DISPERSION)) * np.exp( - (min_dist_occupied ** 2) / (2 * SENSOR_DISPERSION**2))
                     prob_array.append(*prob_pos)
             q = sum(prob_array) / len(prob_pos)
-            # rp.loginfo(f"q value: {q}")
             q_array.append(q)
         q_array = np.array(q_array)
         q_array /= np.sum(q_array)
