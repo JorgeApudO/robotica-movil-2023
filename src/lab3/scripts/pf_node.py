@@ -84,7 +84,7 @@ class PFMap:
         w = np.dot(self.particles[:,2], self.weights)
 
         return x, y, w
-
+    
     def init_particles(self):
         x, y = np.where(self.map == 1)
         indices = np.random.randint(0, len(x), size=MAX_PARTICLES)
@@ -183,9 +183,28 @@ class PFMap:
         # rp.loginfo(f"{self.particles.shape}")
         # rp.loginfo(f"{self.weights.shape}")
         # rp.loginfo(f"weights: {self.weights}")
+
+        y_lim, x_lim = self.map.shape*self.resolution
+
+        self.weights = np.where( 0 <= self.particles[:,0] <= x_lim, self.weights, 0 )
+        self.weights = np.where( 0 <= self.particles[:,1] <= y_lim, self.weights, 0 )
+        
+        x, y = np.where(self.map == 1)
+        indices = np.random.randint(0, len(x), size=20)
+        states = np.zeros((20, 3))
+        states[:,0] = y[indices]
+        states[:,1] = x[indices]
+        states[:,2] = np.random.random(20) * np.pi * 2
+        map_to_world(states, self.map_info)
+        new_weights = np.full(20, 1/20)
+        self.particles = np.concatenate(self.particles, states)
+        self.weights = np.concatenate(self.weights, new_weights)
+        self.normalize_weights()
+
         new_particles_idx = np.random.choice(
             self.particles.shape[0], MAX_PARTICLES, p=self.weights)
-
+        
+        self.weights = self.weights[new_particles_idx]
         self.particles = self.particles[new_particles_idx]
 
     def sensor_model(self, observation):
@@ -205,10 +224,10 @@ class PFMap:
                     min_dist_occupied = self.occupied.query([[x,y]])[0]/1000
                     prob_pos = (1/(np.sqrt(2*np.pi)*SENSOR_DISPERSION)) * np.exp( - (min_dist_occupied ** 2) / (2 * SENSOR_DISPERSION**2))
                     prob_array.append(*prob_pos)
-            q = sum(prob_array) / len(prob_pos)
+            q = sum(prob_array) / len(prob_array)
             q_array.append(*q)
         q_array = np.array(q_array)
-        q_array /= np.sum(q_array)
+        q_array /= sum(q_array)
         # rp.loginfo(f"{q_array}")
         self.weights = q_array
 
