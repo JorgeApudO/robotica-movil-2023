@@ -16,7 +16,7 @@ from sensor_msgs.msg import LaserScan
 from sklearn.neighbors import KDTree
 
 TARGET_DEVIATION = 0.01
-MAX_PARTICLES = 100
+MAX_PARTICLES = 150
 NORMAL_DISPERSION = 0.001
 SENSOR_DISPERSION = 0.5
 
@@ -138,7 +138,7 @@ class PFMap:
 
         dx = cos*movement[0] - sin*movement[1] + np.random.normal(
             0.0, NORMAL_DISPERSION, MAX_PARTICLES)
-        dy = cos*movement[0] + sin*movement[1] + np.random.normal(
+        dy = sin*movement[0] + cos*movement[1] + np.random.normal(
             0.0, NORMAL_DISPERSION, MAX_PARTICLES)
         dw = movement[2] + np.random.normal(
             0.0, NORMAL_DISPERSION, MAX_PARTICLES)
