@@ -138,9 +138,9 @@ def min_rotation_diff(goal, actual):
 
 
 def get_distances(data):
-    izq = np.array([np.NaN,0])
+    izq = np.array([np.nan,0])
     contador = 0
-    while izq[0] == np.NaN:
+    while np.isnan(izq[0]):
         izq = data[contador]
         contador += 1
     # ---
@@ -152,7 +152,7 @@ def get_distances(data):
 
     izq = izq[0]*np.sin(izq[1])
     centro = centro[0]*np.sin(centro[1])
-    rp.loginfo(f"{izq}, {centro}")
+    rp.loginfo(f"izq:{izq}, centro:{centro}")
     return izq, centro
 
 def lidar_manage(data):

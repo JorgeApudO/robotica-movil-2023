@@ -91,9 +91,9 @@ class PFMap:
 
         states = np.zeros((MAX_PARTICLES, 3))
         states[:,0] = y[indices]
-        rp.loginfo(f"{y[indices]}")
+        # rp.loginfo(f"{y[indices]}")
         states[:,1] = x[indices]
-        rp.loginfo(f"{x[indices]}")
+        # rp.loginfo(f"{x[indices]}")
         states[:,2] = np.random.random(MAX_PARTICLES) * np.pi * 2
 
         map_to_world(states, self.map_info)
@@ -124,7 +124,7 @@ class PFMap:
 
         indices_0 = np.transpose((self.map == 0).nonzero())
         coord_0 = np.apply_along_axis(self.cell_position, 1, indices_0)
-        rp.loginfo(coord_0.shape) #[[x,y],[x2,y2].....] <-[x*,y*]
+        # rp.loginfo(coord_0.shape) #[[x,y],[x2,y2].....] <-[x*,y*]
         self.occupied = KDTree(coord_0)
         self.map_ready = True
 
@@ -180,7 +180,7 @@ class PFMap:
     def resample(self):
         # rp.loginfo(f"{self.particles.shape}")
         # rp.loginfo(f"{self.weights.shape}")
-        rp.loginfo(f"weights: {self.weights}")
+        # rp.loginfo(f"weights: {self.weights}")
         new_particles_idx = np.random.choice(
             self.particles.shape[0], MAX_PARTICLES, p=self.weights)
 
@@ -207,7 +207,7 @@ class PFMap:
             q_array.append(*q)
         q_array = np.array(q_array)
         q_array /= np.sum(q_array)
-        rp.loginfo(f"{q_array}")
+        # rp.loginfo(f"{q_array}")
         self.weights = q_array
 
     def update(self):
