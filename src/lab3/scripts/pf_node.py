@@ -189,6 +189,7 @@ class PFMap:
         q_array = np.array([])
         for particula in self.particles:
             q = 1
+            rp.logingo(lidar_info)
             for laser, angle in lidar_info:
                 if laser != np.NaN:
                     # Tomamos la ubicacion del robot como la ubicacion del lidar
