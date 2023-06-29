@@ -160,7 +160,7 @@ class PFMap:
             self.pose_pub.publish(ps)
 
         pa = PoseArray()
-        pa.poses = map(particle_to_pose, self.particles)
+        pa.poses = list(map(particle_to_pose, self.particles))
         self.rviz_pub.publish(pa)
 
     def resample(self):
