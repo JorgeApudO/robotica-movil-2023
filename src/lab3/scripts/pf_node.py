@@ -210,6 +210,7 @@ class PFMap:
                 self.particles.shape[0], MAX_PARTICLES, p=self.weights)
             
             self.weights = self.weights[new_particles_idx]
+            self.normalize_weights()
             self.particles = self.particles[new_particles_idx]
 
     def sensor_model(self, observation):
