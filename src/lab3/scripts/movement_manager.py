@@ -34,7 +34,7 @@ class Robot_mov_manager():
         # ---
 
         # CONSTANTS
-        self.pond_unidades = 1000
+        self.pond_unidades = 1
         self.min_front_dist = 0.5*self.pond_unidades
         # ---
 
@@ -150,8 +150,8 @@ def get_distances(data):
         centro = data[contador]
         contador += 1
 
-    izq = izq[0]*np.sin(izq[1])
-    centro = centro[0]*np.sin(centro[1])
+    izq = izq[0]*abs(np.sin(izq[1]))
+    centro = centro[0]*abs(np.sin(centro[1]))
     rp.loginfo(f"izq:{izq}, centro:{centro}")
     return izq, centro
 
