@@ -183,8 +183,8 @@ class PFMap:
 
     def sensor_model(self, observation):
 
-        lidar_info = np.array(([x, LOWER_ANGLE_LIMIT + i*self.angle_inc]
-                              for i, x in enumerate(observation)))
+        lidar_info = np.array([[x, LOWER_ANGLE_LIMIT + i*self.angle_inc]
+                              for i, x in enumerate(observation)])
 
         q_array = np.array([])
         for particula in self.particles:
