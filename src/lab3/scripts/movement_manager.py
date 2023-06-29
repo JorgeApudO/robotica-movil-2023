@@ -2,6 +2,7 @@
 import rospy as rp
 from std_msgs.msg import Float64, Bool, Float64MultiArray, Int8
 from geometry_msgs.msg import Twist
+from sensor_msgs.msg import LaserScan
 from tf.transformations import euler_from_quaternion
 import numpy as np
 import cv2 as cv
@@ -11,6 +12,9 @@ PARTICLE = 1  # sensor model and particle
 WAIT = 2  # procesando info
 MOVEMENT = 3  # move robot
 DONE = 4  # Finish
+
+LOWER_ANGLE_LIMIT = -27 * np.pi / 180
+UPPER_ANGLE_LIMIT = 27 * np.pi / 180
 
 
 class Robot_mov_manager():
@@ -43,7 +47,7 @@ class Robot_mov_manager():
         # ---
 
         # LIDAR
-        rp.Subscriber("/depth_data", Float64MultiArray, self.update_dist)
+        rp.Subscriber("/depth_data", LaserScan, self.update_dist)
         # ---
 
         # VEL PUBLISHER NODE
@@ -76,7 +80,7 @@ class Robot_mov_manager():
         rp.Timer(rp.Duration(0.1), self.control)
 
     def update_dist(self, data):
-
+        data = lidar_manage(data)
         izq, centro = get_distances(data)
         self.rotate = centro < self.min_front_dist
         self.distances = np.array(izq, centro)
@@ -137,19 +141,33 @@ def get_distances(data):
     izq = np.NaN
     contador = 0
     while izq == np.NaN:
-        izq = data.data[contador]
+        izq = data[contador]
         contador += 1
     # ---
     centro = np.array(0, np.inf)
     contador = 0
     while centro[1] >= 5 * (np.pi / 180):
-        centro = data.data[contador]
+        centro = data[contador]
         contador += 1
 
     izq = izq[0]*np.sin(izq[1])
     centro = centro[0]*np.sin(centro[1])
     return izq, centro
 
+def lidar_manage(data):
+    angle_min,angle_max, angle_inc = float(data.angle_min), float(data.angle_max), \
+                                                                float(data.angle_increment)
+    ranges = data.ranges
+    index_min = int(np.ceil((LOWER_ANGLE_LIMIT - angle_min) / angle_inc))
+    index_max = len(ranges) - int(np.ceil((angle_max - UPPER_ANGLE_LIMIT) / angle_inc))
+
+    ranges = np.array(ranges[index_min:index_max+1])
+    ranges[ranges < float(data.range_min)] = np.NaN
+    ranges[ranges > float(data.range_max)] = np.NaN
+    
+    lidar_info = np.array([[x, LOWER_ANGLE_LIMIT + i*angle_inc]
+                              for i, x in enumerate(ranges)])
+    return lidar_info
 
 if __name__ == "__main__":
     robot_mov = Robot_mov_manager()

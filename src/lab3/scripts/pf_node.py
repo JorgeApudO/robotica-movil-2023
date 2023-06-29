@@ -184,14 +184,11 @@ class PFMap:
 
     def sensor_model(self, observation):
 
-        lidar_info = np.array([[x, LOWER_ANGLE_LIMIT + i*self.angle_inc]
-                              for i, x in enumerate(observation)])
-
         q_array = list()
         for particula in self.particles:
             q = 1
             particle_array = list()
-            for laser, angle in lidar_info:
+            for laser, angle in obs:
                 if not np.isnan(laser):
                     # Tomamos la ubicacion del robot como la ubicacion del lidar
                     x = (particula[0] + laser * np.cos(particula[2] + angle))
@@ -253,7 +250,10 @@ class PFMap:
         ranges[ranges < float(data.range_min)] = np.NaN
         ranges[ranges > float(data.range_max)] = np.NaN
 
-        self.observation = ranges
+        lidar_info = np.array([[x, LOWER_ANGLE_LIMIT + i*self.angle_inc]
+                              for i, x in enumerate(ranges)])
+
+        self.observation = lidar_info
         self.lidar_ready = True
 
         self.update()

@@ -4,7 +4,7 @@ import numpy as np
 
 from nav_msgs.msg import OccupancyGrid, Odometry
 from sensor_msgs.msg import LaserScan
-from std_msgs.msg import Float64MultiArray, Int8, Bool
+from std_msgs.msg import Int8, Bool
 from geometry_msgs.msg import Pose
 
 from tf.transformations import quaternion_from_euler
@@ -36,7 +36,7 @@ class RobotBrain:
         self.map_data = None
 
         self.angle_increment = None
-        self.lidar_scan = None
+        
         # ---
         # State updater
         rp.Subscriber("/state_man", Int8, self.update_state)
@@ -73,7 +73,7 @@ class RobotBrain:
             rp.sleep(0.1)
         rp.loginfo("Ready measurement subscriber")
 
-        self.movement_depth_pub = rp.Publisher('/depth_data', Float64MultiArray,
+        self.movement_depth_pub = rp.Publisher('/depth_data', LaserScan,
                                                queue_size=2)
         rp.loginfo("Waiting depth subscriber")
         while self.movement_depth_pub.get_num_connections() == 0 and not rp.is_shutdown():
@@ -131,8 +131,6 @@ class RobotBrain:
 
         self.lidar_scan = ranges
 
-        # rp.loginfo(ranges)
-
     def update_state(self, data):
         self.state = data.data
 
@@ -141,10 +139,7 @@ class RobotBrain:
 
     def publish_lidar(self):
         if self.state == MOVEMENT:
-            lidar_info = [(x, LOWER_ANGLE_LIMIT + i*self.angle_inc)
-                              for i, x in enumerate(self.lidar_scan)]
-            multiarray = Float64MultiArray(data=lidar_info)
-            self.movement_depth_pub.publish(multiarray)
+            self.movement_depth_pub.publish(self.lidar_data)
 
         elif self.state == PARTICLE:
             self.measurement_pub.publish(self.lidar_data)
