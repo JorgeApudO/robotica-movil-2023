@@ -201,8 +201,8 @@ class PFMap:
         states[:,2] = np.random.random(20) * np.pi * 2
         map_to_world(states, self.map_info)
         new_weights = np.full(20, 1/20)
-        self.particles = np.concatenate(self.particles, states)
-        self.weights = np.concatenate(self.weights, new_weights)
+        self.particles = np.concatenate((self.particles, states))
+        self.weights = np.concatenate((self.weights, new_weights))
         self.normalize_weights()
 
         new_particles_idx = np.random.choice(
