@@ -49,8 +49,6 @@ class PFMap:
         self.odom_ready = False
         self.map_ready = False
 
-        self.init_particles()
-
         # ---
         # Map loader
         rp.Subscriber("/map", OccupancyGrid, self.load_map_grid)
@@ -121,6 +119,7 @@ class PFMap:
         coord_0 = np.apply_along_axis(self.cell_position, 1, indices_0)
         self.occupied = KDTree(coord_0)
         self.map_ready = True
+        self.init_particles()
 
     def motion_model(self, movement):
         cos = np.cos(self.particles[:, 2])
