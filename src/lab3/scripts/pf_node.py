@@ -204,7 +204,7 @@ class PFMap:
         q_array = np.array(q_array)
         q_array /= np.sum(q_array)
         rp.loginfo(f"{q_array}")
-        self.weights = q_array.T
+        self.weights = q_array
 
     def update(self):
         if self.lidar_ready and self.odom_ready and self.map_ready:
