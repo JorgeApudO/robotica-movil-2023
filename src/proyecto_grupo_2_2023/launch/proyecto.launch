@@ -22,10 +22,13 @@
 		<param name="odom_model_type" value="diff"/>
 		<param name="use_map_topic" value="true"/>
 		<param name="initial_pose_x" value="5.325"/>
+		<param name="initial_cov_xx" value="3"/>
 		<param name="initial_pose_y" value="0.814"/>
+		<param name="initial_cov_yy" value="3"/>
 		<param name="initial_pose_a" value="1.570"/>
+		<param name="initial_cov_aa" value="1.570"/>
 		<param name="laser_max_beams" value="181"/>
-		<param name="min_particles" value="250"/>
+		<param name="min_particles" value="350"/>
 	</node>
 
 	<!-- Stack de Navegacion de ROS -->
@@ -37,5 +40,8 @@
 		<rosparam file="$(find proyecto_grupo_2_2023)/param/global_costmap_params.yaml" command="load"/>
 		<rosparam file="$(find proyecto_grupo_2_2023)/param/dwa_local_planner_params.yaml" command="load"/>
 		<rosparam file="$(find proyecto_grupo_2_2023)/param/move_base_params.yaml" command="load"/>
+
+		<remap from="/cmd_vel" to="/yocs_cmd_vel_mux/output/cmd_vel"/>
+		<remap from="/cmd_vel_active" to="/yocs_cmd_vel_mux/active"/>
 	</node>
 </launch>
