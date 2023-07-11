@@ -44,4 +44,8 @@
 		<remap from="/cmd_vel" to="/yocs_cmd_vel_mux/output/cmd_vel"/>
 		<remap from="/cmd_vel_active" to="/yocs_cmd_vel_mux/active"/>
 	</node>
+
+	<!-- Movement manager con archivo .py -->
+
+	<node pkg="proyecto_grupo_2_2023" name="mov_manager" type="nav_stack.py" output="screen" />
 </launch>
