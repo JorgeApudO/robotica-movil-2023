@@ -35,7 +35,7 @@
 		<rosparam file="$(find proyecto_grupo_2_2023)/param/costmap_common_params.yaml" command="load" ns="local_costmap"/>
 		<rosparam file="$(find proyecto_grupo_2_2023)/param/local_costmap_params.yaml" command="load"/>
 		<rosparam file="$(find proyecto_grupo_2_2023)/param/global_costmap_params.yaml" command="load"/>
-		<rosparam file="$(find proyecto_grupo_2_2023)/param/dwa_local_planner.yaml" command="load"/>
+		<rosparam file="$(find proyecto_grupo_2_2023)/param/dwa_local_planner_params.yaml" command="load"/>
 		<rosparam file="$(find proyecto_grupo_2_2023)/param/move_base_params.yaml" command="load"/>
 	</node>
 </launch>
