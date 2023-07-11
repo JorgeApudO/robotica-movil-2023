@@ -38,6 +38,7 @@ class NavStack:
             self.move_base_client.send_goal(
                 move_base_goal, done_cb=self.goal_done)
             self.move_base_client.wait_for_result()
+            rp.loginfo(f"Arrived at: (x:{x}, y:{y}, yaw:{a})")
 
 
 if __name__ == "__main__":
