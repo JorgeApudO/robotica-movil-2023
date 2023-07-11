@@ -1,0 +1,22 @@
+<launch>
+	<include file="$(find very_simple_robot_simulator)/launch/minimal_simulator.launch"/>
+
+	<node pkg="very_simple_robot_simulator" name="lidar_simulator" type="lidar_simulator">
+		<param name="effective_hfov" value="181"/>
+		<param name="view_depth" value="20.0"/>
+	</node>
+
+	<node pkg="map_server" name="map_server" type="map_server" args="$(find proyecto_grupo_2_2023)/scripts/mapa_bodega.yaml"/>
+
+	<node pkg="rviz" name="rviz" type="rviz"/>
+
+	<node pkg="amcl" name="amcl" type="amcl" output="screen">
+		<param name="odom_model_type" value="diff"/>
+		<param name="use_map_topic" value="true"/>
+		<param name="initial_pose_x" value="5.325"/>
+		<param name="initial_pose_y" value="0.814"/>
+		<param name="initial_pose_a" value="1.570"/>
+		<param name="laser_max_beams" value="181"/>
+		<param name="min_particles" value="250"/>
+	</node>
+</launch>
