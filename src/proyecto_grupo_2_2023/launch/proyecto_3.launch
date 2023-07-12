@@ -46,6 +46,5 @@
 	</node>
 
 	<!-- Movement manager con archivo .py -->
-
 	<node pkg="proyecto_grupo_2_2023" name="mov_manager" type="nav_stack.py" output="screen" />
 </launch>

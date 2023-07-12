@@ -22,11 +22,8 @@
 		<param name="odom_model_type" value="diff"/>
 		<param name="use_map_topic" value="true"/>
 		<param name="initial_pose_x" value="5.325"/>
-		<param name="initial_cov_xx" value="3"/>
 		<param name="initial_pose_y" value="0.814"/>
-		<param name="initial_cov_yy" value="3"/>
 		<param name="initial_pose_a" value="1.570"/>
-		<param name="initial_cov_aa" value="1.570"/>
 		<param name="laser_max_beams" value="181"/>
 		<param name="min_particles" value="350"/>
 	</node>
